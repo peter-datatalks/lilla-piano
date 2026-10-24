@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#f8f3e6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Lilla Piano</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app" data-view="free">
+  <header class="topbar">
+    <div class="brand-mini" data-brand-mini></div>
+    <nav class="modes">
+      <button class="mode-btn" data-go="free" data-i18n-label="free">🎹<span data-i18n="free"></span></button>
+      <button class="mode-btn" data-go="library" data-i18n-label="songs">⭐<span data-i18n="songs"></span></button>
+    </nav>
+    <div class="instruments" id="instruments" role="radiogroup" aria-label="Instrument"></div>
+    <button class="more-btn" id="more-inst" data-i18n-label="chooseInstrument">🎼<span data-i18n="more"></span></button>
+    <button class="icon-btn lang-btn" id="lang-btn" data-i18n-label="language"></button>
+    <button class="icon-btn" id="fullscreen-btn" data-i18n-label="fullscreen">⛶</button>
+  </header>
+
+  <main class="stage">
+    <section class="view view-free">
+      <div class="float-area" id="float-area"></div>
+      <button class="round-btn" id="oct-down" data-i18n-label="lower">◀</button>
+      <div class="free-center">
+        <div data-brand></div>
+        <div class="free-hint" data-i18n="tapKeys"></div>
+      </div>
+      <button class="round-btn" id="oct-up" data-i18n-label="higher">▶</button>
+    </section>
+
+    <section class="view view-library" id="library"></section>
+
+    <section class="view view-song">
+      <div class="song-head">
+        <button class="round-btn" id="song-back" data-i18n-label="back">⬅</button>
+        <div class="song-title" id="song-title"></div>
+        <div class="song-actions">
+          <button class="hands-toggle" id="btn-hands" data-i18n-label="switchHands"></button>
+          <button class="big-btn listen" id="btn-listen">👂<span data-i18n="listen"></span></button>
+          <button class="big-btn play" id="btn-play">🎹<span data-i18n="play"></span></button>
+          <button class="round-btn" id="btn-tempo" data-i18n-label="tempo">🐇</button>
+        </div>
+      </div>
+      <div class="progress"><div class="progress-fill" id="progress"></div></div>
+      <canvas class="cascade" id="cascade"></canvas>
+      <div class="rotate-hint" data-i18n="rotate"></div>
+    </section>
+  </main>
+
+  <div class="keyboard" id="keyboard"></div>
+
+  <div class="sheet hidden" id="inst-sheet">
+    <div class="sheet-card" role="dialog" data-i18n-label="chooseInstrument">
+      <div class="sheet-head">
+        <h2 data-i18n="chooseInstrument"></h2>
+        <button class="round-btn" id="sheet-close" data-i18n-label="close">✕</button>
+      </div>
+      <div class="sheet-body" id="sheet-body"></div>
+      <div class="sheet-foot">
+        <button class="offline-btn" id="offline-btn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="sheet hidden" id="hands-sheet">
+    <div class="sheet-card hands-card" role="dialog" data-i18n-label="howToPlay">
+      <div class="sheet-head">
+        <h2 id="hands-song"></h2>
+        <button class="round-btn" id="hands-close" data-i18n-label="close">✕</button>
+      </div>
+      <p class="hands-question" data-i18n="howToPlay"></p>
+      <div class="hands-choices">
+        <button class="hands-choice one" data-hands="one">
+          <span class="hands-emoji">☝️</span>
+          <strong data-i18n="oneHand"></strong>
+          <small data-i18n="oneHandDesc"></small>
+          <span class="hands-done" data-done="one">⭐</span>
+        </button>
+        <button class="hands-choice two" data-hands="two">
+          <span class="hands-emoji">🙌</span>
+          <strong data-i18n="twoHands"></strong>
+          <small data-i18n="twoHandsDesc"></small>
+          <span class="hands-done" data-done="two">⭐</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="celebrate hidden" id="celebrate">
+    <div class="celebrate-card">
+      <div class="celebrate-stars">⭐⭐⭐</div>
+      <h2 data-i18n="bravo"></h2>
+      <div class="celebrate-actions">
+        <button class="big-btn play" id="btn-again">🔁<span data-i18n="again"></span></button>
+        <button class="big-btn listen" id="btn-more">⭐<span data-i18n="moreSongs"></span></button>
+      </div>
+    </div>
+  </div>
+  <canvas id="confetti"></canvas>
+</div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

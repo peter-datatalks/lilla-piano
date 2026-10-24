@@ -1,0 +1,13 @@
+{
+  "name": "Lilla Piano",
+  "short_name": "Lilla Piano",
+  "start_url": ".",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#f8f3e6",
+  "theme_color": "#f8f3e6",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/apple-touch-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

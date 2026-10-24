@@ -1,0 +1,132 @@
+// UI translations. English is the default; add a language by adding a block with the same keys.
+
+export const LANGS = { en: 'EN', sv: 'SV' };
+
+const STRINGS = {
+  en: {
+    free: 'Free play',
+    songs: 'Songs',
+    more: 'More',
+    fullscreen: 'Fullscreen',
+    language: 'Language',
+    tapKeys: 'Tap the keys! 🎶',
+    lower: 'Lower notes',
+    higher: 'Higher notes',
+    back: 'Back',
+    listen: 'Listen',
+    play: 'Play',
+    stop: 'Stop',
+    tempo: 'Speed',
+    rotate: '📱↻ Turn the screen for bigger keys',
+    bravo: 'Well done!',
+    again: 'Again',
+    moreSongs: 'More songs',
+    chooseInstrument: 'Choose an instrument',
+    close: 'Close',
+    howToPlay: 'How do you want to play?',
+    oneHand: 'One hand',
+    oneHandDesc: 'Just the melody. Perfect for little ones',
+    twoHands: 'Two hands',
+    twoHandsDesc: 'Melody plus a left-hand bass',
+    switchHands: 'Switch between one and two hands',
+    noSongs: 'No songs here yet',
+    handL: 'L',
+    handR: 'R',
+    'level.easy': 'Easy', 'level.medium': 'Medium', 'level.hard': 'Hard',
+    'levelDesc.easy': 'Short and simple', 'levelDesc.medium': 'A bit longer', 'levelDesc.hard': 'Tricky rhythms',
+    'country.all': 'All', 'country.se': 'Swedish', 'country.hu': 'Hungarian',
+    'theme.all': 'All', 'theme.children': "Children's songs", 'theme.christmas': 'Christmas',
+    'theme.animals': 'Animals', 'theme.movement': 'Move & play', 'theme.everyday': 'Everyday',
+    'theme.lullaby': 'Lullabies', 'theme.celebrations': 'Celebrations',
+    tagline: 'Little fingers. Big melodies.',
+    offlineSave: '📥 Save all sounds for offline use (about 30 MB)',
+    offlineSaving: '📥 Saving sounds… {p}%',
+    offlineDone: '✅ All sounds are saved for offline use',
+    offlineRetry: '⚠️ Some sounds could not be saved. Tap to try again',
+    offlineUnavailable: 'Offline saving works when the app is opened from its web address (https)',
+    'theme.lucia': 'Lucia', 'theme.midsummer': 'Midsummer',
+    'family.keys': 'Piano & organ', 'family.strings': 'Strings', 'family.woodwinds': 'Woodwinds',
+    'family.brass': 'Brass', 'family.percussion': 'Percussion', 'family.sax': 'Saxophone',
+    'inst.piano': 'Piano', 'inst.jazz': 'Jazz piano', 'inst.organ': 'Church organ', 'inst.celesta': 'Celesta',
+    'inst.violin': 'Violin', 'inst.viola': 'Viola', 'inst.cello': 'Cello', 'inst.contrabass': 'Double bass',
+    'inst.strings': 'String orchestra', 'inst.pizzicato': 'Pizzicato', 'inst.harp': 'Harp',
+    'inst.piccolo': 'Piccolo', 'inst.flute': 'Flute', 'inst.oboe': 'Oboe', 'inst.english_horn': 'Cor anglais',
+    'inst.clarinet': 'Clarinet', 'inst.bassoon': 'Bassoon',
+    'inst.trumpet': 'Trumpet', 'inst.horn': 'French horn', 'inst.trombone': 'Trombone', 'inst.tuba': 'Tuba',
+    'inst.timpani': 'Timpani', 'inst.glock': 'Glockenspiel', 'inst.xylophone': 'Xylophone', 'inst.bells': 'Tubular bells',
+    'inst.soprano_sax': 'Soprano sax', 'inst.alto_sax': 'Alto sax', 'inst.tenor_sax': 'Tenor sax', 'inst.baritone_sax': 'Baritone sax',
+  },
+  sv: {
+    free: 'Fri lek',
+    songs: 'Låtar',
+    more: 'Fler',
+    fullscreen: 'Helskärm',
+    language: 'Språk',
+    tapKeys: 'Tryck på tangenterna! 🎶',
+    lower: 'Lägre toner',
+    higher: 'Högre toner',
+    back: 'Tillbaka',
+    listen: 'Lyssna',
+    play: 'Spela',
+    stop: 'Stopp',
+    tempo: 'Tempo',
+    rotate: '📱↻ Vrid skärmen för större tangenter',
+    bravo: 'Bravo!',
+    again: 'Igen',
+    moreSongs: 'Fler låtar',
+    chooseInstrument: 'Välj instrument',
+    close: 'Stäng',
+    howToPlay: 'Hur vill du spela?',
+    oneHand: 'En hand',
+    oneHandDesc: 'Bara melodin. Perfekt för de minsta',
+    twoHands: 'Två händer',
+    twoHandsDesc: 'Melodi plus bas med vänster hand',
+    switchHands: 'Byt mellan en och två händer',
+    noSongs: 'Inga låtar här än',
+    handL: 'V',
+    handR: 'H',
+    'level.easy': 'Lätt', 'level.medium': 'Mellan', 'level.hard': 'Svår',
+    'levelDesc.easy': 'Kort och enkel', 'levelDesc.medium': 'Lite längre', 'levelDesc.hard': 'Kluriga rytmer',
+    'country.all': 'Alla', 'country.se': 'Svenska', 'country.hu': 'Ungerska',
+    'theme.all': 'Alla', 'theme.children': 'Barnvisor', 'theme.christmas': 'Jul',
+    'theme.animals': 'Djurvisor', 'theme.movement': 'Rörelsesånger', 'theme.everyday': 'Vardag',
+    'theme.lullaby': 'Vaggvisor', 'theme.celebrations': 'Högtider',
+    tagline: 'Små fingrar. Stora melodier.',
+    offlineSave: '📥 Spara alla ljud för offline (cirka 30 MB)',
+    offlineSaving: '📥 Sparar ljud… {p}%',
+    offlineDone: '✅ Alla ljud är sparade för offline',
+    offlineRetry: '⚠️ Några ljud kunde inte sparas. Tryck för att försöka igen',
+    offlineUnavailable: 'Offline-sparande fungerar när appen öppnas från sin webbadress (https)',
+    'theme.lucia': 'Lucia', 'theme.midsummer': 'Midsommar',
+    'family.keys': 'Piano & orgel', 'family.strings': 'Stråkar', 'family.woodwinds': 'Träblås',
+    'family.brass': 'Bleckblås', 'family.percussion': 'Slagverk', 'family.sax': 'Saxofon',
+    'inst.piano': 'Piano', 'inst.jazz': 'Jazzpiano', 'inst.organ': 'Kyrkorgel', 'inst.celesta': 'Celesta',
+    'inst.violin': 'Fiol', 'inst.viola': 'Altfiol', 'inst.cello': 'Cello', 'inst.contrabass': 'Kontrabas',
+    'inst.strings': 'Stråkorkester', 'inst.pizzicato': 'Pizzicato', 'inst.harp': 'Harpa',
+    'inst.piccolo': 'Piccolaflöjt', 'inst.flute': 'Flöjt', 'inst.oboe': 'Oboe', 'inst.english_horn': 'Engelskt horn',
+    'inst.clarinet': 'Klarinett', 'inst.bassoon': 'Fagott',
+    'inst.trumpet': 'Trumpet', 'inst.horn': 'Valthorn', 'inst.trombone': 'Trombon', 'inst.tuba': 'Tuba',
+    'inst.timpani': 'Pukor', 'inst.glock': 'Klockspel', 'inst.xylophone': 'Xylofon', 'inst.bells': 'Rörklockor',
+    'inst.soprano_sax': 'Sopransax', 'inst.alto_sax': 'Altsax', 'inst.tenor_sax': 'Tenorsax', 'inst.baritone_sax': 'Barytonsax',
+  },
+};
+
+let lang = 'en';
+
+export const getLang = () => lang;
+export function setLang(l) { lang = STRINGS[l] ? l : 'en'; }
+export const t = (key) => STRINGS[lang][key] ?? STRINGS.en[key] ?? key;
+
+// Fill static markup: data-i18n="key" sets text, data-i18n-label="key" sets aria-label.
+export function translateDom(root = document) {
+  root.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+  root.querySelectorAll('[data-i18n-label]').forEach((el) => el.setAttribute('aria-label', t(el.dataset.i18nLabel)));
+  document.documentElement.lang = lang;
+}
+
+// Song titles: the original title, plus a translation underneath when it helps.
+// Swedish UI shows Swedish songs without a subtitle; everything else gets the English title.
+export function songTitles(song) {
+  const sameLang = (lang === 'sv' && song.country === 'se');
+  return { main: song.title, sub: sameLang || song.titleEn === song.title ? '' : song.titleEn };
+}
