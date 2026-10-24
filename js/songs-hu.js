@@ -300,4 +300,794 @@ export const SONGS_HU = [
              G4:0.5 G4:0.5 E4:0.5 E4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:0.5 | E4 D4 C4 R:1`,
     chords: 'C C.G C C.G C.G C.G C.G C',
   },
+  // Csiga-biga, gyere ki! — Original C (so-la-so-mi, Wikipedia marks the key as A minor), 2/4 - no transposition. Both sources agree note for note.
+  //   Source: https://hu.wikipedia.org/wiki/Csigabiga,_gyere_ki (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=CsigaBigaGyereKi (LilyPond)
+  //   Public domain: Traditional Hungarian children's song.
+  {
+    id: 'csiga-biga',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Csiga-biga, gyere ki!',
+    titleEn: 'Snail, Snail, Come Out!',
+    emoji: '🐌',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 G4:0.5 E4 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 G4:0.5 E4 |
+             G4 G4:0.5 A4:0.5 | G4 E4 | G4:0.5 F4:0.5 E4:0.5 D4:0.5 | C4 C4`,
+    chords: 'C C C C C C C C',
+  },
+  // A part alatt — Original C major, 2/4 - no transposition. Both sources agree note for note.
+  //   Source: https://hu.wikipedia.org/wiki/A_part_alatt (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=APartAlatt (LilyPond)
+  //   Public domain: Traditional; collected by Csaplár Benedek in Szeged around 1870.
+  {
+    id: 'a-part-alatt',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'A part alatt',
+    titleEn: 'Down by the Riverbank',
+    emoji: '🌾',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `C4:0.5 C4:0.5 A4 | G4 R:1 | C4:0.5 C4:0.5 A4 | G4 R:1 |
+             F4 E4 | D4:0.5 C4:0.5 D4:0.5 E4:0.5 | F4 E4 | D4:0.5 C4:0.5 D4 |
+             C4 R:1`,
+    chords: 'F C F C F G F G C',
+  },
+  // Hinta, palinta — Original C (so-la-so-mi, Wikipedia marks the key as A minor), 2/4 - no transposition. Single source (theisz has a different "Hinta, palinta, szépen szól a pacsirta" tune).
+  //   Source: https://hu.wikipedia.org/wiki/Hinta,_palinta (LilyPond score)
+  //   Public domain: Traditional; in Kiss Áron's 1891 collection.
+  {
+    id: 'hinta-palinta',
+    country: 'hu',
+    themes: ['children', 'movement'],
+    title: 'Hinta, palinta',
+    titleEn: 'Swing, Swing',
+    emoji: '🎠',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4 E4 | G4:0.5 G4:0.5 E4 | G4:0.5 G4:0.5 E4:0.5 E4:0.5 | G4:0.5 G4:0.5 E4:0.5 E4:0.5 |
+             G4:0.5 G4:0.5 G4:0.5 G4:0.5 | G4 C4`,
+    chords: 'C C C C C C',
+  },
+  // Én elmentem a vásárba — Original F major, 2/4 - moved down a fourth to C major. Single source; the closing repeat sign is not written out.
+  //   Source: https://hu.wikipedia.org/wiki/Én_elmentem_a_vásárba_félpénzzel (LilyPond score)
+  //   Public domain: Traditional; recorded by Vikár Béla.
+  {
+    id: 'en-elmentem-a-vasarba',
+    country: 'hu',
+    themes: ['children', 'animals', 'everyday'],
+    title: 'Én elmentem a vásárba',
+    titleEn: 'I Went to the Market',
+    emoji: '🐔',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `C4:0.5 D4:0.5 E4:0.5 C4:0.5 | D4:0.5 D4:0.5 D4:0.5 C4:0.5 | E4 G3 | C4 R:1 |
+             C4:0.5 D4:0.5 E4:0.5 C4:0.5 | D4:0.5 D4:0.5 D4:0.5 C4:0.5 | E4 G3 | C4 R:1 |
+             C4:0.5 D4:0.5 E4:0.5 C4:0.5 | D4:0.5 B3:0.5 C4 | G4:0.75 G4:0.25 A4:0.5 E4:0.5 | F4:0.5 D4:0.5 E4:0.5 C4:0.5 |
+             D4:0.5 D4:0.5 C4:0.5 B3:0.5 | D4 G3 | C4 R:1`,
+    chords: 'C G C C C G C C C G C F G G C',
+  },
+  // Egy boszorka van — Original C major, 4/4 - no transposition. Theisz (2/4) has the same pitches; it holds two line endings as quarters where Wikipedia has eighth + rest.
+  //   Source: https://hu.wikipedia.org/wiki/Egy_boszorka_van (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=EgyBoszorkaVan (LilyPond)
+  //   Public domain: Traditional Hungarian children's song.
+  {
+    id: 'egy-boszorka-van',
+    country: 'hu',
+    themes: ['children'],
+    title: 'Egy boszorka van',
+    titleEn: 'There Is a Witch',
+    emoji: '🧙',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 4,
+    melody: `C4:0.5 D4:0.5 E4:0.5 D4:0.5 C4 R:1 | C4:0.5 D4:0.5 E4:0.5 D4:0.5 C4 R:1 |
+             E4:0.5 E4:0.5 F4:0.5 F4:0.5 E4:0.5 E4:0.5 D4:0.5 R:0.5 | E4:0.5 D4:0.5 E4:0.5 F4:0.5 E4:0.5 E4:0.5 D4:0.5 R:0.5 |
+             E4:0.5 D4:0.5 E4:0.5 F4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:0.5 | E4:0.5 D4:0.5 E4:0.5 F4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:0.5 |
+             C4:0.5 D4:0.5 E4:0.5 D4:0.5 C4 R:1 | C4:0.5 D4:0.5 E4:0.5 D4:0.5 C4 R:1`,
+    chords: 'C C C C C C C C',
+  },
+  // Katalinka, szállj el! — Original D major, 2/4 - moved down a tone to C major. Theisz has the same tune (in C) with a shorter text, so two of the repeated "Katalinka" bars are missing there; this follows Wikipedia.
+  //   Source: https://hu.wikipedia.org/wiki/Katalinka,_szállj_el (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=KatalinkaSzalljEl (LilyPond)
+  //   Public domain: Traditional; collected by Sztankó Béla.
+  {
+    id: 'katalinka-szallj-el',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Katalinka, szállj el!',
+    titleEn: 'Ladybird, Fly Away!',
+    emoji: '🐞',
+    level: 'easy',
+    bpm: 104,
+    beatsPerBar: 2,
+    melody: `E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4 D4 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4 D4 |
+             E4 D4:0.5 D4:0.5 | C4 D4 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4 D4 |
+             E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4 D4 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4 D4 |
+             E4:0.5 E4:0.5 G4:0.5 G4:0.5 | E4:0.5 E4:0.5 G4:0.5 G4:0.5 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4 C4`,
+    chords: 'C C C C C C C C C C C C C C C C',
+  },
+  // Kis kacsa fürdik — Original D minor, 2/4 - moved down a fourth to A minor. Both sources agree note for note.
+  //   Source: https://hu.wikipedia.org/wiki/Kis_kacsa_fürdik (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=KisKacsaFurdik (LilyPond)
+  //   Public domain: Traditional (Wikipedia: Hungarian folk song in Kiss Áron's 1891 collection; theisz: Polish folk song).
+  {
+    id: 'kis-kacsa-furdik',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Kis kacsa fürdik',
+    titleEn: 'The Little Duck Is Bathing',
+    emoji: '🦆',
+    level: 'easy',
+    bpm: 96,
+    beatsPerBar: 2,
+    melody: `A3 A3:0.5 A3:0.5 | E4 E4 | F4 E4:0.5 D4:0.5 | D4 D4 |
+             E4 D4:0.5 C4:0.5 | C4 C4 | D4 C4:0.5 B3:0.5 | A3 A3`,
+    chords: 'Am Am Dm Dm Am Am G Am',
+  },
+  // Cirmos cica, haj! — Original C major, 2/4 - no transposition. Single source (no Wikipedia page).
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=CirmosCicaHaj (LilyPond)
+  //   Public domain: Traditional Hungarian children's song.
+  {
+    id: 'cirmos-cica-haj',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Cirmos cica, haj!',
+    titleEn: 'Tabby Cat, Shoo!',
+    emoji: '🐈',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 R:1 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 R:1 |
+             G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 F4:0.5 E4:0.5 D4:0.5 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4 R:1`,
+    chords: 'C C C C C C C C',
+  },
+  // Hopp, Juliska! — Original C major, 4/4 - no transposition. Single source; the volta repeat is written out.
+  //   Source: https://hu.wikipedia.org/wiki/Hopp,_Juliska (LilyPond score)
+  //   Public domain: Traditional; collected by Bartók (the tune, not his arrangement).
+  {
+    id: 'hopp-juliska',
+    country: 'hu',
+    themes: ['children', 'movement'],
+    title: 'Hopp, Juliska!',
+    titleEn: 'Hop, Juliska!',
+    emoji: '💃',
+    level: 'easy',
+    bpm: 108,
+    beatsPerBar: 4,
+    melody: `C5 G4 G4 E4 | C5 G4 G4 E4 |
+             F4 F4:0.5 G4:0.5 A4 G4 | D4 D4 D4 C4 |
+             F4 F4:0.5 G4:0.5 A4 G4 | D4 D4 D4 C4`,
+    chords: 'C C F G F C',
+  },
+  // Aki nem lép egyszerre — Original C major, 2/4 - no transposition. Single source; the volta repeat is written out.
+  //   Source: https://hu.wikipedia.org/wiki/Aki_nem_lép_egyszerre (LilyPond score)
+  //   Public domain: Traditional; collected by Kodály (the tune only).
+  {
+    id: 'aki-nem-lep-egyszerre',
+    country: 'hu',
+    themes: ['children', 'movement'],
+    title: 'Aki nem lép egyszerre',
+    titleEn: 'Whoever Doesn\'t March in Step',
+    emoji: '🥁',
+    level: 'easy',
+    bpm: 108,
+    beatsPerBar: 2,
+    melody: `C4:0.5 C4:0.5 C4:0.5 E4:0.5 | G4:0.5 G4:0.5 G4 | G4:0.5 E4:0.5 E4:0.5 G4:0.5 | C4:0.5 C4:0.5 C4 |
+             C4:0.5 C4:0.5 C4:0.5 E4:0.5 | G4:0.5 G4:0.5 G4 | G4:0.5 E4:0.5 E4:0.5 G4:0.5 | C4:0.5 C4:0.5 C4`,
+    chords: 'C C C C C C C C',
+  },
+  // Elvesztettem zsebkendőmet — Original C major, 2/4 - no transposition. Single source; repeat with first/second ending written out.
+  //   Source: https://hu.wikipedia.org/wiki/Elvesztettem_zsebkendőmet (LilyPond score)
+  //   Public domain: Traditional circle-game song; collected by Osváth Albert.
+  {
+    id: 'elvesztettem-zsebkendomet',
+    country: 'hu',
+    themes: ['children', 'movement'],
+    title: 'Elvesztettem zsebkendőmet',
+    titleEn: 'I Lost My Handkerchief',
+    emoji: '🎀',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4:0.5 E4:0.5 F4:0.5 D4:0.5 | E4:0.5 D4:0.5 E4:0.5 C4:0.5 | D4:0.5 F4:0.5 E4:0.5 D4:0.5 | G4 G4 |
+             G4:0.5 E4:0.5 F4:0.5 D4:0.5 | E4:0.5 D4:0.5 E4:0.5 C4:0.5 | D4:0.5 F4:0.5 E4:0.5 D4:0.5 | C4 C4`,
+    chords: 'C C Dm C C C Dm C',
+  },
+  // Gólya, gólya, gilice — Original F major, 2/4 - moved down a fourth to C major. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Gólya,_gólya,_gilice (LilyPond score)
+  //   Public domain: Traditional; collected by Sztankó Béla.
+  {
+    id: 'golya-golya-gilice',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Gólya, gólya, gilice',
+    titleEn: 'Stork, Stork, Turtledove',
+    emoji: '🐦',
+    level: 'easy',
+    bpm: 96,
+    beatsPerBar: 2,
+    melody: `E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4:0.5 E4:0.5 C4 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4:0.5 E4:0.5 C4 |
+             E4:0.5 E4:0.5 D4:0.5 E4:0.5 | F4:0.5 E4:0.5 D4 | E4:0.5 E4:0.5 D4:0.5 E4:0.5 | F4:0.5 E4:0.5 D4 |
+             E4 D4 | E4 D4 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4 C4`,
+    chords: 'C C C C C Dm C Dm C C C C',
+  },
+  // Pál, Kata, Péter, jó reggelt! — Original F major, 4/4 - moved down a fourth to C major. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Pál,_Kata,_Péter,_jó_reggelt! (LilyPond score)
+  //   Public domain: Traditional Hungarian song.
+  {
+    id: 'pal-kata-peter',
+    country: 'hu',
+    themes: ['children', 'everyday', 'animals'],
+    title: 'Pál, Kata, Péter, jó reggelt!',
+    titleEn: 'Paul, Kate, Peter, Good Morning!',
+    emoji: '🐓',
+    level: 'medium',
+    bpm: 96,
+    beatsPerBar: 4,
+    melody: `C4 C4:0.5 D4:0.5 E4 C4 | D4 B3 C4 R:1 |
+             E4 E4:0.5 F4:0.5 G4 E4 | F4 D4 E4 R:1 |
+             G4:0.5 G4:0.5 G4:0.5 G4:0.5 G4 A4:0.5 G4:0.5 | F4 G4:0.5 F4:0.5 E4 R:1 |
+             E4:0.5 E4:0.5 E4:0.5 E4:0.5 E4 F4:0.5 E4:0.5 | D4 G4 C4 R:1`,
+    chords: 'C G.C C Dm.C C F.C C C',
+  },
+  // Sétálunk, sétálunk — Original C major, 2/4 - no transposition. Single source (no Wikipedia page).
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=SetalunkSetalunk (LilyPond)
+  //   Public domain: Traditional Hungarian game song.
+  {
+    id: 'setalunk-setalunk',
+    country: 'hu',
+    themes: ['children', 'movement'],
+    title: 'Sétálunk, sétálunk',
+    titleEn: 'We Are Walking, Walking',
+    emoji: '🚶',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4 G4:0.5 A4:0.5 | G4 G4:0.5 A4:0.5 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 F4:0.5 E4:0.5 D4:0.5 |
+             C4 R:1`,
+    chords: 'C C C C C',
+  },
+  // Zsipp-zsupp, kenderzsupp — Original C (so-la-so-mi, Wikipedia marks the key as A minor), 2/4 - no transposition. Theisz has the same notes plus one extra closing G; this follows Wikipedia.
+  //   Source: https://hu.wikipedia.org/wiki/Zsipp,_zsupp,_kenderzsupp (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=ZsipZsupKenderZsup (LilyPond)
+  //   Public domain: Traditional; in Kiss Áron's 1891 collection.
+  {
+    id: 'zsipp-zsupp',
+    country: 'hu',
+    themes: ['children', 'movement'],
+    title: 'Zsipp-zsupp, kenderzsupp',
+    titleEn: 'Zsipp-Zsupp, Bundle of Hemp',
+    emoji: '🌾',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4 E4 | G4:0.5 G4:0.5 E4 | G4:0.5 G4:0.5 E4:0.5 E4:0.5 | G4:0.5 G4:0.5 E4`,
+    chords: 'C C C C',
+  },
+  // Tente, baba, tente — Original C major, 2/4 - no transposition. Single source (no Wikipedia page).
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=TenteBabaTente (LilyPond)
+  //   Public domain: Traditional Hungarian lullaby.
+  {
+    id: 'tente-baba-tente',
+    country: 'hu',
+    themes: ['lullaby'],
+    title: 'Tente, baba, tente',
+    titleEn: 'Hush, Baby, Hush',
+    emoji: '🌙',
+    level: 'easy',
+    bpm: 76,
+    beatsPerBar: 2,
+    melody: `G4:0.5 G4:0.5 E4:0.5 E4:0.5 | G4 E4 | G4:0.5 G4:0.5 E4:0.5 E4:0.5 | G4 E4 |
+             G4:0.5 F4:0.5 E4:0.5 D4:0.5 | C4 G4 | G4:0.5 F4:0.5 E4:0.5 D4:0.5 | C4 C4 |
+             G4 E4:0.5 E4:0.5 | G4:0.5 G4:0.5 E4 | G4:0.5 G4:0.5 E4 | G4:0.5 G4:0.5 E4`,
+    chords: 'C C C C C C C C C C C C',
+  },
+  // Hová mégy te, kis nyulacska? — Original C major, 2/4 - no transposition. Both sources agree note for note.
+  //   Source: https://hu.wikipedia.org/wiki/Hová_mégy_te,_kis_nyulacska (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=HovaMegyTeKisNyulacska (LilyPond)
+  //   Public domain: Traditional; collected by Kodály (the tune only).
+  {
+    id: 'hova-megy-te-kis-nyulacska',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Hová mégy te, kis nyulacska?',
+    titleEn: 'Where Are You Going, Little Bunny?',
+    emoji: '🐇',
+    level: 'easy',
+    bpm: 104,
+    beatsPerBar: 2,
+    melody: `G4 G4 | F4 E4 | G4 G4 | F4 E4 |
+             F4:0.5 E4:0.5 D4:0.5 E4:0.5 | C4 D4:0.5 E4:0.5 | F4:0.5 E4:0.5 D4:0.5 E4:0.5 | C4 D4:0.5 E4:0.5 |
+             F4:0.5 E4:0.5 D4 | C4 R:1`,
+    chords: 'C F C F Dm C Dm C Dm C',
+  },
+  // Megfogtam egy szúnyogot — Original D minor, 2/4 - moved up a fifth to A minor. Single source (no Wikipedia page).
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=MegfogtamEgySzunyogot (LilyPond)
+  //   Public domain: Traditional Hungarian folk song.
+  {
+    id: 'megfogtam-egy-szunyogot',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Megfogtam egy szúnyogot',
+    titleEn: 'I Caught a Mosquito',
+    emoji: '🦟',
+    level: 'medium',
+    bpm: 104,
+    beatsPerBar: 2,
+    melody: `A4:0.5 B4:0.5 C5:0.5 B4:0.5 | C5:0.5 B4:0.5 A4 | A4:0.5 B4:0.5 C5:0.5 B4:0.5 | A4 A4 |
+             A4:0.5 B4:0.5 C5:0.5 B4:0.5 | C5:0.5 B4:0.5 A4 | A4:0.5 B4:0.5 C5:0.5 B4:0.5 | A4 A4 |
+             E5:0.5 D5:0.5 C5:0.5 B4:0.5 | C5:0.5 B4:0.5 A4 | A4:0.5 B4:0.5 C5:0.5 D5:0.5 | E5 E5 |
+             E5:0.5 D5:0.5 C5:0.5 B4:0.5 | C5:0.5 B4:0.5 A4 | A4:0.5 B4:0.5 C5:0.5 B4:0.5 | A4 A4`,
+    chords: 'Am Am Am Am Am Am Am Am Am Am Am Am Am Am Am Am',
+  },
+  // A gúnárom elveszett — Original F major, 2/4 - moved down a fourth to C major. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/A_gúnárom_elveszett (LilyPond score)
+  //   Public domain: Traditional; recorded by Vikár Béla in Szegvár in 1898.
+  {
+    id: 'a-gunarom-elveszett',
+    country: 'hu',
+    themes: ['animals'],
+    title: 'A gúnárom elveszett',
+    titleEn: 'My Gander Is Lost',
+    emoji: '🦢',
+    level: 'medium',
+    bpm: 96,
+    beatsPerBar: 2,
+    melody: `G3:0.5 C4:0.5 B3:0.5 C4:0.5 | D4:0.5 E4:0.5 C4 | G3:0.5 C4:0.5 B3:0.5 C4:0.5 | D4:0.5 E4:0.5 C4 |
+             F4:0.5 E4:0.5 D4:0.5 E4:0.5 | F4 G4 | D4 R:1 | D4:0.5 C4:0.5 B3:0.5 C4:0.5 |
+             D4 E4 | C4 R:1`,
+    chords: 'C C C C Dm F G G G C',
+  },
+  // Csicseriborsó, bab, lencse — Original C major, 2/4 - no transposition. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Csicseriborsó,_bab,_lencse (LilyPond score)
+  //   Public domain: Traditional; collected by Manga János.
+  {
+    id: 'csicseriborso',
+    country: 'hu',
+    themes: ['children', 'everyday'],
+    title: 'Csicseriborsó, bab, lencse',
+    titleEn: 'Chickpea, Bean, Lentil',
+    emoji: '🌱',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4 G4:0.5 A4:0.5 | G4 E4 | G4 E4 | G4 R:1 |
+             G4 G4:0.5 A4:0.5 | G4 E4 | G4 E4 | G4 R:1 |
+             G4:0.5 A4:0.5 G4:0.5 F4:0.5 | E4 D4 | G4:0.5 A4:0.5 G4:0.5 F4:0.5 | E4 D4 |
+             E4 D4 | C4 R:1`,
+    chords: 'C C C C C C C C C C C C C C',
+  },
+  // Házasodik a tücsök — Written in E minor (the page displays it a tone lower, in D minor), 2/4 - moved down a fifth to A minor. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Házasodik_a_tücsök (LilyPond score)
+  //   Public domain: Traditional; collected by Bartók (the tune, not his arrangement).
+  {
+    id: 'hazasodik-a-tucsok',
+    country: 'hu',
+    themes: ['animals', 'celebrations'],
+    title: 'Házasodik a tücsök',
+    titleEn: 'The Cricket Is Getting Married',
+    emoji: '🦗',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `A4:0.5 G4:0.5 F4:0.5 E4:0.5 | D4:0.5 E4:0.5 C4 | D4:0.5 D4:0.5 D4:0.5 D4:0.5 | E4 E4 |
+             A4:0.5 G4:0.5 F4:0.5 E4:0.5 | D4:0.5 E4:0.5 C4 | A3:0.5 A3:0.5 G3:0.5 G3:0.5 | A3 A3 |
+             G3:0.5 B3:0.5 G3:0.5 B3:0.5 | C4:0.5 C4:0.5 C4 | D4:0.5 D4:0.5 D4:0.5 D4:0.5 | E4 E4 |
+             A4:0.5 G4:0.5 F4:0.5 E4:0.5 | D4:0.5 E4:0.5 C4 | A3:0.5 A3:0.5 G3:0.5 G3:0.5 | A3 A3`,
+    chords: 'Am Am Dm Am Am Am Am Am G Am Dm Am Am Am Am Am',
+  },
+  // Volt nekem egy kecském — Original D minor, 2/4 - moved down a fourth to A minor. Both sources agree note for note.
+  //   Source: https://hu.wikipedia.org/wiki/Volt_nekem_egy_kecském (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=VoltNekemEgyKecskem (LilyPond)
+  //   Public domain: Traditional; collected by Kodály (the tune only).
+  {
+    id: 'volt-nekem-egy-kecskem',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Volt nekem egy kecském',
+    titleEn: 'I Had a Little Goat',
+    emoji: '🐐',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `A4:0.5 A4:0.5 A4:0.5 G4:0.5 | E4 D4 | G4:0.5 G4:0.5 G4:0.5 R:0.5 | A4:0.5 A4:0.5 A4:0.5 G4:0.5 |
+             E4 D4 | E4:0.5 E4:0.5 E4:0.5 R:0.5 | D4:0.5 D4:0.5 D4:0.5 C4:0.5 | A3 G3 |
+             C4:0.5 C4:0.5 C4:0.5 R:0.5 | D4:0.5 D4:0.5 D4:0.5 C4:0.5 | A3 G3 | A3:0.5 A3:0.5 A3:0.5 R:0.5`,
+    chords: 'Am Am G Am Am Am Dm Am Am Dm Am Am',
+  },
+  // Mackó, mackó, ugorjál! — Original F major, 2/4 - moved down a fourth to C major. Single source (no Wikipedia page).
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=MackoMackoUgorjal (LilyPond)
+  //   Public domain: Traditional Hungarian children's song.
+  {
+    id: 'macko-macko-ugorjal',
+    country: 'hu',
+    themes: ['children', 'animals', 'movement'],
+    title: 'Mackó, mackó, ugorjál!',
+    titleEn: 'Teddy Bear, Jump!',
+    emoji: '🧸',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4:0.5 C4:0.5 D4 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 | C4:0.5 C4:0.5 D4 |
+             E4 D4 | C4 D4 | E4 D4 | C4 R:1`,
+    chords: 'C C C C C C C C',
+  },
+  // Ha én cica volnék — Original C major, 2/4 - no transposition. Single source (no Wikipedia page).
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=HaEnCicaVolnek (LilyPond)
+  //   Public domain: Traditional Hungarian children's song.
+  {
+    id: 'ha-en-cica-volnek',
+    country: 'hu',
+    themes: ['children', 'animals'],
+    title: 'Ha én cica volnék',
+    titleEn: 'If I Were a Kitten',
+    emoji: '🐱',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 |
+             G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 F4:0.5 E4 | E4:0.5 D4:0.5 E4:0.5 D4:0.5 | C4:0.5 C4:0.5 C4`,
+    chords: 'C C C C C C C C',
+  },
+  // Debrecenbe kéne menni — Original C major, 2/4 - no transposition. Both sources agree note for note.
+  //   Source: https://hu.wikipedia.org/wiki/Debrecenbe_kéne_menni (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=DebrecenbeKeneMenni (LilyPond)
+  //   Public domain: Traditional; recorded by Vikár Béla.
+  {
+    id: 'debrecenbe-kene-menni',
+    country: 'hu',
+    themes: ['children', 'animals', 'everyday'],
+    title: 'Debrecenbe kéne menni',
+    titleEn: 'We Should Go to Debrecen',
+    emoji: '🦃',
+    level: 'easy',
+    bpm: 104,
+    beatsPerBar: 2,
+    melody: `G4:0.5 G4:0.5 G4:0.5 G4:0.5 | E4 G4 | C4 C4 | A4:0.5 A4:0.5 A4:0.5 A4:0.5 |
+             F4 A4 | G4 G4 | C5:0.5 G4:0.5 C5:0.5 G4:0.5 | E4 G4 |
+             C4 E4 | F4:0.5 D4:0.5 F4:0.5 D4:0.5 | B3 D4 | C4 C4`,
+    chords: 'C C C F F C C C C Dm G C',
+  },
+  // Sárga csikó — Original C major, 3/4 - no transposition. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Sárga_csikó,_csengő_rajta (LilyPond score)
+  //   Public domain: Traditional; collected by Bartók (the tune, not his arrangement).
+  {
+    id: 'sarga-csiko',
+    country: 'hu',
+    themes: ['animals'],
+    title: 'Sárga csikó',
+    titleEn: 'Yellow Foal',
+    emoji: '🐴',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 3,
+    melody: `C4:0.5 E4:0.5 G4 G4 | G4:0.5 A4:0.5 G4 G4 | D4:0.5 E4:0.5 F4 F4 | E4:0.5 G4:0.5 E4 G4 |
+             C4:0.5 E4:0.5 D4:1.5 F4:0.5 | E4:0.5 D4:0.5 C4 R:1`,
+    chords: 'C C Dm C Dm C',
+  },
+  // Csön-csön gyűrű — Original C major, 2/4 - no transposition. Single source; the volta repeat is written out.
+  //   Source: https://hu.wikipedia.org/wiki/Csön,_csön_gyűrű (LilyPond score)
+  //   Public domain: Traditional ring-passing game song; collected by Sztankó Béla.
+  {
+    id: 'cson-cson-gyuru',
+    country: 'hu',
+    themes: ['children', 'movement'],
+    title: 'Csön-csön gyűrű',
+    titleEn: 'Ring, Ring, Little Ring',
+    emoji: '💍',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4 A4 | G4 E4 | G4 A4 | G4 E4 |
+             G4 A4 | G4 E4 | G4 A4 | G4 E4 |
+             G4 E4:0.5 F4:0.5 | G4 E4:0.5 F4:0.5 | G4 E4 | G4 R:1`,
+    chords: 'C C C C C C C C C C C C',
+  },
+  // Mit mos, mit mos Levél Katicája? — Original F major, 4/4 - moved down a fourth to C major. Single source; both volta repeats are written out.
+  //   Source: https://hu.wikipedia.org/wiki/Mit_mos,_Levél_Katicája? (LilyPond score)
+  //   Public domain: Traditional; in Kiss Áron's 1891 collection.
+  {
+    id: 'mit-mos-mit-mos',
+    country: 'hu',
+    themes: ['movement', 'everyday'],
+    title: 'Mit mos, mit mos Levél Katicája?',
+    titleEn: 'What Is Kati Levél Washing?',
+    emoji: '🧼',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 4,
+    melody: `G4 E4 G4 E4 | F4:0.5 E4:0.5 D4:0.5 E4:0.5 C4 G3 |
+             G4 E4 G4 E4 | F4:0.5 E4:0.5 D4:0.5 E4:0.5 C4 G3 |
+             C4 D4 E4 F4 | E4 D4 D4 C4 |
+             C4 D4 E4 F4 | E4 D4 D4 C4 |
+             G4:0.5 G4:0.5 G4:0.5 A4:0.5 G4:0.5 E4:0.5 E4:0.5 C4:0.5 | E4:0.5 E4:0.5 D4:0.5 D4:0.5 C4 C4`,
+    chords: 'C C C C C C.G C C.G C C',
+  },
+  // Fehér liliomszál — Original D mixolydian, 2/4 - moved down a tone to C mixolydian. Single source (first of the page's scores); the three-time volta repeat is written out.
+  //   Source: https://hu.wikipedia.org/wiki/Fehér_liliomszál,_ugorj_a_Dunába (LilyPond score)
+  //   Public domain: Traditional game song; collected by Gerzanics Magdolna.
+  {
+    id: 'feher-liliomszal',
+    country: 'hu',
+    themes: ['children', 'movement'],
+    title: 'Fehér liliomszál',
+    titleEn: 'White Lily Stem',
+    emoji: '🌸',
+    level: 'easy',
+    bpm: 104,
+    beatsPerBar: 2,
+    melody: `G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 |
+             G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 |
+             G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 |
+             G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 F4:0.5 E4:0.5 D4:0.5 | C4 C4`,
+    chords: 'C C C C C C C C C C C C C C C C',
+  },
+  // Megy a gőzös — Original C major, 4/4 - no transposition. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Megy_a_gőzös_Kanizsára (LilyPond score)
+  //   Public domain: Traditional; collected by Kodály (the tune only).
+  {
+    id: 'megy-a-gozos',
+    country: 'hu',
+    themes: ['children', 'movement', 'everyday'],
+    title: 'Megy a gőzös',
+    titleEn: 'The Steam Train Is Going',
+    emoji: '🚂',
+    level: 'medium',
+    bpm: 108,
+    beatsPerBar: 4,
+    melody: `C4:0.5 C4:0.5 E4:0.5 C4:0.5 G4:0.5 G4:0.5 A4:0.5 G4:0.5 | F4:0.5 E4:0.5 D4 C4 R:1 |
+             C4:0.5 C4:0.5 E4:0.5 C4:0.5 G4:0.5 G4:0.5 A4:0.5 G4:0.5 | F4:0.5 E4:0.5 D4 C4 R:1 |
+             F4:0.5 G4:0.5 A4 A4:2 | C5:0.5 B4:0.5 A4 G4 R:1 |
+             C5:0.5 G4:0.5 E4:0.5 C4:0.5 G4:0.5 G4:0.5 A4:0.5 G4:0.5 | F4:0.5 E4:0.5 D4 C4 R:1`,
+    chords: 'C Dm.C C Dm.C F F.C C C',
+  },
+  // Virágéknál ég a világ — Original F major, 2/4 - moved down a fourth to C major. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Virágéknál_ég_a_világ (LilyPond score)
+  //   Public domain: Traditional; collected by Ziegler Márta.
+  {
+    id: 'virageknal-eg-a-vilag',
+    country: 'hu',
+    themes: ['everyday'],
+    title: 'Virágéknál ég a világ',
+    titleEn: 'The Lights Are On at the Virágs\'',
+    emoji: '🐸',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `C4:0.5 C4:0.5 C4:0.5 C4:0.5 | C4:0.5 D4:0.5 E4:0.5 C4:0.5 | D4:0.5 D4:0.5 D4:0.5 D4:0.5 | G4:0.5 F4:0.5 E4:0.5 D4:0.5 |
+             C4:0.5 C4:0.5 G3 | C4:0.5 C4:0.5 G3 | A3:0.5 F4:0.5 E4:0.5 D4:0.5 | C4:0.5 C4:0.5 C4`,
+    chords: 'C C G C C C Dm C',
+  },
+  // Kiment a ház az ablakon — Original C major, 2/4 - no transposition. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Kiment_a_ház_az_ablakon (LilyPond score)
+  //   Public domain: Traditional nonsense song; recorded by Vikár Béla.
+  {
+    id: 'kiment-a-haz-az-ablakon',
+    country: 'hu',
+    themes: ['children', 'everyday'],
+    title: 'Kiment a ház az ablakon',
+    titleEn: 'The House Went Out the Window',
+    emoji: '🏠',
+    level: 'easy',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4:0.5 G4:0.5 F4:0.5 E4:0.5 | G4:0.5 G4:0.5 A4 | G4 R:1 | G4:0.5 G4:0.5 F4:0.5 E4:0.5 |
+             G4:0.5 G4:0.5 F4 | E4 R:1 | E4:0.5 E4:0.5 D4:0.5 C4:0.5 | E4:0.5 E4:0.5 F4 |
+             E4 R:1 | E4:0.5 E4:0.5 D4:0.5 C4:0.5 | E4:0.5 E4:0.5 D4 | C4 R:1`,
+    chords: 'C C C C C C C C C C C C',
+  },
+  // Hej, Vargáné káposztát főz — Written in C dorian (the page displays it a tone higher), 3/4 - moved up a tone to D dorian. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Hej,_Vargáné_káposztát_főz (LilyPond score)
+  //   Public domain: Traditional; collected by Bartók (the tune, not his arrangement).
+  {
+    id: 'hej-vargane',
+    country: 'hu',
+    themes: ['everyday'],
+    title: 'Hej, Vargáné káposztát főz',
+    titleEn: 'Mrs Varga Is Cooking Cabbage',
+    emoji: '🥬',
+    level: 'medium',
+    bpm: 104,
+    beatsPerBar: 3,
+    melody: `D4:0.5 D4:0.5 D4 D4 | D5:0.5 A4:0.5 A4 A4 | A4:0.5 B4:0.5 C5 G4 | F4:0.5 E4:0.5 D4 D4 |
+             F4:0.5 C4:0.5 F4 G4 | A4:0.5 A4:0.5 A4 A4 | D4:0.5 E4:0.5 F4 G4 | F4:0.5 E4:0.5 D4 D4`,
+    chords: 'Dm Dm C Dm F Dm Dm Dm',
+  },
+  // Három szabólegények — Original G major, 2/4 - moved down a fifth to C major. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Három_szabó_legények (LilyPond score)
+  //   Public domain: Traditional; collected by Sándor Emma.
+  {
+    id: 'harom-szabolegenyek',
+    country: 'hu',
+    themes: ['everyday'],
+    title: 'Három szabólegények',
+    titleEn: 'Three Tailor Lads',
+    emoji: '🧵',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `C4:0.5 C4:0.5 C4:0.5 D4:0.5 | C4:0.5 A3:0.5 G3 | D4:0.5 D4:0.5 D4:0.5 R:0.5 | D4:0.5 E4:0.5 F4:0.5 F4:0.5 |
+             E4:0.5 F4:0.5 G4 | C4:0.5 C4:0.5 C4:0.5 R:0.5 | E4 G4 | C4 G3 |
+             C4:0.5 C4:0.5 D4:0.5 D4:0.5 | E4:0.5 E4:0.5 F4:0.5 D4:0.5 | C4:0.5 C4:0.5 C4:0.5 G3:0.5 | C4:0.5 C4:0.5 C4:0.5 R:0.5`,
+    chords: 'C C G Dm C C C C C C C C',
+  },
+  // Hej, Dunáról fúj a szél — Original D minor, 2/4 - moved down a fourth to A minor. Both sources agree note for note.
+  //   Source: https://hu.wikipedia.org/wiki/Hej,_Dunáról_fúj_a_szél (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=HejDunarolFujASzel (LilyPond)
+  //   Public domain: Traditional; collected by Bartók, Kodály and Vikár László (the tune only).
+  {
+    id: 'hej-dunarol-fuj-a-szel',
+    country: 'hu',
+    themes: ['everyday'],
+    title: 'Hej, Dunáról fúj a szél',
+    titleEn: 'Hey, the Wind Blows from the Danube',
+    emoji: '🌬️',
+    level: 'medium',
+    bpm: 96,
+    beatsPerBar: 2,
+    melody: `A4:0.5 A4:0.5 G4:0.5 E4:0.5 | A4:0.5 A4:0.5 G4 | A4:0.5 A4:0.5 G4:0.5 E4:0.5 | A4:0.5 A4:0.5 G4 |
+             A4:0.5 E4 D4:0.5 | E4:0.5 E4:0.5 E4 | D4:0.5 D4:0.5 C4:0.5 A3:0.5 | D4:0.5 D4:0.5 C4 |
+             D4:0.5 D4:0.5 C4:0.5 A3:0.5 | D4:0.5 D4:0.5 C4 | D4:0.5 A3 G3:0.5 | A3:0.5 A3:0.5 A3`,
+    chords: 'Am Am Am Am Am Am Dm Dm Dm Dm Dm Am',
+  },
+  // Aludj, baba, aludjál! — Original C major, 2/4 - no transposition. Single source (no Wikipedia page).
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=AludjBabaAludjal (LilyPond)
+  //   Public domain: Traditional Hungarian lullaby.
+  {
+    id: 'aludj-baba-aludjal',
+    country: 'hu',
+    themes: ['lullaby'],
+    title: 'Aludj, baba, aludjál!',
+    titleEn: 'Sleep, Baby, Sleep',
+    emoji: '💤',
+    level: 'easy',
+    bpm: 76,
+    beatsPerBar: 2,
+    melody: `G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 G4:0.5 E4 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4 E4 |
+             G4:0.5 A4:0.5 G4:0.5 F4:0.5 | E4:0.5 E4:0.5 D4 | C4:0.5 D4:0.5 E4:0.5 D4:0.5 | C4 C4`,
+    chords: 'C C C C C C C C',
+  },
+  // Csillagok, csillagok — Original A minor, 4/4 - no transposition. Same pitches in both; theisz ends each line with a half note + rest where Wikipedia has two half notes.
+  //   Source: https://hu.wikipedia.org/wiki/Csillagok,_csillagok (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=CsillagokCsillagok (LilyPond)
+  //   Public domain: Traditional; collected by Bartók (the tune, not his arrangement).
+  {
+    id: 'csillagok-csillagok',
+    country: 'hu',
+    themes: ['lullaby'],
+    title: 'Csillagok, csillagok',
+    titleEn: 'Stars, Stars',
+    emoji: '✨',
+    level: 'medium',
+    bpm: 72,
+    beatsPerBar: 4,
+    melody: `A4:0.5 A4:0.5 B4:0.5 A4:0.5 E4:0.5 C4:1.5 | A4 G4 E4:0.5 D4:1.5 |
+             A3:2 A3:2 | C5:0.5 B4:0.5 A4:0.5 B4:0.5 G4 G4 |
+             A4:0.5 B4:1.5 C5:0.5 A4:1.5 | E4:2 E4:2 |
+             C5:0.5 B4:0.5 A4:0.5 B4:0.5 G4:0.5 G4:1.5 | A4:1.5 B4:0.5 C5 A4 |
+             E4:2 C4:2 | A4:0.5 A4:0.5 B4:0.5 A4:0.5 E4 C4 |
+             A4:1.5 G4:0.5 E4:0.5 D4:1.5 | A3:2 A3:2`,
+    chords: 'Am Dm Am G Am Am G Am Am Am Dm Am',
+  },
+  // Két szál pünkösdrózsa — Original D dorian, 2/4 - no transposition. Single source.
+  //   Source: https://hu.wikipedia.org/wiki/Két_szál_pünkösdrózsa (LilyPond score)
+  //   Public domain: Traditional Pentecost song; recorded by Vikár Béla.
+  {
+    id: 'ket-szal-punkosdrozsa',
+    country: 'hu',
+    themes: ['celebrations'],
+    title: 'Két szál pünkösdrózsa',
+    titleEn: 'Two Stems of Peony',
+    emoji: '🌺',
+    level: 'medium',
+    bpm: 92,
+    beatsPerBar: 2,
+    melody: `D5 A4 | A4:0.5 B4:0.5 C5:0.5 A4:0.5 | D5 A4 | A4:0.5 B4:0.5 C5:0.5 A4:0.5 |
+             G4 A4 | F4:0.5 F4:0.5 E4:0.5 D4:0.5 | G4:0.5 G4:0.5 F4:0.5 E4:0.5 | D4 D4`,
+    chords: 'Dm Am Dm Am C Dm C Dm',
+  },
+  // Érik a szőlő — Original A minor, 2/4 - no transposition. Same pitches in both; theisz adds a 1/4 rest bar after each half, which is left out here.
+  //   Source: https://hu.wikipedia.org/wiki/Érik_a_szőlő,_hajlik_a_vessző (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=ErikASzolo (LilyPond)
+  //   Public domain: Traditional; collected by Bartók (the tune, not his arrangement).
+  {
+    id: 'erik-a-szolo',
+    country: 'hu',
+    themes: ['everyday'],
+    title: 'Érik a szőlő',
+    titleEn: 'The Grapes Are Ripening',
+    emoji: '🍇',
+    level: 'medium',
+    bpm: 96,
+    beatsPerBar: 2,
+    melody: `D5 D5:0.5 A4:0.5 | D5 E5 | C5 C5:0.5 D5:0.5 | E5 D5 |
+             C5:0.5 B4:0.5 A4 | A4:0.5 D5:0.5 A4 | G4 G4:0.5 D4:0.5 | G4 A4 |
+             F4 F4:0.5 G4:0.5 | A4 G4 | F4:0.5 E4:0.5 D4 | D4:0.5 G4:0.5 D4`,
+    chords: 'Dm Dm C C Am Dm G C Dm Dm Dm Dm',
+  },
+  // Hull a szilva a fáról — Original D minor, 2/4 - moved down a fourth to A minor. Both sources agree note for note.
+  //   Source: https://hu.wikipedia.org/wiki/Hull_a_szilva_a_fáról (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=HullASzilvaAFarol (LilyPond)
+  //   Public domain: Traditional; collected by Domokos Pál Péter.
+  {
+    id: 'hull-a-szilva-a-farol',
+    country: 'hu',
+    themes: ['everyday'],
+    title: 'Hull a szilva a fáról',
+    titleEn: 'Plums Are Falling from the Tree',
+    emoji: '🌳',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `A3:0.5 A3:0.5 A4:0.5 A4:0.5 | G4:0.5 A4 A4:0.5 | D4:0.5 D4:0.5 G4:0.5 F4:0.5 | E4:0.5 E4 A3:0.5 |
+             D4 G4:0.5 F4:0.5 | E4:0.5 D4:0.5 C4:0.5 G3:0.5 | C4:0.5 C4:0.5 D4:0.5 C4:0.5 | A3 A3:0.5 R:0.5`,
+    chords: 'Am Am Dm Am Dm C Am Am',
+  },
+  // Esik az eső, hajlik a vessző — Original C major, 2/4 - no transposition. Single source (first score on the page).
+  //   Source: https://hu.wikipedia.org/wiki/Esik_az_eső,_hajlik_a_vessző (LilyPond score)
+  //   Public domain: Traditional; collected by Volly István.
+  {
+    id: 'esik-az-eso',
+    country: 'hu',
+    themes: ['children', 'everyday'],
+    title: 'Esik az eső, hajlik a vessző',
+    titleEn: 'Rain Is Falling, the Twig Is Bending',
+    emoji: '🌧️',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `G4 G4:0.5 A4:0.5 | G4 E4 | G4 G4:0.5 A4:0.5 | G4 E4 |
+             G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 F4:0.5 E4:0.5 R:0.5 | E4:0.5 D4:0.5 E4:0.5 D4:0.5 | C4:0.5 C4:0.5 C4:0.5 R:0.5 |
+             G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 G4:0.5 E4:0.5 R:0.5 | G4:0.5 G4:0.5 G4:0.5 A4:0.5 | G4:0.5 G4:0.5 E4:0.5 R:0.5 |
+             E4:0.5 D4:0.5 E4:0.5 D4:0.5 | C4:0.5 C4:0.5 C4:0.5 R:0.5`,
+    chords: 'C C C C C C C C C C C C C C',
+  },
+  // Hull a pelyhes fehér hó — Original D major, 4/4 - moved down a tone to C major. Both sources agree note for note (theisz writes 2/4).
+  //   Source: https://hu.wikipedia.org/wiki/Hull_a_pelyhes_fehér_hó (LilyPond score)
+  //   Source: https://dalok.theisz.hu/index.php?lang=hu&page=song&id=HullAPelyhes (LilyPond)
+  //   Public domain: Tune: 18th-century French "Ah! vous dirai-je, maman" (public domain). Only the tune is used; the Hungarian text by Rossa Ernő is not.
+  {
+    id: 'hull-a-pelyhes',
+    country: 'hu',
+    themes: ['christmas', 'children'],
+    title: 'Hull a pelyhes fehér hó',
+    titleEn: 'Fluffy White Snow Is Falling',
+    emoji: '❄️',
+    level: 'easy',
+    bpm: 96,
+    beatsPerBar: 4,
+    melody: `C4:0.5 C4:0.5 G4:0.5 G4:0.5 A4:0.5 A4:0.5 G4 | F4:0.5 F4:0.5 E4:0.5 E4:0.5 D4:0.5 D4:0.5 C4 |
+             C4:0.5 C4:0.5 G4:0.5 G4:0.5 A4:0.5 A4:0.5 G4 | F4:0.5 F4:0.5 E4:0.5 E4:0.5 D4:0.5 D4:0.5 C4 |
+             G4:0.5 G4:0.5 F4:0.5 F4:0.5 E4:0.5 E4:0.5 D4 | G4:0.5 G4:0.5 F4:0.5 F4:0.5 E4:0.5 E4:0.5 D4 |
+             C4:0.5 C4:0.5 G4:0.5 G4:0.5 A4:0.5 A4:0.5 G4 | F4:0.5 F4:0.5 E4:0.5 E4:0.5 D4:0.5 D4:0.5 C4`,
+    chords: 'C F C F C C C C',
+  },
+  // Csendes éj — Original Bb major, 3/4 - moved up a tone to C major. Single source; repeat written out. Top note F5 is one step above the usual range.
+  //   Source: https://hu.wikipedia.org/wiki/Csendes_éj_(dal) (LilyPond score)
+  //   Public domain: Franz Xaver Gruber (d. 1863), text Joseph Mohr (d. 1848).
+  {
+    id: 'csendes-ej',
+    country: 'hu',
+    themes: ['christmas', 'lullaby'],
+    title: 'Csendes éj',
+    titleEn: 'Silent Night',
+    emoji: '🎄',
+    level: 'medium',
+    bpm: 84,
+    beatsPerBar: 3,
+    melody: `G4:1.5 A4:0.5 G4 | E4:3 | G4:1.5 A4:0.5 G4 | E4:3 |
+             D5:2 D5 | B4:3 | C5:2 C5 | G4:3 |
+             A4:2 A4 | C5:1.5 B4:0.5 A4 | G4:1.5 A4:0.5 G4 | E4:3 |
+             A4:2 A4 | C5:1.5 B4:0.5 A4 | G4:1.5 A4:0.5 G4 | E4:3 |
+             D5:1.5 D5:0.5 D5 | F5:1.5 D5:0.5 B4 | C5:3 | E5:3 |
+             C5:1.5 G4:0.5 E4 | G4:1.5 F4:0.5 D4 | C4:3`,
+    chords: 'C C C C G G C C F F C C F F C C G Dm C C C G C',
+  },
 ];
