@@ -6,10 +6,11 @@
 
 import { SONGS_HU } from './songs-hu.js';
 import { SONGS_SE_EXTRA } from './songs-se-extra.js';
+import { SONGS_ANTHEMS } from './songs-anthems.js';
 
 export const LEVELS = ['easy', 'medium', 'hard'];
 export const COUNTRIES = ['se', 'hu'];
-export const THEMES = ['children', 'animals', 'movement', 'everyday', 'lullaby', 'celebrations', 'christmas', 'lucia', 'midsummer'];
+export const THEMES = ['children', 'animals', 'movement', 'everyday', 'lullaby', 'celebrations', 'christmas', 'lucia', 'midsummer', 'anthems'];
 
 const SONGS_SE = [
   {
@@ -345,4 +346,4 @@ const SONGS_SE = [
   },
 ];
 
-export const SONGS = [...SONGS_SE, ...SONGS_SE_EXTRA, ...SONGS_HU];
+export const SONGS = [...SONGS_SE, ...SONGS_SE_EXTRA, ...SONGS_HU, ...SONGS_ANTHEMS];

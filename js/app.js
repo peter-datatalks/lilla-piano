@@ -47,7 +47,7 @@ const LEVEL_STYLE = {
 const COUNTRY_FLAG = { se: '🇸🇪', hu: '🇭🇺' };
 const THEME_EMOJI = {
   all: '🎵', children: '🧸', animals: '🐾', movement: '💃', everyday: '🏡', lullaby: '🌙',
-  celebrations: '🎉', christmas: '🎄', lucia: '🕯️', midsummer: '🌸',
+  celebrations: '🎉', christmas: '🎄', lucia: '🕯️', midsummer: '🌸', anthems: '🎺',
 };
 
 const app = $('#app');
