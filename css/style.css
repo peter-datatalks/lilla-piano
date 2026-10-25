@@ -1039,3 +1039,23 @@ input { user-select: text; -webkit-user-select: text; font: inherit; }
 .key.black.lh-zone.down,
 .key.black.lh-zone.playing,
 .key.black.lh-zone.target { background: var(--kc); }
+
+/* right-hand badge on the selected instrument when the hands differ (mirrors the L badge) */
+.inst-btn { position: relative; }
+.rh-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--right-hand);
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+}
+.instruments { padding-right: 8px; } /* room for the badge */

@@ -127,7 +127,8 @@ function renderInstruments() {
     b.setAttribute('role', 'radio');
     b.setAttribute('aria-checked', inst.id === state.instrument);
     b.setAttribute('aria-label', t(`inst.${inst.id}`));
-    b.innerHTML = `<span class="inst-icon">${iconFor(inst.id)}</span><span class="inst-name">${t(`inst.${inst.id}`)}</span>`;
+    const rBadge = inst.id === state.instrument && splitActive() ? `<span class="rh-badge">${t('handR')}</span>` : '';
+    b.innerHTML = `<span class="inst-icon">${iconFor(inst.id)}</span><span class="inst-name">${t(`inst.${inst.id}`)}</span>${rBadge}`;
     b.onclick = () => selectInstrument(inst.id);
     box.append(b);
   }
