@@ -235,4 +235,29 @@ export const SONGS_SE_EXTRA = [
              C4 C4 C4 C4:2 E4 | G4:2 E4 C4:2 C4 | D4:2 D4 G3:2 G3 | C4:3 C4:3`,
     chords: 'C C G G C C G C',
   },
+  // Vi äro musikanter — traditional Swedish singing game (Sven Lampa, Folklekar från Västergötland 1908–34).
+  //   Source: https://www.mamalisa.com/?p=5090&t=es (score image + MIDI; all 81 notes checked against the MIDI)
+  //   Chords: https://svenskabarnvisor.se/vi_aro_musikanter.html (D and A, here C and G)
+  //   Original D major, 4/4 with a one-beat pickup — moved down a tone to C. Verse ×2, instrument part ×2, "bom-faderalla" refrain.
+  //   Related to, but not the same melody as, the German "Musikantenlied" (Erk & Irmer 1838).
+  {
+    id: 'vi-aro-musikanter',
+    country: 'se',
+    themes: ['children', 'movement', 'midsummer', 'christmas'],
+    title: 'Vi äro musikanter',
+    titleEn: 'We Are Musicians',
+    emoji: '🥁',
+    level: 'easy',
+    bpm: 108,
+    beatsPerBar: 4,
+    pickup: 1,
+    melody: `G3 |
+             C4:1.5 C4:0.5 C4 D4 | E4:2 E4 E4 | D4 C4 D4 E4 | C4:3 G3 |
+             C4:1.5 C4:0.5 C4 D4 | E4:2 E4 E4 | D4 C4 D4 E4 | C4:4 |
+             E4:2 G4:2 | E4:2 G4:2 | D4:1.5 D4:0.5 D4 D4 | E4 D4 C4:2 |
+             E4:2 G4:2 | E4:2 G4:2 | D4:1.5 D4:0.5 D4 D4 | C4:2 R:1 G3 |
+             C4 C4 C4 D4 | E4 E4:0.5 E4:0.5 E4 E4 | D4 D4:0.5 D4:0.5 D4 D4 | C4 C4:0.5 C4:0.5 C4 G3 |
+             C4 C4 C4 D4 | E4 E4:0.5 E4:0.5 E4 E4 | D4 D4:0.5 D4:0.5 G4 G4 | C4:3`,
+    chords: 'C C G C C C G C C C G C C C G C C C G C C C G C',
+  },
 ];
