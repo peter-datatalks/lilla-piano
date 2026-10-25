@@ -183,7 +183,19 @@ async function saveOffline() {
 }
 
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
+  const hadWorker = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.register('sw.js').then((reg) => reg.update()).catch(() => {});
+  // A new version took over: reload once so it shows straight away (but never in the middle of a song).
+  let reloading = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadWorker || reloading) return;
+    reloading = true;
+    const tryReload = () => {
+      if (state.mode === 'idle' && $('#celebrate').classList.contains('hidden')) location.reload();
+      else setTimeout(tryReload, 2000);
+    };
+    tryReload();
+  });
 }
 
 /* ---------- views ---------- */

@@ -1,10 +1,11 @@
 // Service worker: makes Lilla Piano work offline once it has been opened online.
-// - App files: served from cache, refreshed in the background (new versions show on the next start).
+// - App files: network first (always the newest version when online), cached copy when offline
+//   or when the network takes longer than 3 seconds.
 // - Google Fonts: cached the first time they load.
 // - Instrument samples are cached by js/samples.js itself (Cache Storage "lp-samples-v1").
 
 // Bump the version when releasing so every device downloads the new app files.
-const SHELL = 'lp-shell-v9';
+const SHELL = 'lp-shell-v10';
 const FONTS = 'lp-fonts-v1';
 
 const APP_FILES = [
@@ -57,9 +58,9 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(cacheFirst(FONTS, req));
     return;
   }
-  // our own files: stale-while-revalidate
+  // our own files: network first, cache as fallback
   if (url.origin === self.location.origin) {
-    event.respondWith(staleWhileRevalidate(SHELL, req));
+    event.respondWith(networkFirst(SHELL, req));
   }
   // everything else (instrument samples) goes to the network; samples.js caches those itself
 });
@@ -73,13 +74,15 @@ async function cacheFirst(name, req) {
   return res;
 }
 
-async function staleWhileRevalidate(name, req) {
+async function networkFirst(name, req) {
   const cache = await caches.open(name);
-  const hit = await cache.match(req, { ignoreSearch: true });
-  const update = fetch(req, { cache: 'no-cache' })
+  const network = fetch(req, { cache: 'no-cache' })
     .then((res) => { if (res.ok) cache.put(req, res.clone()); return res; })
     .catch(() => null);
-  if (hit) return hit;
-  const res = await update;
-  return res || (req.mode === 'navigate' ? cache.match('index.html') : Response.error());
+  const slow = new Promise((resolve) => setTimeout(() => resolve(null), 3000));
+  const res = await Promise.race([network, slow]);
+  if (res) return res;
+  const hit = (await cache.match(req, { ignoreSearch: true }))
+    || (req.mode === 'navigate' ? await cache.match('index.html') : null);
+  return hit || (await network) || Response.error();
 }
