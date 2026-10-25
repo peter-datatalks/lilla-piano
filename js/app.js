@@ -5,6 +5,7 @@ import { SONGS, LEVELS, COUNTRIES, THEMES } from './songs.js';
 import { buildSong, fitRange, noteColor, noteName, setNoteNames } from './music.js';
 import { LANGS, t, getLang, setLang, translateDom, songTitles } from './i18n.js';
 import { brandHTML, brandMini } from './brand.js';
+import { getName, setName, hasAskedName, recordPlay, favourites, track } from './profile.js';
 import { Keyboard } from './keyboard.js';
 import { Cascade } from './cascade.js';
 import { SheetView } from './sheet.js';
@@ -100,6 +101,7 @@ function selectInstrument(id) {
   state.instrument = id;
   if (!state.recent.includes(id)) state.recent = [id, ...state.recent].slice(0, 6);
   store.set('instrument', id);
+  track('instrument', { instrument: id });
   store.set('recent', state.recent);
   renderInstruments();
   preloadCurrent();
@@ -315,6 +317,26 @@ function renderLibrary() {
   }
   lib.append(countries, themes);
 
+  // greeting + favourites (the 5 songs this device plays most)
+  const name = getName();
+  const hello = document.createElement('button');
+  hello.className = 'hello-chip';
+  hello.innerHTML = name ? `👋 ${t('hi').replace('{name}', escapeHtml(name))} <span>✏️</span>` : `👋 ${t('whoPlays')} <span>✏️</span>`;
+  hello.onclick = () => openWelcome(true);
+  lib.querySelector('.library-brand').after(hello);
+  const favs = favourites(5).map((id) => SONGS.find((s) => s.id === id)).filter(Boolean);
+  if (favs.length && state.country === 'all' && state.theme === 'all') {
+    const sec = document.createElement('section');
+    sec.className = 'level favourites';
+    sec.style.setProperty('--lc', 'oklch(80% 0.13 85)');
+    sec.innerHTML = `<h2 class="level-title"><span class="stars">❤️</span>${name ? t('favouritesOf').replace('{name}', escapeHtml(name)) : t('favourites')}<small>${t('favouritesDesc')}</small></h2>`;
+    const grid = document.createElement('div');
+    grid.className = 'song-grid';
+    favs.forEach((s) => grid.append(songCard(s, true)));
+    sec.append(grid);
+    lib.append(sec);
+  }
+
   const visible = SONGS.filter((s) => inCountry(s) && inTheme(s));
   if (!visible.length) {
     const p = document.createElement('p');
@@ -332,21 +354,49 @@ function renderLibrary() {
     sec.innerHTML = `<h2 class="level-title"><span class="stars">${'★'.repeat(style.stars)}</span>${t(`level.${lvl}`)}<small>${t(`levelDesc.${lvl}`)}</small></h2>`;
     const grid = document.createElement('div');
     grid.className = 'song-grid';
-    for (const s of songs) {
-      const { main, sub } = songTitles(s);
-      const done = state.done[s.id] || {};
-      const b = document.createElement('button');
-      b.className = 'song-card';
-      b.innerHTML = `<span class="song-flag">${COUNTRY_FLAG[s.country] || ''}</span>
-        <span class="song-emoji">${s.emoji}</span>
-        <span class="song-name">${main}</span>${sub ? `<span class="song-sub">${sub}</span>` : ''}
-        <span class="song-done">${done.one ? '☝️' : ''}${done.two ? '🙌' : ''}${done.chords ? '💪' : ''}</span>`;
-      b.onclick = () => { unlock(); askHands(s); };
-      grid.append(b);
-    }
+    for (const s of songs) grid.append(songCard(s));
     sec.append(grid);
     lib.append(sec);
   }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+function songCard(s, ownColour = false) {
+  const { main, sub } = songTitles(s);
+  const done = state.done[s.id] || {};
+  const b = document.createElement('button');
+  b.className = 'song-card';
+  if (ownColour) b.style.setProperty('--lc', LEVEL_STYLE[s.level].color);
+  b.innerHTML = `<span class="song-flag">${COUNTRY_FLAG[s.country] || ''}</span>
+    <span class="song-emoji">${s.emoji}</span>
+    <span class="song-name">${main}</span>${sub ? `<span class="song-sub">${sub}</span>` : ''}
+    <span class="song-done">${done.one ? '☝️' : ''}${done.two ? '🙌' : ''}${done.chords ? '💪' : ''}</span>`;
+  b.onclick = () => { unlock(); askHands(s); };
+  return b;
+}
+
+/* ---------- name: ask on the first visit, greet afterwards ---------- */
+
+function openWelcome(editing = false) {
+  $('#welcome-name').value = getName();
+  $('#welcome-sheet').dataset.editing = editing;
+  $('#welcome-sheet').classList.remove('hidden');
+  setTimeout(() => $('#welcome-name').focus(), 50);
+}
+
+function closeWelcome() { $('#welcome-sheet').classList.add('hidden'); }
+
+function greet() {
+  const name = getName();
+  if (!name) return;
+  const toast = $('#greeting');
+  toast.innerHTML = `<img src="assets/moose.png" alt="">${t('hiBig').replace('{name}', escapeHtml(name))}`;
+  toast.classList.remove('hidden');
+  clearTimeout(greet.timer);
+  greet.timer = setTimeout(() => toast.classList.add('hidden'), 3500);
 }
 
 /* ---------- one or two hands? ---------- */
@@ -418,6 +468,8 @@ function listen() {
   if (state.mode === 'listen') { stopAll(); return; }
   stopAll();
   unlock();
+  recordPlay(state.song.id);
+  track('listen', songEvent());
   state.mode = 'listen';
   const b = state.built;
   const spb = 60 / (state.song.bpm * (state.slow ? 0.7 : 1));
@@ -462,9 +514,14 @@ function listen() {
 }
 
 /* guided: notes fall to the keyboard and wait for the child */
+// What gets logged with each song event.
+const songEvent = () => ({ song: state.song.id, hands: state.hands, view: state.songView, instrument: state.instrument });
+
 function startGuided() {
   stopAll();
   unlock();
+  recordPlay(state.song.id);
+  track('play', songEvent());
   state.mode = 'guided';
   state.guided = { i: 0, hit: new Set(), lastInput: performance.now() };
   $('#btn-play').classList.remove('pulse');
@@ -515,6 +572,7 @@ setInterval(() => {
 function finish() {
   setProgress(1);
   state.done[state.song.id] = { ...state.done[state.song.id], [state.hands]: true };
+  track('complete', songEvent());
   store.set('done', state.done);
   stopAll();
   cascade.current = -1;
@@ -683,6 +741,7 @@ fsBtn.onclick = () => {
 };
 
 window.addEventListener('keydown', (e) => {
+  if (e.target.closest?.('input, textarea')) return;
   if (e.key === 'Escape' && !$('#inst-sheet').classList.contains('hidden')) { closeSheet(); return; }
   if (e.key === 'Escape' && !$('#hands-sheet').classList.contains('hidden')) { closeHands(); return; }
   if (e.key === 'Escape' && state.view === 'song') setView('library');
@@ -723,4 +782,19 @@ function applyLang(lang) {
 
 applyLang(store.get('lang', 'en'));
 setSongView(state.songView);
+
+$('#welcome-form').onsubmit = (e) => {
+  e.preventDefault();
+  const name = setName($('#welcome-name').value);
+  closeWelcome();
+  if (state.view === 'library') renderLibrary();
+  if (name) greet();
+};
+$('#welcome-skip').onclick = () => {
+  if ($('#welcome-sheet').dataset.editing !== 'true') setName('');
+  closeWelcome();
+};
+track('visit');
+if (!hasAskedName()) openWelcome();
+else greet();
 setView('free');

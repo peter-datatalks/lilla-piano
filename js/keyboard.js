@@ -44,8 +44,9 @@ export class Keyboard {
     el.addEventListener('contextmenu', (e) => e.preventDefault());
     el.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
 
+    const typing = (e) => e.target.closest?.('input, textarea, [contenteditable]');
     window.addEventListener('keydown', (e) => {
-      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.repeat || e.metaKey || e.ctrlKey || e.altKey || typing(e)) return;
       const off = COMPUTER_KEYS[e.key.toLowerCase()];
       if (off == null) return;
       const m = this.lo - pc(this.lo) + off;

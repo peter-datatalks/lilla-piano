@@ -31,6 +31,26 @@ for offline mode and "Add to Home Screen" to work.
 When you release a new version, bump `SHELL` in `sw.js` (e.g. `lp-shell-v2` → `lp-shell-v3`)
 so installed copies pick up the new files.
 
+## Players, favourites and statistics
+
+- **Name and greeting:** on the first visit the app asks for a name. It's stored on that device, and the app says hi on later visits.
+- **Favourites:** the library shows the 5 songs most played on the device.
+- **Usage events:** visits, plays, listens, finished songs and instrument changes are queued on the device and sent to a Google Sheet when online.
+- **Admin page:** statistics are at `/admin.html` (not linked from the app).
+
+### Connect the Google Sheet (once)
+
+1. Create a Google Sheet, e.g. "Lilla Piano stats".
+2. **Extensions → Apps Script**: replace the code with [`tools/stats-apps-script.gs`](tools/stats-apps-script.gs) and save.
+3. **Project Settings → Script properties → Add**: `ADMIN_KEY` = a long secret of your choice.
+4. **Deploy → New deployment → Web app**. Set "Execute as: **Me**" and "Who has access: **Anyone**", then copy the `/exec` URL.
+5. Paste that URL into [`js/config.js`](js/config.js) as `STATS_URL`, commit and push.
+6. Open `/admin.html` on the live site and enter your `ADMIN_KEY`. Add `?demo` to preview the page with made-up data.
+
+**What's stored:** first name, a random device ID, language, and song, hands mode, view and instrument per event. No other personal data.
+
+**Privacy:** if the app is used outside your own family (for example with other families or a preschool), tell the parents what is collected and get their consent first. Names of children are personal data under GDPR.
+
 ## Credits
 
 - Instrument samples: FluidR3_GM soundfont (MIT licence) via gleitz/midi-js-soundfonts

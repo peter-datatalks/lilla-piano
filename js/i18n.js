@@ -43,6 +43,17 @@ const STRINGS = {
     'theme.animals': 'Animals', 'theme.movement': 'Move & play', 'theme.everyday': 'Everyday',
     'theme.lullaby': 'Lullabies', 'theme.celebrations': 'Celebrations', 'theme.anthems': 'National anthems',
     tagline: 'Little fingers. Big melodies.',
+    welcomeTitle: 'Hello! What’s your name?',
+    namePlaceholder: 'Your name',
+    letsPlay: 'Let’s play!',
+    nameNote: 'Your name is only used to say hi and in the family’s play statistics.',
+    skip: 'Skip',
+    hi: 'Hi, {name}!',
+    hiBig: 'Hi {name}! 👋',
+    whoPlays: 'Who’s playing?',
+    favourites: 'Favourites',
+    favouritesOf: '{name}’s favourites',
+    favouritesDesc: 'Played most often',
     songView: 'How to show the notes',
     viewNotes: 'Notes',
     viewSheet: 'Sheet music',
@@ -104,6 +115,17 @@ const STRINGS = {
     'theme.animals': 'Djurvisor', 'theme.movement': 'Rörelsesånger', 'theme.everyday': 'Vardag',
     'theme.lullaby': 'Vaggvisor', 'theme.celebrations': 'Högtider', 'theme.anthems': 'Nationalsånger',
     tagline: 'Små fingrar. Stora melodier.',
+    welcomeTitle: 'Hej! Vad heter du?',
+    namePlaceholder: 'Ditt namn',
+    letsPlay: 'Nu spelar vi!',
+    nameNote: 'Namnet används bara för att säga hej och i familjens spelstatistik.',
+    skip: 'Hoppa över',
+    hi: 'Hej, {name}!',
+    hiBig: 'Hej {name}! 👋',
+    whoPlays: 'Vem spelar?',
+    favourites: 'Favoriter',
+    favouritesOf: '{name}s favoriter',
+    favouritesDesc: 'Spelas oftast',
     songView: 'Hur tonerna visas',
     viewNotes: 'Toner',
     viewSheet: 'Noter',
@@ -137,6 +159,7 @@ export const t = (key) => STRINGS[lang][key] ?? STRINGS.en[key] ?? key;
 export function translateDom(root = document) {
   root.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
   root.querySelectorAll('[data-i18n-label]').forEach((el) => el.setAttribute('aria-label', t(el.dataset.i18nLabel)));
+  root.querySelectorAll('[data-i18n-placeholder]').forEach((el) => el.setAttribute('placeholder', t(el.dataset.i18nPlaceholder)));
   document.documentElement.lang = lang;
 }
 

@@ -115,6 +115,20 @@
     </div>
   </div>
 
+  <div class="sheet hidden" id="welcome-sheet">
+    <div class="sheet-card welcome-card" role="dialog" data-i18n-label="welcomeTitle">
+      <div data-brand></div>
+      <h2 data-i18n="welcomeTitle"></h2>
+      <form id="welcome-form" autocomplete="off">
+        <input id="welcome-name" maxlength="40" autocomplete="given-name" enterkeyhint="go" data-i18n-placeholder="namePlaceholder">
+        <button class="big-btn play" type="submit">👋<span data-i18n="letsPlay"></span></button>
+      </form>
+      <p class="welcome-note" data-i18n="nameNote"></p>
+      <button class="link-btn" id="welcome-skip" type="button" data-i18n="skip"></button>
+    </div>
+  </div>
+  <div class="greeting hidden" id="greeting" role="status"></div>
+
   <div class="celebrate hidden" id="celebrate">
     <div class="celebrate-card">
       <div class="celebrate-stars">⭐⭐⭐</div>

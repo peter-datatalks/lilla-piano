@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Lilla Piano · Statistics</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body class="admin">
+  <header class="admin-head">
+    <div class="brand-mini" data-brand-mini></div>
+    <h1>Lilla Piano <span>statistics</span></h1>
+    <div class="admin-actions">
+      <span class="admin-updated" id="updated"></span>
+      <button class="admin-btn" id="refresh">↻ Refresh</button>
+      <button class="admin-btn ghost" id="forget">Forget key</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <form class="admin-login hidden" id="login">
+      <h2>Admin key</h2>
+      <p>Enter the <code>ADMIN_KEY</code> you set in the Apps Script project.</p>
+      <div class="admin-row">
+        <input id="key" type="password" autocomplete="current-password" placeholder="Admin key">
+        <button class="admin-btn" type="submit">Show statistics</button>
+      </div>
+    </form>
+    <p class="admin-message hidden" id="message"></p>
+    <div id="stats"></div>
+  </main>
+
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
