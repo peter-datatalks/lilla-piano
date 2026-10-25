@@ -27,7 +27,7 @@ const state = {
   mode: 'idle', // idle | listen | guided
   guided: null,
   player: null,
-  slow: false,
+  speed: [0.5, 0.75, 1, 1.25, 1.5].includes(store.get('speed')) ? store.get('speed') : 1, // Listen tempo factor
   hands: 'one', // one | two
   done: store.get('done', {}), // { songId: { one: true, two: true } }
   country: store.get('country', 'all'),
@@ -486,18 +486,34 @@ function stopAll() {
 }
 
 /* listen: notes fall in time with the music */
+// Listen speeds (factor of the song's tempo).
+const SPEEDS = [
+  { v: 0.5, emoji: '🐌', key: 'speedVerySlow' },
+  { v: 0.75, emoji: '🐢', key: 'speedSlow' },
+  { v: 1, emoji: '🐇', key: 'speedNormal' },
+  { v: 1.25, emoji: '🐎', key: 'speedFast' },
+  { v: 1.5, emoji: '🐆', key: 'speedVeryFast' },
+];
+const speedInfo = () => SPEEDS.find((s) => s.v === state.speed) || SPEEDS[2];
+
 function listen() {
   if (state.mode === 'listen') { stopAll(); return; }
   stopAll();
   unlock();
   recordPlay(state.song.id);
   track('listen', songEvent());
+  startListen(0);
+}
+
+// Play the song from `fromBeat` (used to continue at a new speed without restarting).
+function startListen(fromBeat) {
   state.mode = 'listen';
   const b = state.built;
-  const spb = 60 / (state.song.bpm * (state.slow ? 0.7 : 1));
-  const lead = 1.2; // seconds of notes falling before the first one lands
-  const t0 = now() + lead;
-  let i = 0;
+  const spb = 60 / (state.song.bpm * state.speed);
+  const lead = fromBeat > 0 ? 0.15 : 1.2; // seconds of notes falling before the first one lands
+  const t0 = now() + lead - fromBeat * spb;
+  let i = b.events.findIndex((ev) => ev.time >= fromBeat - 1e-6);
+  if (i < 0) i = b.events.length;
   const timers = [];
   const scheduled = [];
   kb.setGuided(true);
@@ -747,11 +763,37 @@ $('#lang-btn').onclick = () => {
 };
 $('#btn-listen').onclick = listen;
 $('#btn-play').onclick = startGuided;
-$('#btn-tempo').onclick = () => {
-  state.slow = !state.slow;
-  $('#btn-tempo').textContent = state.slow ? '🐢' : '🐇';
-  if (state.mode === 'listen') { stopAll(); listen(); }
+function renderSpeed() {
+  const info = speedInfo();
+  $('#btn-tempo').textContent = info.emoji;
+  $('#btn-tempo').title = `${t(info.key)} (${Math.round(info.v * 100)}%)`;
+  $('#speed-menu').innerHTML = SPEEDS.map((s) => `<button role="menuitemradio" aria-checked="${s.v === state.speed}" data-speed="${s.v}">
+    <span class="speed-emoji">${s.emoji}</span><span>${t(s.key)}</span><small>${Math.round(s.v * 100)}%</small></button>`).join('');
+}
+
+function setSpeed(v) {
+  state.speed = v;
+  store.set('speed', v);
+  renderSpeed();
+  $('#speed-menu').classList.add('hidden');
+  if (state.mode === 'listen' && state.player) { // keep playing from the same spot
+    const beat = Math.max(0, state.player.beat());
+    stopAll();
+    startListen(beat);
+  }
+}
+
+$('#btn-tempo').onclick = (e) => {
+  e.stopPropagation();
+  renderSpeed();
+  $('#speed-menu').classList.toggle('hidden');
 };
+$('#speed-menu').onclick = (e) => {
+  e.stopPropagation();
+  const b = e.target.closest('[data-speed]');
+  if (b) setSpeed(Number(b.dataset.speed));
+};
+document.addEventListener('click', () => $('#speed-menu').classList.add('hidden'));
 $('#btn-again').onclick = () => { $('#celebrate').classList.add('hidden'); startGuided(); };
 $('#btn-more').onclick = () => { $('#celebrate').classList.add('hidden'); setView('library'); };
 
@@ -796,6 +838,7 @@ function applyLang(lang) {
   renderInstruments();
   renderSongHead();
   renderStrip();
+  renderSpeed();
   if (state.mode !== 'listen') $('#btn-listen').innerHTML = `👂<span>${t('listen')}</span>`;
   if (state.view === 'library') renderLibrary();
   if (!$('#inst-sheet').classList.contains('hidden')) openSheet();
@@ -804,6 +847,7 @@ function applyLang(lang) {
 
 applyLang(store.get('lang', 'en'));
 setSongView(state.songView);
+renderSpeed();
 
 $('#welcome-form').onsubmit = (e) => {
   e.preventDefault();

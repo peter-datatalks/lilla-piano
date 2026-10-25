@@ -945,3 +945,39 @@ input { user-select: text; -webkit-user-select: text; font: inherit; }
 }
 .song-search input::-webkit-search-cancel-button { display: none; }
 .song-search button { width: 34px; height: 34px; border-radius: 50%; background: var(--muted); font-size: 14px; }
+
+/* listen speed menu */
+.speed-wrap { position: relative; }
+.speed-menu {
+  position: absolute;
+  z-index: 12;
+  right: 0;
+  top: calc(100% + 8px);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 210px;
+  padding: 6px;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 2px solid var(--border);
+  box-shadow: 0 2px 0 var(--edge), 0 20px 40px -16px oklch(30% 0.05 60 / 0.45);
+}
+.speed-menu.hidden { display: none; }
+.speed-menu button {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 10px;
+  border-radius: 14px;
+  background: transparent;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 700;
+}
+.speed-menu button:hover { background: var(--muted); }
+.speed-menu button[aria-checked="true"] { background: var(--sun); color: var(--sun-foreground); }
+.speed-menu .speed-emoji { font-size: 22px; text-align: center; }
+.speed-menu small { color: var(--muted-foreground); font-weight: 700; }

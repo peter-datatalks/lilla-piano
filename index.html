@@ -52,7 +52,10 @@
           <button class="hands-toggle" id="btn-hands" data-i18n-label="switchHands"></button>
           <button class="big-btn listen" id="btn-listen">👂<span data-i18n="listen"></span></button>
           <button class="big-btn play" id="btn-play">🎹<span data-i18n="play"></span></button>
-          <button class="round-btn" id="btn-tempo" data-i18n-label="tempo">🐇</button>
+          <div class="speed-wrap">
+            <button class="round-btn" id="btn-tempo" data-i18n-label="tempo" aria-haspopup="menu">🐇</button>
+            <div class="speed-menu hidden" id="speed-menu" role="menu"></div>
+          </div>
         </div>
       </div>
       <div class="progress"><div class="progress-fill" id="progress"></div></div>
