@@ -55,4 +55,5 @@ so installed copies pick up the new files.
 
 - Instrument samples: FluidR3_GM soundfont (MIT licence) via gleitz/midi-js-soundfonts
 - Song melodies: traditional or public domain; sources are noted next to each song in `js/songs*.js`
+- Turkish folk melodies (türküler and two ninniler): transcribed from the [SymbTr](https://github.com/MTG/SymbTr) corpus by the Music Technology Group, Universitat Pompeu Fabra, licensed CC BY-NC-SA 4.0. The melodies are traditional; the transcriptions may only be used non-commercially, with attribution.
 - Moose artwork from Lilla Lingua
