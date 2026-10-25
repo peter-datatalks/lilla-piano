@@ -479,4 +479,29 @@ export const SONGS_CLASSICAL_A = [
              A3 E4 E4 D4 | C4 B3 A3:0.5 B3:0.5 C4:0.5 D4:0.5 | E4 A4 G#4:0.5 A4:0.5 B4:0.5 G#4:0.5 | A4:2`,
     chords: 'Am.E Am Am.E E.Am Am.E Am Am.E Am',
   },
+  // Sarabande (Keyboard Suite in D minor, HWV 437; Suites de pièces, 2nd vol. No. 4) — top voice of the chords, bars 1–16 (the whole theme,
+  //  both 8-bar halves; repeat not written out; variations left out). Original D minor, 3/2 - moved down a fourth to A minor, and counted
+  //  in halves (every value halved: minim = 1 beat, so beatsPerBar 3). The original rhythm is minim–minim–crotchet rest–crotchet (beat 2 is
+  //  a repeated chord, not a held note); kept as written.
+  //  Source: https://commons.wikimedia.org/wiki/File:Georg_Friedrich_H%C3%A4ndel_Sarabande.pdf (CC0 engraving; read from the image, no LilyPond).
+  //  Cross-check: Walsh first edition, London 1733 (https://archive.org/details/h321-images, 2nd vol. p. 27) — same top voice.
+  //  Chords simplified from the bass of both. Public domain (Handel d. 1759). Confidence: medium-high.
+  {
+    id: 'handel-sarabande',
+    country: 'de',
+    themes: ['classical'],
+    title: 'Sarabande',
+    titleEn: 'Sarabande (Suite in D minor)',
+    composer: 'Handel',
+    aka: ['HWV 437', 'Sarabande in D minor', 'Barry Lyndon'],
+    emoji: '🕯️',
+    level: 'medium',
+    bpm: 66,
+    beatsPerBar: 3,
+    melody: `C4 C4 R:0.5 D4:0.5 | B3 B3 R:1 | E4 E4 R:0.5 F4:0.5 | D4 D4 R:0.5 E4:0.5 |
+             F4 F4 R:0.5 G4:0.5 | E4 E4 R:0.5 E4:0.5 | A4 A4 R:0.5 B4:0.5 | G#4 G#4 R:1 |
+             C4 C4 R:0.5 D4:0.5 | B3 B3 R:1 | E4 E4 R:0.5 F4:0.5 | D4 D4 R:0.5 E4:0.5 |
+             F4 F4 R:0.5 G4:0.5 | E4:1.5 E4:0.5 A4:0.5 G#4:0.5 | A4:0.5 B4:0.5 C5 B4:0.5 A4:0.5 | A4 A4 R:1`,
+    chords: 'Am E Am G.A Dm Am Dm E Am E Am G.A Dm.G C.F Dm.E Am',
+  },
 ];
