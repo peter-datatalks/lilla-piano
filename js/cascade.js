@@ -1,6 +1,6 @@
 // Cascade view: coloured note bars fall onto the keys they belong to.
 // `beat` is the song position (in beats) that sits exactly on the keyboard edge.
-import { noteColor, noteName } from './music.js';
+import { noteColor, eventName } from './music.js';
 
 export class Cascade {
   constructor(canvas, keyboard) {
@@ -79,7 +79,7 @@ export class Cascade {
       }
       if (bottom - top > fontSize + 6) {
         ctx.fillStyle = 'rgba(255,255,255,0.95)';
-        ctx.fillText(noteName(ev.midi), x + bw / 2, bottom - 4);
+        ctx.fillText(eventName(ev), x + bw / 2, bottom - 4);
       }
       ctx.restore();
     }

@@ -43,6 +43,8 @@ const STRINGS = {
     'theme.all': 'All', 'theme.children': "Children's songs", 'theme.christmas': 'Christmas',
     'theme.animals': 'Animals', 'theme.movement': 'Move & play', 'theme.everyday': 'Everyday',
     'theme.lullaby': 'Lullabies', 'theme.celebrations': 'Celebrations', 'theme.anthems': 'National anthems',
+    'theme.classical': 'Classical',
+    'country.it': 'Italian', 'country.ru': 'Russian', 'country.no': 'Norwegian', 'country.cz': 'Czech', 'country.pl': 'Polish',
     tagline: 'Little fingers. Big melodies.',
     welcomeTitle: 'Hello! What’s your name?',
     namePlaceholder: 'Your name',
@@ -127,6 +129,8 @@ const STRINGS = {
     'theme.all': 'Alla', 'theme.children': 'Barnvisor', 'theme.christmas': 'Jul',
     'theme.animals': 'Djurvisor', 'theme.movement': 'Rörelsesånger', 'theme.everyday': 'Vardag',
     'theme.lullaby': 'Vaggvisor', 'theme.celebrations': 'Högtider', 'theme.anthems': 'Nationalsånger',
+    'theme.classical': 'Klassiskt',
+    'country.it': 'Italienska', 'country.ru': 'Ryska', 'country.no': 'Norska', 'country.cz': 'Tjeckiska', 'country.pl': 'Polska',
     tagline: 'Små fingrar. Stora melodier.',
     welcomeTitle: 'Hej! Vad heter du?',
     namePlaceholder: 'Ditt namn',
@@ -189,7 +193,10 @@ export function translateDom(root = document) {
 
 // Song titles: the original title, plus a translation underneath when it helps.
 // Swedish UI shows Swedish songs without a subtitle; everything else gets the English title.
+// Classical pieces show "Composer · English title" underneath.
 export function songTitles(song) {
   const sameLang = (lang === 'sv' && song.country === 'se');
-  return { main: song.title, sub: sameLang || song.titleEn === song.title ? '' : song.titleEn };
+  const translation = sameLang || song.titleEn === song.title ? '' : song.titleEn;
+  const sub = song.composer ? [song.composer, translation].filter(Boolean).join(' · ') : translation;
+  return { main: song.title, sub };
 }

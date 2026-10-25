@@ -2,7 +2,7 @@
 // playhead; noteheads are coloured like the keys and named underneath.
 // Same interface as Cascade: set `beat` (song position at the playhead) and `current`
 // (guided step, -1 = none), then call draw().
-import { noteColor, noteName, isBlack, pc, countsEighths } from './music.js';
+import { noteColor, eventName, isBlack, pc, countsEighths } from './music.js';
 
 const LETTER_OF_PC = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6]; // C C# D D# E F F# G G# A A# B -> C..B index
 const NOTE_VALUES = [4, 3, 2, 1.5, 1, 0.75, 0.5, 0.25]; // in quarter notes (dotted values included)
@@ -156,7 +156,7 @@ export class SheetView {
       }
       // label: chord symbol for chords, otherwise the note name
       // (melody above the staff when there are two hands, otherwise below)
-      const label = evs.length > 1 && ev.chord ? ev.chord : noteName(ev.midi);
+      const label = evs.length > 1 && ev.chord ? ev.chord : eventName(ev);
       ctx.fillStyle = evs.length > 1 ? INK : noteColor(ev.midi);
       ctx.font = `800 ${Math.round(g * (isCurrent ? 1.55 : 1.3))}px "Baloo 2", Nunito, sans-serif`;
       ctx.textAlign = 'center';
@@ -192,7 +192,8 @@ export class SheetView {
   // Draws one notehead (+ stem, flags, dot, sharp, ledger lines). Returns head geometry for ties.
   drawNote(x, ev, q, g, y0, bass, highlight, noStem = false) {
     const { ctx } = this;
-    const d = dia(ev.midi);
+    const flat = ev.flat && isBlack(ev.midi); // a flat sits on the line/space of the note above
+    const d = dia(flat ? ev.midi + 1 : ev.midi);
     const ref = bass ? 18 : 30; // bottom line: G2 (bass) / E4 (treble)
     const y = y0 + 4 * g - ((d - ref) * g) / 2;
     const color = noteColor(ev.midi);
@@ -238,7 +239,7 @@ export class SheetView {
       ctx.font = `700 ${Math.round(g * 1.9)}px "Apple Symbols", "Segoe UI Symbol", serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('♯', x - rx - g * 0.75, y);
+      ctx.fillText(flat ? '♭' : '♯', x - rx - g * 0.75, y);
     }
 
     // stem + flags

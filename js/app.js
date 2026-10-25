@@ -2,7 +2,7 @@ import { playNote, unlock, jingle, now, preloadInstrument, instrumentReady, save
 import { INSTRUMENTS, FAMILIES, instrumentById } from './instruments.js';
 import { iconFor } from './icons.js';
 import { SONGS, LEVELS, COUNTRIES, THEMES } from './songs.js';
-import { buildSong, fitRange, noteColor, noteName, setNoteNames } from './music.js';
+import { buildSong, fitRange, noteColor, noteName, eventName, setNoteNames } from './music.js';
 import { LANGS, t, getLang, setLang, translateDom, songTitles } from './i18n.js';
 import { brandHTML, brandMini } from './brand.js';
 import { getName, setName, hasAskedName, recordPlay, favourites, track } from './profile.js';
@@ -50,10 +50,10 @@ const LEVEL_STYLE = {
   medium: { stars: 2, color: '#fb8c00' },
   hard: { stars: 3, color: '#e53935' },
 };
-const COUNTRY_FLAG = { se: '🇸🇪', hu: '🇭🇺', ua: '🇺🇦', tr: '🇹🇷', gb: '🇬🇧', us: '🇺🇸', de: '🇩🇪', at: '🇦🇹', fr: '🇫🇷' };
+const COUNTRY_FLAG = { se: '🇸🇪', hu: '🇭🇺', ua: '🇺🇦', tr: '🇹🇷', gb: '🇬🇧', us: '🇺🇸', de: '🇩🇪', at: '🇦🇹', fr: '🇫🇷', it: '🇮🇹', ru: '🇷🇺', no: '🇳🇴', cz: '🇨🇿', pl: '🇵🇱' };
 const THEME_EMOJI = {
   all: '🎵', children: '🧸', animals: '🐾', movement: '💃', everyday: '🏡', lullaby: '🌙',
-  celebrations: '🎉', christmas: '🎄', lucia: '🕯️', midsummer: '🌸', anthems: '🎺',
+  celebrations: '🎉', christmas: '🎄', lucia: '🕯️', midsummer: '🌸', anthems: '🎺', classical: '🎻',
 };
 
 const app = $('#app');
@@ -433,7 +433,7 @@ function renderLibrary() {
   const inCountry = (s) => state.country === 'all' || s.country === state.country;
   const inTheme = (s) => state.theme === 'all' || s.themes?.includes(state.theme);
   const query = searchKey(state.search);
-  const inSearch = (s) => !query || searchKey(`${s.title} ${s.titleEn} ${(s.aka || []).join(' ')}`).includes(query);
+  const inSearch = (s) => !query || searchKey(`${s.title} ${s.titleEn} ${s.composer || ''} ${(s.aka || []).join(' ')}`).includes(query);
 
   // filter row 1: where the songs come from
   const countries = document.createElement('div');
@@ -806,7 +806,7 @@ function renderStrip() {
     if (!n) return;
     const el = document.createElement('span');
     el.className = 'syl';
-    el.textContent = noteName(n.midi);
+    el.textContent = eventName(n);
     el.style.setProperty('--sc', noteColor(n.midi));
     box.append(el);
     strip.chips.push({ step: i, time: st.time, el });

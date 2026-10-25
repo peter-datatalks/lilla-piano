@@ -13,13 +13,22 @@ const SOLFEGE = {
   en: ['do', 'di', 're', 'ri', 'mi', 'fa', 'fi', 'sol', 'si', 'la', 'li', 'ti'],
   sv: ['do', 'di', 're', 'ri', 'mi', 'fa', 'fi', 'so', 'si', 'la', 'li', 'ti'],
 };
+// Black keys written as flats in the score (e.g. "Bb4") keep their flat name.
+// Swedish: B♭ is "B" (B natural is "H"); Do-Re-Mi uses ra, me, se, le, te.
+const FLAT_NAMES = {
+  en: ['', 'D♭', '', 'E♭', '', '', 'G♭', '', 'A♭', '', 'B♭', ''],
+  sv: ['', 'Dess', '', 'Ess', '', '', 'Gess', '', 'Ass', '', 'B', ''],
+};
+const SOLFEGE_FLATS = ['', 'ra', '', 'me', '', '', 'se', '', 'le', '', 'te', ''];
 let names = NOTE_NAMES.en;
+let flatNames = FLAT_NAMES.en;
 let naming = 'letters';
 // naming: 'letters' (C D E… / C D E… H) or 'solfege' (do re mi…)
 export function setNoteNames(lang, mode = naming) {
   naming = mode;
   const table = mode === 'solfege' ? SOLFEGE : NOTE_NAMES;
   names = table[lang] || table.en;
+  flatNames = mode === 'solfege' ? SOLFEGE_FLATS : FLAT_NAMES[lang] || FLAT_NAMES.en;
 }
 export const getNaming = () => naming;
 
@@ -35,6 +44,8 @@ export const pc = (m) => ((m % 12) + 12) % 12;
 export const countsEighths = (song) => song.bpm >= 150;
 export const isBlack = (m) => [1, 3, 6, 8, 10].includes(pc(m));
 export const noteName = (m) => names[pc(m)];
+// Name of a song note, keeping the score's flat spelling where it has one.
+export const eventName = (ev) => (ev.flat && flatNames[pc(ev.midi)]) || noteName(ev.midi);
 export const noteColor = (m) => NOTE_COLORS[pc(m)];
 
 export function parseNote(s) {
@@ -53,7 +64,7 @@ function parseMelody(str, rests = null) {
     if (!tok || tok === '|') continue;
     const [n, d] = tok.split(':');
     const dur = d ? parseFloat(d) : 1;
-    if (n !== 'R') events.push({ time: t, dur, midi: parseNote(n), hand: 'R' });
+    if (n !== 'R') events.push({ time: t, dur, midi: parseNote(n), hand: 'R', ...(/^[A-G]b\d/.test(n) && { flat: true }) });
     else if (rests) rests.push({ time: t, dur });
     t += dur;
   }
