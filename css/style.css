@@ -916,3 +916,32 @@ input { user-select: text; -webkit-user-select: text; font: inherit; }
 }
 .hello-chip span { font-size: 14px; opacity: 0.7; }
 .favourites .level-title .stars { letter-spacing: 0; }
+
+/* library search */
+.song-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 8px 0 16px;
+  border-radius: 36px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  box-shadow: var(--lift);
+  max-width: 520px;
+}
+.song-search:focus-within { border-color: var(--primary); }
+.song-search > span { font-size: 18px; }
+.song-search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--foreground);
+  font-size: 17px;
+  font-weight: 700;
+}
+.song-search input::-webkit-search-cancel-button { display: none; }
+.song-search button { width: 34px; height: 34px; border-radius: 50%; background: var(--muted); font-size: 14px; }

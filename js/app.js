@@ -33,6 +33,7 @@ const state = {
   country: store.get('country', 'all'),
   theme: store.get('theme', 'all'),
   pendingSong: null, // song waiting for the one/two hands choice
+  search: '',
   songView: ['notes', 'sheet', 'solfege'].includes(store.get('songView')) ? store.get('songView') : 'notes',
 };
 
@@ -292,6 +293,8 @@ function renderLibrary() {
   lib.innerHTML = `<div class="library-brand">${brandHTML()}</div>`;
   const inCountry = (s) => state.country === 'all' || s.country === state.country;
   const inTheme = (s) => state.theme === 'all' || s.themes?.includes(state.theme);
+  const query = searchKey(state.search);
+  const inSearch = (s) => !query || searchKey(`${s.title} ${s.titleEn}`).includes(query);
 
   // filter row 1: where the songs come from
   const countries = document.createElement('div');
@@ -315,7 +318,21 @@ function renderLibrary() {
       renderLibrary();
     }));
   }
-  lib.append(countries, themes);
+  // search box (ignores accents, spaces and punctuation: "kis karacsony" finds "Kiskarácsony")
+  const search = document.createElement('div');
+  search.className = 'song-search';
+  search.innerHTML = `<span>🔎</span><input type="search" id="song-search" enterkeyhint="search" placeholder="${escapeHtml(t('searchSongs'))}" value="${escapeHtml(state.search)}">${state.search ? '<button type="button" aria-label="✕">✕</button>' : ''}`;
+  search.querySelector('input').oninput = (e) => {
+    state.search = e.target.value;
+    const caret = e.target.selectionStart;
+    renderLibrary();
+    const again = $('#song-search');
+    again.focus();
+    again.setSelectionRange(caret, caret);
+  };
+  const clear = search.querySelector('button');
+  if (clear) clear.onclick = () => { state.search = ''; renderLibrary(); };
+  lib.append(search, countries, themes);
 
   // greeting + favourites (the 5 songs this device plays most)
   const name = getName();
@@ -325,7 +342,7 @@ function renderLibrary() {
   hello.onclick = () => openWelcome(true);
   lib.querySelector('.library-brand').after(hello);
   const favs = favourites(5).map((id) => SONGS.find((s) => s.id === id)).filter(Boolean);
-  if (favs.length && state.country === 'all' && state.theme === 'all') {
+  if (favs.length && state.country === 'all' && state.theme === 'all' && !query) {
     const sec = document.createElement('section');
     sec.className = 'level favourites';
     sec.style.setProperty('--lc', 'oklch(80% 0.13 85)');
@@ -337,7 +354,7 @@ function renderLibrary() {
     lib.append(sec);
   }
 
-  const visible = SONGS.filter((s) => inCountry(s) && inTheme(s));
+  const visible = SONGS.filter((s) => inCountry(s) && inTheme(s) && inSearch(s));
   if (!visible.length) {
     const p = document.createElement('p');
     p.className = 'empty';
@@ -358,6 +375,11 @@ function renderLibrary() {
     sec.append(grid);
     lib.append(sec);
   }
+}
+
+// Lower case, no accents, letters and digits only: "Kiskarácsony, nagy…" -> "kiskaracsonynagy…"
+function searchKey(s) {
+  return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
 }
 
 function escapeHtml(s) {
