@@ -70,7 +70,8 @@ function doPost(e) {
 
 function doGet(e) {
   const key = PropertiesService.getScriptProperties().getProperty('ADMIN_KEY');
-  if (!key || !e.parameter || e.parameter.key !== key) return json_({ error: 'unauthorized' });
+  const params = (e && e.parameter) || {}; // e is missing when run from the editor (▶ Run)
+  if (!key || params.key !== key) return json_({ error: 'unauthorized' });
   const values = sheet_().getDataRange().getValues().slice(1);
   const rows = values.map((r) => ({
     ts: r[1] || (r[0] instanceof Date ? r[0].toISOString() : String(r[0])),

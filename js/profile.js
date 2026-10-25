@@ -66,13 +66,14 @@ export async function flush() {
   const batch = queue.slice(0, 50);
   let sent = false;
   try {
-    // text/plain + no-cors keeps this a "simple" request that Apps Script accepts without CORS
-    await fetch(STATS_URL, {
+    // text/plain keeps this a "simple" request (no CORS preflight); Apps Script answers "ok"
+    // through a redirect that allows cross-origin reads, so we can confirm the batch was stored.
+    const res = await fetch(STATS_URL, {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ deviceId, name: getName(), lang: document.documentElement.lang, events: batch }),
     });
+    if (!res.ok || (await res.text()).trim() !== 'ok') throw new Error(`stats ${res.status}`);
     write('queue', read('queue', []).slice(batch.length));
     sent = true;
   } catch {
