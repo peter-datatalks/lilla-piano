@@ -55,7 +55,16 @@
         </div>
       </div>
       <div class="progress"><div class="progress-fill" id="progress"></div></div>
+      <div class="song-subbar">
+      <div class="view-switch" role="radiogroup" data-i18n-label="songView">
+        <button data-songview="notes" role="radio">🎹<span data-i18n="viewNotes"></span></button>
+        <button data-songview="sheet" role="radio">🎼<span data-i18n="viewSheet"></span></button>
+        <button data-songview="solfege" role="radio">🎵<span data-i18n="viewSolfege"></span></button>
+      </div>
+      <div class="solfege-strip" id="solfege-strip"></div>
+      </div>
       <canvas class="cascade" id="cascade"></canvas>
+      <canvas class="cascade staff-view" id="sheet"></canvas>
       <div class="rotate-hint" data-i18n="rotate"></div>
     </section>
   </main>

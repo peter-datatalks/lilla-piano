@@ -7,8 +7,21 @@ const NOTE_NAMES = {
   en: ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'],
   sv: ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'H'],
 };
+// Solfège (movable do). Every song is written in C major / A minor, so do = C.
+// Chromatic syllables for the black keys: di, ri, fi, si, li.
+const SOLFEGE = {
+  en: ['do', 'di', 're', 'ri', 'mi', 'fa', 'fi', 'sol', 'si', 'la', 'li', 'ti'],
+  sv: ['do', 'di', 're', 'ri', 'mi', 'fa', 'fi', 'so', 'si', 'la', 'li', 'ti'],
+};
 let names = NOTE_NAMES.en;
-export function setNoteNames(lang) { names = NOTE_NAMES[lang] || NOTE_NAMES.en; }
+let naming = 'letters';
+// naming: 'letters' (C D E… / C D E… H) or 'solfege' (do re mi…)
+export function setNoteNames(lang, mode = naming) {
+  naming = mode;
+  const table = mode === 'solfege' ? SOLFEGE : NOTE_NAMES;
+  names = table[lang] || table.en;
+}
+export const getNaming = () => naming;
 
 // One colour per pitch class (boomwhacker-style rainbow).
 export const NOTE_COLORS = [
@@ -29,7 +42,8 @@ export function parseNote(s) {
 }
 
 // "C4 D4:0.5 R:1 | E4:2" -> events. Duration is in beats (default 1), R is a rest.
-function parseMelody(str) {
+// Rests are collected into `rests` when an array is passed.
+function parseMelody(str, rests = null) {
   const events = [];
   let t = 0;
   for (const tok of str.split(/\s+/)) {
@@ -37,6 +51,7 @@ function parseMelody(str) {
     const [n, d] = tok.split(':');
     const dur = d ? parseFloat(d) : 1;
     if (n !== 'R') events.push({ time: t, dur, midi: parseNote(n), hand: 'R' });
+    else if (rests) rests.push({ time: t, dur });
     t += dur;
   }
   return events;
@@ -85,7 +100,8 @@ function leftHand(song) {
 // Song -> { events, steps, length, lo, hi }. A step is every note that starts at the same time.
 // hands: 'one' = melody only, 'two' = melody + generated left hand.
 export function buildSong(song, hands = 'one') {
-  const events = [...parseMelody(song.melody), ...(hands === 'two' ? leftHand(song) : [])].sort(
+  const rests = [];
+  const events = [...parseMelody(song.melody, rests), ...(hands === 'two' ? leftHand(song) : [])].sort(
     (a, b) => a.time - b.time || a.midi - b.midi,
   );
   const steps = [];
@@ -97,7 +113,7 @@ export function buildSong(song, hands = 'one') {
   }
   const length = Math.max(...events.map((e) => e.time + e.dur));
   const midis = events.map((e) => e.midi);
-  return { events, steps, length, lo: Math.min(...midis), hi: Math.max(...midis) };
+  return { events, steps, rests, length, lo: Math.min(...midis), hi: Math.max(...midis) };
 }
 
 // Expand a range so it starts and ends on white keys and has at least `minWhites` white keys.

@@ -68,7 +68,8 @@ Guided play also greys out every key except the next one, which glows and bounce
 - [ ] Sustain pedal and velocity based on touch pressure or area where supported
 
 ### M3 – More songs and learning
-- [ ] Rainbow view (horizontal piano roll) and ColorNote view (coloured noteheads on a staff), switchable from a view picker
+- [x] Three note views per song, switchable in the song screen: **Notes** (falling notes), **Sheet music** (scrolling staff with coloured noteheads, grand staff for two hands, rests, ties, sharps) and **Do-Re-Mi** (movable-do solfège on keys and notes, plus a sing-along syllable strip)
+- [ ] Rainbow view (horizontal piano roll)
 - [ ] Finger numbers on the falling notes (1–5), as in ROLI's Cascade view
 - [ ] Score and streak counter for older children
 - [x] 19 songs, transcribed from published scores (Tegnér's "Sjung med oss, Mamma!", Wikimedia Commons, folkwiki), each with a source comment, and filterable by theme (Barnvisor, Jul, Lucia, Midsommar)

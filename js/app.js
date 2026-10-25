@@ -2,11 +2,12 @@ import { playNote, unlock, jingle, now, preloadInstrument, instrumentReady, save
 import { INSTRUMENTS, FAMILIES, instrumentById } from './instruments.js';
 import { iconFor } from './icons.js';
 import { SONGS, LEVELS, COUNTRIES, THEMES } from './songs.js';
-import { buildSong, fitRange, noteColor, setNoteNames } from './music.js';
+import { buildSong, fitRange, noteColor, noteName, setNoteNames } from './music.js';
 import { LANGS, t, getLang, setLang, translateDom, songTitles } from './i18n.js';
 import { brandHTML, brandMini } from './brand.js';
 import { Keyboard } from './keyboard.js';
 import { Cascade } from './cascade.js';
+import { SheetView } from './sheet.js';
 
 const $ = (s) => document.querySelector(s);
 
@@ -31,6 +32,7 @@ const state = {
   country: store.get('country', 'all'),
   theme: store.get('theme', 'all'),
   pendingSong: null, // song waiting for the one/two hands choice
+  songView: ['notes', 'sheet', 'solfege'].includes(store.get('songView')) ? store.get('songView') : 'notes',
 };
 
 // Older saves: done[id] === true meant "played" before hands existed; theme ids were Swedish.
@@ -54,6 +56,7 @@ const app = $('#app');
 const voices = new Map(); // input source -> voice
 const kb = new Keyboard($('#keyboard'), { onDown, onUp });
 const cascade = new Cascade($('#cascade'), kb);
+const sheet = new SheetView($('#sheet'));
 
 /* ---------- input ---------- */
 
@@ -193,7 +196,7 @@ function setView(v) {
     b.classList.toggle('active', b.dataset.go === v || (v === 'song' && b.dataset.go === 'library')));
   if (v === 'free') { kb.setGuided(false); kb.setTargets([]); applyFreeRange(); }
   if (v === 'library') renderLibrary();
-  if (v === 'song') requestAnimationFrame(() => { cascade.resize(); });
+  if (v === 'song') requestAnimationFrame(() => { cascade.resize(); sheet.resize(); });
 }
 
 function freeOctaveCount() {
@@ -331,6 +334,8 @@ function openSong(song, hands) {
   cascade.spans = null;
   cascade.current = -1;
   cascade.beat = state.built.steps[0].time - 3;
+  sheet.setSong(song, state.built);
+  renderStrip();
   setProgress(0);
   $('#btn-play').classList.add('pulse');
 }
@@ -431,6 +436,7 @@ function showStep() {
   kb.setTargets(step.notes, state.hands === 'two' ? { L: t('handL'), R: t('handR') } : null);
   cascade.current = g.i;
   setProgress(g.i / state.built.steps.length);
+  if (state.songView === 'solfege') updateStrip();
 }
 
 function guidedInput(midi) {
@@ -474,6 +480,60 @@ function finish() {
   }, 250);
 }
 
+/* ---------- note views: falling notes, sheet music, do-re-mi ---------- */
+
+function setSongView(v) {
+  state.songView = v;
+  store.set('songView', v);
+  app.dataset.songview = v;
+  document.querySelectorAll('.view-switch button').forEach((b) => b.setAttribute('aria-checked', b.dataset.songview === v));
+  setNoteNames(getLang(), v === 'solfege' ? 'solfege' : 'letters');
+  kb.el.classList.toggle('solfege', v === 'solfege');
+  kb.relabel();
+  cascade.spans = null;
+  renderStrip();
+  requestAnimationFrame(() => { cascade.resize(); sheet.resize(); });
+  if (state.mode === 'guided') showStep();
+}
+
+// Do-Re-Mi strip: the melody as sing-along syllables, current one highlighted.
+let strip = { chips: [], index: -2 };
+
+function renderStrip() {
+  const box = $('#solfege-strip');
+  box.innerHTML = '';
+  strip = { chips: [], index: -2 };
+  if (!state.built) return;
+  state.built.steps.forEach((st, i) => {
+    const n = st.notes.find((x) => x.hand === 'R');
+    if (!n) return;
+    const el = document.createElement('span');
+    el.className = 'syl';
+    el.textContent = noteName(n.midi);
+    el.style.setProperty('--sc', noteColor(n.midi));
+    box.append(el);
+    strip.chips.push({ step: i, time: st.time, el });
+  });
+}
+
+function updateStrip() {
+  let index = -1;
+  if (state.mode === 'guided' && state.guided) {
+    index = strip.chips.findIndex((c) => c.step >= state.guided.i);
+  } else if (state.mode === 'listen') {
+    for (let i = 0; i < strip.chips.length && strip.chips[i].time <= cascade.beat + 0.01; i++) index = i;
+  }
+  if (index === strip.index) return;
+  strip.index = index;
+  strip.chips.forEach((c, i) => {
+    c.el.classList.toggle('current', i === index);
+    c.el.classList.toggle('done', index >= 0 && i < index);
+  });
+  const el = strip.chips[Math.max(0, index)]?.el;
+  const box = $('#solfege-strip');
+  if (el) box.scrollTo({ left: el.offsetLeft - box.clientWidth / 2 + el.offsetWidth / 2, behavior: 'smooth' });
+}
+
 /* ---------- animation loop for the cascade ---------- */
 
 let lastFrame = performance.now();
@@ -490,7 +550,15 @@ function frame(t) {
         : state.built.steps[0].time;
       cascade.beat += (target - cascade.beat) * (1 - Math.exp(-dt * 7));
     }
-    cascade.draw();
+    // the cascade's position drives every view
+    if (state.songView === 'sheet') {
+      sheet.beat = cascade.beat;
+      sheet.current = cascade.current;
+      sheet.draw();
+    } else {
+      cascade.draw();
+    }
+    if (state.songView === 'solfege') updateStrip();
   }
   requestAnimationFrame(frame);
 }
@@ -536,6 +604,7 @@ $('#sheet-close').onclick = closeSheet;
 $('#offline-btn').onclick = saveOffline;
 $('#inst-sheet').onclick = (e) => { if (e.target.id === 'inst-sheet') closeSheet(); };
 $('#song-back').onclick = () => setView('library');
+document.querySelectorAll('.view-switch button').forEach((b) => (b.onclick = () => setSongView(b.dataset.songview)));
 $('#hands-close').onclick = closeHands;
 $('#hands-sheet').onclick = (e) => { if (e.target.id === 'hands-sheet') closeHands(); };
 document.querySelectorAll('.hands-choice').forEach((b) => (b.onclick = () => {
@@ -580,13 +649,14 @@ window.addEventListener('resize', () => {
   resizeTimer = setTimeout(() => {
     if (state.view === 'free') applyFreeRange();
     cascade.resize();
+    sheet.resize();
   }, 120);
 });
 
 function applyLang(lang) {
   setLang(lang);
   store.set('lang', getLang());
-  setNoteNames(getLang());
+  setNoteNames(getLang(), state.songView === 'solfege' ? 'solfege' : 'letters');
   translateDom();
   document.querySelectorAll('[data-brand]').forEach((el) => { el.innerHTML = brandHTML(); });
   document.querySelectorAll('[data-brand-mini]').forEach((el) => { el.innerHTML = brandMini(); });
@@ -595,6 +665,7 @@ function applyLang(lang) {
   cascade.spans = null;
   renderInstruments();
   renderSongHead();
+  renderStrip();
   if (state.mode !== 'listen') $('#btn-listen').innerHTML = `👂<span>${t('listen')}</span>`;
   if (state.view === 'library') renderLibrary();
   if (!$('#inst-sheet').classList.contains('hidden')) openSheet();
@@ -602,4 +673,5 @@ function applyLang(lang) {
 }
 
 applyLang(store.get('lang', 'en'));
+setSongView(state.songView);
 setView('free');
