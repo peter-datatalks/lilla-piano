@@ -2,7 +2,7 @@
 // playhead; noteheads are coloured like the keys and named underneath.
 // Same interface as Cascade: set `beat` (song position at the playhead) and `current`
 // (guided step, -1 = none), then call draw().
-import { noteColor, noteName, isBlack, pc } from './music.js';
+import { noteColor, noteName, isBlack, pc, countsEighths } from './music.js';
 
 const LETTER_OF_PC = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6]; // C C# D D# E F F# G G# A A# B -> C..B index
 const NOTE_VALUES = [4, 3, 2, 1.5, 1, 0.75, 0.5, 0.25]; // in quarter notes (dotted values included)
@@ -36,7 +36,7 @@ export class SheetView {
   setSong(song, built) {
     this.song = song;
     this.built = built;
-    this.unit = song.beatsPerBar === 6 && song.bpm >= 150 ? 8 : 4; // beat = eighth (6/8) or quarter
+    this.unit = countsEighths(song) ? 8 : 4; // beat = eighth (6/8, 9/8…) or quarter
     this.grand = built.events.some((e) => e.hand === 'L');
   }
 

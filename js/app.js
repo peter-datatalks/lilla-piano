@@ -20,6 +20,8 @@ const store = {
 const state = {
   view: 'free',
   instrument: instrumentById(store.get('instrument', 'piano')).id,
+  instrumentL: store.get('instrumentL', null), // left-hand instrument (null = same as right)
+  pickHand: 'R', // which hand the instrument picker is choosing for
   recent: store.get('recent', ['piano', 'violin', 'flute', 'trumpet', 'alto_sax', 'xylophone']),
   freeOctave: null, // lowest octave shown in free play
   song: null,
@@ -48,7 +50,7 @@ const LEVEL_STYLE = {
   medium: { stars: 2, color: '#fb8c00' },
   hard: { stars: 3, color: '#e53935' },
 };
-const COUNTRY_FLAG = { se: '🇸🇪', hu: '🇭🇺' };
+const COUNTRY_FLAG = { se: '🇸🇪', hu: '🇭🇺', ua: '🇺🇦', tr: '🇹🇷', gb: '🇬🇧', us: '🇺🇸', de: '🇩🇪', at: '🇦🇹', fr: '🇫🇷' };
 const THEME_EMOJI = {
   all: '🎵', children: '🧸', animals: '🐾', movement: '💃', everyday: '🏡', lullaby: '🌙',
   celebrations: '🎉', christmas: '🎄', lucia: '🕯️', midsummer: '🌸', anthems: '🎺',
@@ -62,10 +64,40 @@ const sheet = new SheetView($('#sheet'));
 
 /* ---------- input ---------- */
 
+// Instrument for a hand ('L' falls back to the right-hand instrument).
+const instFor = (hand) => (hand === 'L' && state.instrumentL) || state.instrument;
+const splitActive = () => !!state.instrumentL && state.instrumentL !== state.instrument;
+
+// Where the left hand ends: mid-keyboard in free play; below the melody in two-hand songs.
+function splitPoint() {
+  if (!splitActive()) return null;
+  if (state.view === 'free') { // the C nearest the middle; with one octave, C–E is the left hand
+    const span = kb.hi - kb.lo;
+    return span >= 24 ? kb.lo + 12 * Math.floor(span / 24) : kb.lo + 5;
+  }
+  if (state.view === 'song' && state.built && state.hands !== 'one') {
+    const melody = state.built.events.filter((e) => e.hand === 'R').map((e) => e.midi);
+    return melody.length ? Math.min(...melody) : 60;
+  }
+  return null;
+}
+
+// Which hand a key press belongs to: the target's hand in guided play, else the side of the split.
+function handFor(midi) {
+  if (state.mode === 'guided' && state.guided) {
+    const n = state.built.steps[state.guided.i]?.notes.find((x) => x.midi === midi);
+    if (n) return n.hand;
+  }
+  const split = splitPoint();
+  return split != null && midi < split ? 'L' : 'R';
+}
+
+function applySplit() { kb.setSplit(splitPoint()); }
+
 function onDown(midi, src) {
   unlock();
   voices.get(src)?.release();
-  voices.set(src, playNote(state.instrument, midi, 0.85));
+  voices.set(src, playNote(instFor(handFor(midi)), midi, 0.85));
   if (state.view === 'free') spawnFloat(midi);
   if (state.mode === 'guided') guidedInput(midi);
 }
@@ -79,6 +111,10 @@ function onUp(midi, src) {
 
 // Top bar: the most recently used instruments (current one first in the list).
 function renderInstruments() {
+  const lh = $('#lh-inst');
+  lh.innerHTML = `<span class="inst-icon">${iconFor(instFor('L'))}</span><span class="lh-badge">${t('handL')}</span>`;
+  lh.classList.toggle('set', splitActive());
+  lh.title = `${t('leftHand')}: ${state.instrumentL ? t(`inst.${state.instrumentL}`) : t('sameAsRight')}`;
   const box = $('#instruments');
   box.innerHTML = '';
   const ready = instrumentReady(state.instrument, kb.lo, kb.hi);
@@ -97,35 +133,55 @@ function renderInstruments() {
   }
 }
 
-function selectInstrument(id) {
+function selectInstrument(id, hand = 'R') {
   unlock();
-  state.instrument = id;
-  if (!state.recent.includes(id)) state.recent = [id, ...state.recent].slice(0, 6);
-  store.set('instrument', id);
-  track('instrument', { instrument: id });
-  store.set('recent', state.recent);
+  if (hand === 'L') {
+    state.instrumentL = id; // null = same as right hand
+    store.set('instrumentL', id);
+    track('instrument', { instrument: id || 'same', hands: 'L' });
+  } else {
+    state.instrument = id;
+    if (!state.recent.includes(id)) state.recent = [id, ...state.recent].slice(0, 6);
+    store.set('instrument', id);
+    store.set('recent', state.recent);
+    track('instrument', { instrument: id });
+  }
   renderInstruments();
+  applySplit();
   preloadCurrent();
+  if (!id) return;
   // preview: wait briefly for the real sample so the first sound is the instrument itself
   const mid = Math.round((kb.lo + kb.hi) / 2 / 12) * 12 + 7;
   Promise.race([preloadInstrument(id, mid, mid), new Promise((r) => setTimeout(r, 1200))]).then(() => {
-    if (state.instrument !== id) return;
-    const v = playNote(id, mid, 0.7);
+    if (instFor(hand) !== id) return;
+    const v = playNote(id, hand === 'L' ? mid - 12 : mid, 0.7);
     setTimeout(() => v.release(), 450);
   });
 }
 
 // Fetch the current instrument's notes for the visible keyboard.
 function preloadCurrent() {
+  if (state.instrumentL) preloadInstrument(state.instrumentL, kb.lo, kb.hi);
   const id = state.instrument;
   if (instrumentReady(id, kb.lo, kb.hi)) return;
   renderInstruments();
   preloadInstrument(id, kb.lo, kb.hi).then(() => { if (state.instrument === id) renderInstruments(); });
 }
 
-function openSheet() {
+function openSheet(hand = state.pickHand) {
+  state.pickHand = hand;
+  document.querySelectorAll('.hand-tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.hand === hand));
+  const current = hand === 'L' ? state.instrumentL : state.instrument;
   const body = $('#sheet-body');
   body.innerHTML = '';
+  if (hand === 'L') {
+    const same = document.createElement('button');
+    same.className = 'inst-card same-card';
+    same.classList.toggle('selected', !state.instrumentL);
+    same.innerHTML = `<span class="inst-icon">${iconFor(state.instrument)}</span><span class="inst-name">${t('sameAsRight')}</span>`;
+    same.onclick = () => { closeSheet(); selectInstrument(null, 'L'); };
+    body.append(same);
+  }
   for (const fam of FAMILIES) {
     const sec = document.createElement('section');
     sec.className = 'family';
@@ -136,9 +192,9 @@ function openSheet() {
     for (const inst of INSTRUMENTS.filter((i) => i.family === fam.id)) {
       const b = document.createElement('button');
       b.className = 'inst-card';
-      b.classList.toggle('selected', inst.id === state.instrument);
+      b.classList.toggle('selected', inst.id === current);
       b.innerHTML = `<span class="inst-icon">${iconFor(inst.id)}</span><span class="inst-name">${t(`inst.${inst.id}`)}</span>`;
-      b.onclick = () => { closeSheet(); selectInstrument(inst.id); };
+      b.onclick = () => { closeSheet(); selectInstrument(inst.id, hand); };
       grid.append(b);
     }
     sec.append(grid);
@@ -212,6 +268,7 @@ function setView(v) {
   if (v === 'free') { kb.setGuided(false); kb.setTargets([]); applyFreeRange(); }
   if (v === 'library') renderLibrary();
   if (v === 'song') requestAnimationFrame(() => { cascade.resize(); sheet.resize(); });
+  applySplit();
 }
 
 function freeOctaveCount() {
@@ -227,6 +284,7 @@ function applyFreeRange() {
   const lo = (state.freeOctave + 1) * 12;
   kb.setRange(lo, lo + octs * 12);
   preloadCurrent();
+  applySplit();
   renderRangeMap(octs);
 }
 
@@ -242,7 +300,7 @@ function shiftOctave(delta) {
   if (state.freeOctave === before) return;
   // let the child hear the jump: play the C in the middle of the new range
   const m = kb.lo + (kb.hi - kb.lo >= 24 ? 12 : 0);
-  const v = playNote(state.instrument, m, 0.7);
+  const v = playNote(instFor(handFor(m)), m, 0.7);
   setTimeout(() => v.release(), 400);
   spawnFloat(m);
 }
@@ -294,7 +352,7 @@ function renderLibrary() {
   const inCountry = (s) => state.country === 'all' || s.country === state.country;
   const inTheme = (s) => state.theme === 'all' || s.themes?.includes(state.theme);
   const query = searchKey(state.search);
-  const inSearch = (s) => !query || searchKey(`${s.title} ${s.titleEn}`).includes(query);
+  const inSearch = (s) => !query || searchKey(`${s.title} ${s.titleEn} ${(s.aka || []).join(' ')}`).includes(query);
 
   // filter row 1: where the songs come from
   const countries = document.createElement('div');
@@ -377,9 +435,21 @@ function renderLibrary() {
   }
 }
 
-// Lower case, no accents, letters and digits only: "Kiskarácsony, nagy…" -> "kiskaracsonynagy…"
+// Ukrainian Cyrillic -> Latin (national transliteration), so "dva pivnyky" finds "Два півники".
+const CYRILLIC = {
+  а: 'a', б: 'b', в: 'v', г: 'h', ґ: 'g', д: 'd', е: 'e', є: 'ie', ж: 'zh', з: 'z', и: 'y', і: 'i', ї: 'i',
+  й: 'i', к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f', х: 'kh',
+  ц: 'ts', ч: 'ch', ш: 'sh', щ: 'shch', ь: '', ю: 'iu', я: 'ia', ы: 'y', э: 'e', ё: 'io', ъ: '',
+};
+
+// Lower case, Latin letters, no accents, letters and digits only:
+// "Kiskarácsony, nagy…" -> "kiskaracsonynagy…", "Два півники" -> "dvapivnyky"
 function searchKey(s) {
-  return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+  return String(s || '').toLowerCase()
+    .replace(/[а-яіїєґёыэъ]/g, (c) => CYRILLIC[c] ?? c)
+    .replace(/ı/g, 'i') // Turkish dotless i
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
 }
 
 function escapeHtml(s) {
@@ -444,6 +514,7 @@ function openSong(song, hands) {
   const [lo, hi] = fitRange(state.built.lo, state.built.hi, 8);
   kb.setRange(lo, hi);
   preloadCurrent();
+  applySplit();
   app.dataset.wide = Number(kb.el.dataset.whites) > 10;
   setView('song');
   cascade.built = state.built;
@@ -526,7 +597,7 @@ function startListen(fromBeat) {
       const ev = b.events[i++];
       const at = t0 + ev.time * spb;
       const end = at + ev.dur * spb * 0.92;
-      const v = playNote(state.instrument, ev.midi, ev.chord ? 0.42 : ev.hand === 'L' ? 0.6 : 0.85, at);
+      const v = playNote(instFor(ev.hand), ev.midi, ev.chord ? 0.42 : ev.hand === 'L' ? 0.6 : 0.85, at);
       v.release(end);
       scheduled.push(v);
       timers.push(setTimeout(() => kb.setPlaying(ev.midi, true), (at - tn) * 1000));
@@ -603,7 +674,7 @@ setInterval(() => {
   if (performance.now() - g.lastInput < 6000) return;
   g.lastInput = performance.now();
   const step = state.built.steps[g.i];
-  step.notes.forEach((n) => { const v = playNote(state.instrument, n.midi, 0.35); setTimeout(() => v.release(), 500); });
+  step.notes.forEach((n) => { const v = playNote(instFor(n.hand), n.midi, 0.35); setTimeout(() => v.release(), 500); });
   kb.nudge(step.notes);
 }, 1000);
 
@@ -740,7 +811,9 @@ function confetti() {
 document.querySelectorAll('.mode-btn').forEach((b) => (b.onclick = () => { unlock(); setView(b.dataset.go); }));
 $('#oct-down').onclick = () => shiftOctave(-1);
 $('#oct-up').onclick = () => shiftOctave(1);
-$('#more-inst').onclick = () => { unlock(); openSheet(); };
+$('#more-inst').onclick = () => { unlock(); openSheet('R'); };
+$('#lh-inst').onclick = () => { unlock(); openSheet('L'); };
+document.querySelectorAll('.hand-tab').forEach((b) => (b.onclick = () => openSheet(b.dataset.hand)));
 $('#sheet-close').onclick = closeSheet;
 $('#offline-btn').onclick = saveOffline;
 $('#inst-sheet').onclick = (e) => { if (e.target.id === 'inst-sheet') closeSheet(); };

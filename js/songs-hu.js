@@ -230,6 +230,7 @@ export const SONGS_HU = [
     country: 'hu',
     themes: ['christmas'],
     title: 'Kiskarácsony, nagykarácsony',
+    aka: ['Kis karácsony, nagy karácsony'],
     titleEn: 'Little Christmas, Big Christmas',
     emoji: '🍞',
     level: 'easy',

@@ -117,6 +117,7 @@ export class Keyboard {
       this.keys.set(m, k);
     }
     this.el.dataset.whites = whites;
+    if (this.split != null) this.setSplit(this.split);
   }
 
   // Horizontal position of a key relative to `refEl`, in CSS px.
@@ -129,6 +130,12 @@ export class Keyboard {
   }
 
   setGuided(on) { this.el.classList.toggle('guided', on); }
+
+  // Keys below `midi` belong to the left hand (different instrument): tint them. null = no split.
+  setSplit(midi) {
+    this.split = midi;
+    for (const [m, k] of this.keys) k.classList.toggle('lh-zone', midi != null && m < midi);
+  }
 
   // Re-render (e.g. after the note-name language changed).
   relabel() { this.setRange(this.lo, this.hi, true); }

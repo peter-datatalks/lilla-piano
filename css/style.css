@@ -26,7 +26,7 @@
   --wood-dark: oklch(36% 0.06 52);
   --lift: 0 2px 0 var(--edge), 0 10px 24px -12px oklch(40% 0.05 60 / 0.35);
   --lift-pressed: 0 0 0 var(--edge), 0 4px 10px -8px oklch(40% 0.05 60 / 0.35);
-  --font-display: "Baloo 2", ui-rounded, system-ui, sans-serif;
+  --font-display: "Baloo 2", Nunito, ui-rounded, system-ui, sans-serif; /* Nunito covers Cyrillic */
 
   /* note colours (one per pitch class) – also used in js/music.js */
   --c0: #e53935; --c1: #f4511e; --c2: #fb8c00; --c3: #f9a825; --c4: #fdd835; --c5: #43a047;
@@ -981,3 +981,61 @@ input { user-select: text; -webkit-user-select: text; font: inherit; }
 .speed-menu button[aria-checked="true"] { background: var(--sun); color: var(--sun-foreground); }
 .speed-menu .speed-emoji { font-size: 22px; text-align: center; }
 .speed-menu small { color: var(--muted-foreground); font-weight: 700; }
+
+/* ---------- left-hand instrument ---------- */
+
+.lh-btn {
+  position: relative;
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--card);
+  border: 2px dashed var(--border);
+  box-shadow: var(--lift);
+  opacity: 0.8;
+}
+.lh-btn.set { border: 2px solid var(--left-hand); opacity: 1; }
+.lh-btn .inst-icon { width: 32px; height: 32px; }
+.lh-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 4px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--left-hand);
+  color: var(--foreground);
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+}
+@media (max-height: 520px) { .lh-btn { width: 44px; height: 44px; } }
+
+.hand-tabs { display: flex; gap: 4px; padding: 3px; margin: 0 auto 0 16px; border-radius: 30px; background: var(--muted); }
+.hand-tab { display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 14px; border-radius: 26px; background: transparent; font-size: 15px; font-weight: 700; color: var(--muted-foreground); }
+.hand-tab[aria-selected="true"] { background: var(--card); color: var(--foreground); box-shadow: var(--lift); }
+.tab-badge { min-width: 22px; height: 22px; border-radius: 11px; display: grid; place-items: center; font-size: 12px; font-weight: 800; color: var(--foreground); }
+.tab-badge.l { background: var(--left-hand); }
+.tab-badge.r { background: var(--right-hand); }
+@media (max-width: 600px) { .hand-tab span:not(.tab-badge) { display: none; } .sheet-head { gap: 8px; } }
+
+.same-card { width: 100%; flex-direction: row; justify-content: center; gap: 10px; margin-top: 6px; --fc: var(--left-hand); }
+.same-card .inst-icon { width: 36px; height: 36px; }
+.same-card .inst-name { font-size: 16px; }
+
+/* keys played by the left-hand instrument */
+.key.white.lh-zone { background: linear-gradient(oklch(99% 0.01 0), oklch(95% 0.03 0)); box-shadow: inset 0 -10px 0 oklch(86% 0.06 0); }
+.key.black.lh-zone { box-shadow: inset 0 -7px 0 oklch(45% 0.12 0), 0 4px 6px oklch(20% 0.03 50 / 0.4); }
+/* pressed / highlighted states win over the left-hand tint */
+.key.white.lh-zone.down,
+.key.white.lh-zone.playing { background: color-mix(in srgb, var(--kc) 40%, white); box-shadow: inset 0 -4px 0 oklch(86% 0.06 0); }
+.key.white.lh-zone.target { background: color-mix(in srgb, var(--kc) 22%, white); box-shadow: inset 0 0 0 4px var(--kc), 0 0 28px var(--kc); }
+.key.black.lh-zone.down,
+.key.black.lh-zone.playing,
+.key.black.lh-zone.target { background: var(--kc); }

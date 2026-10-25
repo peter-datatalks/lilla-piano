@@ -30,6 +30,9 @@ export const NOTE_COLORS = [
 ];
 
 export const pc = (m) => ((m % 12) + 12) % 12;
+
+// Songs in x/8 metres (6/8, and aksak 5/8, 7/8, 9/8) are counted in eighth notes with a fast bpm.
+export const countsEighths = (song) => song.bpm >= 150;
 export const isBlack = (m) => [1, 3, 6, 8, 10].includes(pc(m));
 export const noteName = (m) => names[pc(m)];
 export const noteColor = (m) => NOTE_COLORS[pc(m)];
@@ -123,7 +126,7 @@ const bassNote = (pcRoot, offset = 0) => 40 + ((((pcRoot + offset) - 4) % 12) + 
 function chordHand(song) {
   if (!song.chords) return [];
   const bpb = song.beatsPerBar;
-  const eighths = bpb === 6 && song.bpm >= 150;
+  const eighths = countsEighths(song);
   const bars = song.chords.split(/\s+/).filter((x) => x && x !== '|');
   const events = [];
   let prev = null;
@@ -137,9 +140,10 @@ function chordHand(song) {
       const triad = triadVoicing(tok, prev);
       prev = triad;
       const root = chordRoot(tok);
-      if (eighths && segLen === 6) { // 6/8: bass, then chord
-        add(st, 3, [bassNote(root)], tok);
-        add(st + 3, 3, triad, tok);
+      if (eighths && segLen >= 5) { // x/8: bass on the first group, chord on the rest (6/8 = 3+3, 9/8 = 4+5…)
+        const half = Math.floor(segLen / 2);
+        add(st, half, [bassNote(root)], tok);
+        add(st + half, segLen - half, triad, tok);
       } else if (!eighths && segLen === 4) { // bass - chord - fifth - chord
         add(st, 1, [bassNote(root)], tok);
         add(st + 1, 1, triad, tok);

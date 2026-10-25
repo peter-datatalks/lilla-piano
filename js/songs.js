@@ -7,9 +7,13 @@
 import { SONGS_HU } from './songs-hu.js';
 import { SONGS_SE_EXTRA } from './songs-se-extra.js';
 import { SONGS_ANTHEMS } from './songs-anthems.js';
+import { SONGS_UA } from './songs-ua.js';
+import { SONGS_TR } from './songs-tr.js';
+import { SONGS_XMAS_EN } from './songs-xmas-en.js';
+import { SONGS_XMAS_EU } from './songs-xmas-eu.js';
 
 export const LEVELS = ['easy', 'medium', 'hard'];
-export const COUNTRIES = ['se', 'hu'];
+export const COUNTRIES = ['se', 'hu', 'ua', 'tr', 'gb', 'us', 'de', 'at', 'fr'];
 export const THEMES = ['children', 'animals', 'movement', 'everyday', 'lullaby', 'celebrations', 'christmas', 'lucia', 'midsummer', 'anthems'];
 
 const SONGS_SE = [
@@ -333,6 +337,7 @@ const SONGS_SE = [
     country: 'se',
     themes: ['christmas'],
     title: 'Bjällerklang',
+    aka: ['Jingle Bells'],
     titleEn: 'Jingle Bells',
     emoji: '🛷',
     level: 'medium',
@@ -346,4 +351,4 @@ const SONGS_SE = [
   },
 ];
 
-export const SONGS = [...SONGS_SE, ...SONGS_SE_EXTRA, ...SONGS_HU, ...SONGS_ANTHEMS];
+export const SONGS = [...SONGS_SE, ...SONGS_SE_EXTRA, ...SONGS_HU, ...SONGS_UA, ...SONGS_TR, ...SONGS_XMAS_EN, ...SONGS_XMAS_EU, ...SONGS_ANTHEMS];
