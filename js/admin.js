@@ -88,9 +88,10 @@ export function aggregate(rows) {
 
 /* ---------- rendering ---------- */
 
+// Song names link to the song in the app (opens in a new tab).
 const songTitle = (id) => {
   const s = songById.get(id);
-  return s ? `${s.emoji} ${esc(s.title)}` : esc(id);
+  return s ? `<a href="./#/song/${encodeURIComponent(id)}" target="_blank" rel="noopener">${s.emoji} ${esc(s.title)}</a>` : esc(id);
 };
 
 function fmtDate(ts) {

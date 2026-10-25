@@ -1059,3 +1059,15 @@ input { user-select: text; -webkit-user-select: text; font: inherit; }
   font-weight: 800;
 }
 .instruments { padding-right: 8px; } /* room for the badge */
+
+/* copy-link button next to the song title */
+.link-mini {
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--muted);
+  font-size: 16px;
+  opacity: 0.75;
+}
+.link-mini:hover { opacity: 1; }

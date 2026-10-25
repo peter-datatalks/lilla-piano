@@ -270,6 +270,86 @@ function setView(v) {
   if (v === 'library') renderLibrary();
   if (v === 'song') requestAnimationFrame(() => { cascade.resize(); sheet.resize(); });
   applySplit();
+  // same song (e.g. switching hands) replaces the history entry; anything else adds one
+  syncUrl(v === 'song' && location.hash.startsWith(`#/song/${state.song?.id}/`));
+}
+
+/* ---------- links: every screen and every song has its own URL ----------
+   #/                       free play
+   #/songs                  song library
+   #/song/<id>              a song (asks one hand / two hands / chords)
+   #/song/<id>/<hands>      straight into one | two | chords
+   …?view=sheet|solfege     with that note view                                   */
+
+let routing = false; // true while applying a URL, so it isn't written back
+
+function currentHash() {
+  if (state.view === 'song' && state.song) {
+    return `#/song/${state.song.id}/${state.hands}${state.songView !== 'notes' ? `?view=${state.songView}` : ''}`;
+  }
+  return state.view === 'library' ? '#/songs' : '#/';
+}
+
+function syncUrl(replace = false) {
+  if (routing) return;
+  const hash = currentHash();
+  if (location.hash === hash) return;
+  // a bare address (no #…) is upgraded in place rather than adding a history step
+  history[replace || !location.hash ? 'replaceState' : 'pushState'](null, '', hash);
+}
+
+function route() {
+  routing = true;
+  try {
+    const [path, query] = location.hash.replace(/^#\/?/, '').split('?');
+    const [page, id, hands] = path.split('/').map(decodeURIComponent);
+    const view = new URLSearchParams(query || '').get('view');
+    closeSheet();
+    closeHands();
+    $('#celebrate').classList.add('hidden');
+    if (page === 'song') {
+      const song = SONGS.find((s) => s.id === id);
+      if (!song) { setView('library'); return; }
+      if (['notes', 'sheet', 'solfege'].includes(view) && view !== state.songView) setSongView(view);
+      if (['one', 'two', 'chords'].includes(hands)) {
+        openSong(song, hands);
+      } else {
+        if (state.view !== 'library') setView('library');
+        askHands(song);
+      }
+    } else if (page === 'songs') {
+      setView('library');
+    } else {
+      setView('free');
+    }
+  } finally {
+    routing = false;
+  }
+}
+
+// back / forward buttons and links typed or pasted into the address bar
+window.addEventListener('hashchange', route);
+
+function showToast(html) {
+  const toast = $('#greeting');
+  toast.innerHTML = html;
+  toast.classList.remove('hidden');
+  clearTimeout(greet.timer);
+  greet.timer = setTimeout(() => toast.classList.add('hidden'), 2500);
+}
+
+async function copySongLink() {
+  const url = location.href;
+  try {
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) {
+      await navigator.share({ title: songTitles(state.song).main, url });
+      return;
+    }
+    await navigator.clipboard.writeText(url);
+    showToast(`🔗 ${t('linkCopied')}`);
+  } catch {
+    showToast(`🔗 ${escapeHtml(url)}`);
+  }
 }
 
 function freeOctaveCount() {
@@ -508,6 +588,7 @@ function closeHands() { $('#hands-sheet').classList.add('hidden'); }
 /* ---------- song view ---------- */
 
 function openSong(song, hands) {
+  state.openedFromLibrary = state.view === 'library' || (state.view === 'song' && state.openedFromLibrary);
   state.song = song;
   state.hands = hands;
   state.built = buildSong(song, hands);
@@ -535,7 +616,9 @@ function renderSongHead() {
   const style = LEVEL_STYLE[song.level];
   $('#song-title').innerHTML = `<span class="song-emoji">${song.emoji}</span>
     <span class="song-title-text"><span class="song-title-main">${main}</span>${sub ? `<small>${sub}</small>` : ''}</span>
-    <span class="stars" style="color:${style.color}">${'★'.repeat(style.stars)}</span>`;
+    <span class="stars" style="color:${style.color}">${'★'.repeat(style.stars)}</span>
+    <button class="link-mini" id="copy-link" title="${t('copyLink')}" aria-label="${t('copyLink')}">🔗</button>`;
+  $('#copy-link').onclick = copySongLink;
   const btn = $('#btn-hands');
   btn.innerHTML = [['one', '☝️'], ['two', '🙌'], ['chords', '💪']]
     .map(([h, icon]) => `<span data-h="${h}" class="${state.hands === h ? 'on' : ''}">${icon}</span>`).join('');
@@ -698,6 +781,7 @@ function finish() {
 function setSongView(v) {
   state.songView = v;
   store.set('songView', v);
+  if (state.view === 'song') syncUrl(true);
   app.dataset.songview = v;
   document.querySelectorAll('.view-switch button').forEach((b) => b.setAttribute('aria-checked', b.dataset.songview === v));
   setNoteNames(getLang(), v === 'solfege' ? 'solfege' : 'letters');
@@ -818,7 +902,7 @@ document.querySelectorAll('.hand-tab').forEach((b) => (b.onclick = () => openShe
 $('#sheet-close').onclick = closeSheet;
 $('#offline-btn').onclick = saveOffline;
 $('#inst-sheet').onclick = (e) => { if (e.target.id === 'inst-sheet') closeSheet(); };
-$('#song-back').onclick = () => setView('library');
+$('#song-back').onclick = () => { if (state.openedFromLibrary) history.back(); else setView('library'); };
 document.querySelectorAll('.view-switch button').forEach((b) => (b.onclick = () => setSongView(b.dataset.songview)));
 $('#hands-close').onclick = closeHands;
 $('#hands-sheet').onclick = (e) => { if (e.target.id === 'hands-sheet') closeHands(); };
@@ -937,4 +1021,4 @@ $('#welcome-skip').onclick = () => {
 track('visit');
 if (!hasAskedName()) openWelcome();
 else greet();
-setView('free');
+route();
