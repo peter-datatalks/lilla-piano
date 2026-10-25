@@ -208,10 +208,42 @@ function freeOctaveCount() {
 function applyFreeRange() {
   const octs = freeOctaveCount();
   if (state.freeOctave == null) state.freeOctave = octs >= 2 ? 3 : 4;
-  state.freeOctave = Math.max(2, Math.min(7 - octs, state.freeOctave));
+  state.freeOctave = Math.max(FREE_MIN_OCT, Math.min(FREE_TOP_OCT - octs, state.freeOctave));
   const lo = (state.freeOctave + 1) * 12;
   kb.setRange(lo, lo + octs * 12);
   preloadCurrent();
+  renderRangeMap(octs);
+}
+
+// Lowest/highest start octave for free play: the keyboard can sit anywhere in C2–C7.
+const FREE_MIN_OCT = 2;
+const FREE_TOP_OCT = 7;
+
+function shiftOctave(delta) {
+  unlock();
+  const before = state.freeOctave;
+  state.freeOctave += delta;
+  applyFreeRange();
+  if (state.freeOctave === before) return;
+  // let the child hear the jump: play the C in the middle of the new range
+  const m = kb.lo + (kb.hi - kb.lo >= 24 ? 12 : 0);
+  const v = playNote(state.instrument, m, 0.7);
+  setTimeout(() => v.release(), 400);
+  spawnFloat(m);
+}
+
+// Small map of the whole C2–C7 range with the visible part highlighted, plus its name ("C3–C6").
+function renderRangeMap(octs) {
+  const map = $('#range-map');
+  const first = state.freeOctave;
+  let cells = '';
+  for (let o = FREE_MIN_OCT; o < FREE_TOP_OCT; o++) {
+    const on = o >= first && o < first + octs;
+    cells += `<span class="rm-oct${on ? ' on' : ''}">${'<i></i>'.repeat(7)}</span>`;
+  }
+  map.innerHTML = `<span class="rm-keys">${cells}</span><span class="rm-label">C${first}–C${first + octs}</span>`;
+  $('#oct-down').disabled = first <= FREE_MIN_OCT;
+  $('#oct-up').disabled = first >= FREE_TOP_OCT - octs;
 }
 
 /* ---------- free play ---------- */
@@ -597,8 +629,8 @@ function confetti() {
 /* ---------- wiring ---------- */
 
 document.querySelectorAll('.mode-btn').forEach((b) => (b.onclick = () => { unlock(); setView(b.dataset.go); }));
-$('#oct-down').onclick = () => { state.freeOctave--; applyFreeRange(); };
-$('#oct-up').onclick = () => { state.freeOctave++; applyFreeRange(); };
+$('#oct-down').onclick = () => shiftOctave(-1);
+$('#oct-up').onclick = () => shiftOctave(1);
 $('#more-inst').onclick = () => { unlock(); openSheet(); };
 $('#sheet-close').onclick = closeSheet;
 $('#offline-btn').onclick = saveOffline;
