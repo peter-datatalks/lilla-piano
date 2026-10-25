@@ -29,9 +29,10 @@ The app follows the Lilla Lingua style (lillalingua.lovable.app):
 ### Song format
 Each song stores its **melody** (right hand), **one chord per bar**, its `country` (se, hu), themes, original title and English title. Swedish songs live in `js/songs.js` and Hungarian songs in `js/songs-hu.js`.
 
-When a child picks a song, the app asks **one hand or two hands?**:
+When a child picks a song, the app asks **one hand, two hands or chords?**:
 - **One hand:** melody only, on a compact keyboard with extra-big keys (toddlers).
 - **Two hands:** melody plus a left hand generated from the chords. Easy and medium songs get one held bass note per chord; hard songs get a moving bass (root and fifth, or oom-pah-pah in 3/4).
+- **Chords (hard):** melody plus full three-note chords in the left hand with a bass note on the strong beats: oom-pah in 2/4, oom-pah-pah in 3/4, bass–chord–fifth–chord in 4/4, bass then chord in 6/8. Chords use smooth voice leading (each inversion is chosen to sit closest to the previous chord) between C3 and B3, with bass notes from E2 to D♯3.
 
 **Level** (easy/medium/hard) now describes the melody itself: its length, rhythm and black keys. Each song stores a star for each hand mode.
 

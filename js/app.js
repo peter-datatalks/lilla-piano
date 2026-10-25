@@ -340,7 +340,7 @@ function renderLibrary() {
       b.innerHTML = `<span class="song-flag">${COUNTRY_FLAG[s.country] || ''}</span>
         <span class="song-emoji">${s.emoji}</span>
         <span class="song-name">${main}</span>${sub ? `<span class="song-sub">${sub}</span>` : ''}
-        <span class="song-done">${done.one ? '☝️' : ''}${done.two ? '🙌' : ''}</span>`;
+        <span class="song-done">${done.one ? '☝️' : ''}${done.two ? '🙌' : ''}${done.chords ? '💪' : ''}</span>`;
       b.onclick = () => { unlock(); askHands(s); };
       grid.append(b);
     }
@@ -393,8 +393,9 @@ function renderSongHead() {
     <span class="song-title-text"><span class="song-title-main">${main}</span>${sub ? `<small>${sub}</small>` : ''}</span>
     <span class="stars" style="color:${style.color}">${'★'.repeat(style.stars)}</span>`;
   const btn = $('#btn-hands');
-  btn.innerHTML = `<span class="${state.hands === 'one' ? 'on' : ''}">☝️</span><span class="${state.hands === 'two' ? 'on' : ''}">🙌</span>`;
-  btn.title = t(state.hands === 'one' ? 'oneHand' : 'twoHands');
+  btn.innerHTML = [['one', '☝️'], ['two', '🙌'], ['chords', '💪']]
+    .map(([h, icon]) => `<span data-h="${h}" class="${state.hands === h ? 'on' : ''}">${icon}</span>`).join('');
+  btn.title = t({ one: 'oneHand', two: 'twoHands', chords: 'chordHands' }[state.hands]);
 }
 
 function setProgress(f) { $('#progress').style.width = `${Math.round(f * 100)}%`; }
@@ -435,7 +436,7 @@ function listen() {
       const ev = b.events[i++];
       const at = t0 + ev.time * spb;
       const end = at + ev.dur * spb * 0.92;
-      const v = playNote(state.instrument, ev.midi, ev.hand === 'L' ? 0.6 : 0.85, at);
+      const v = playNote(state.instrument, ev.midi, ev.chord ? 0.42 : ev.hand === 'L' ? 0.6 : 0.85, at);
       v.release(end);
       scheduled.push(v);
       timers.push(setTimeout(() => kb.setPlaying(ev.midi, true), (at - tn) * 1000));
@@ -477,7 +478,7 @@ function showStep() {
   const step = state.built.steps[g.i];
   g.hit.clear();
   g.lastInput = performance.now();
-  kb.setTargets(step.notes, state.hands === 'two' ? { L: t('handL'), R: t('handR') } : null);
+  kb.setTargets(step.notes, state.hands !== 'one' ? { L: t('handL'), R: t('handR') } : null);
   cascade.current = g.i;
   setProgress(g.i / state.built.steps.length);
   if (state.songView === 'solfege') updateStrip();
@@ -655,7 +656,11 @@ document.querySelectorAll('.hands-choice').forEach((b) => (b.onclick = () => {
   closeHands();
   openSong(state.pendingSong, b.dataset.hands);
 }));
-$('#btn-hands').onclick = () => openSong(state.song, state.hands === 'one' ? 'two' : 'one');
+$('#btn-hands').onclick = (e) => {
+  const order = ['one', 'two', 'chords'];
+  const picked = e.target.closest('[data-h]')?.dataset.h;
+  openSong(state.song, picked || order[(order.indexOf(state.hands) + 1) % order.length]);
+};
 $('#lang-btn').onclick = () => {
   const codes = Object.keys(LANGS);
   applyLang(codes[(codes.indexOf(getLang()) + 1) % codes.length]);

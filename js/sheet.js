@@ -118,33 +118,51 @@ export class SheetView {
       this.drawRest(x, yT, g, r.dur * toQ);
     }
 
-    // notes
+    // notes, grouped into chords (same time, same hand)
     const playing = this.current < 0;
+    const groups = new Map();
     for (const ev of built.events) {
+      const key = `${ev.time}|${ev.hand}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(ev);
+    }
+    for (const evs of groups.values()) {
+      const ev = evs[0];
       const x0 = xAt(ev.time);
       if (x0 < clefW - ppb * ev.dur - 30 || x0 > w + 30) continue;
       const isCurrent = playing
         ? this.beat >= ev.time - 0.02 && this.beat < ev.time + ev.dur - 0.02
         : ev.step === this.current;
       const isDone = !playing && ev.step < this.current;
+      const bass = ev.hand === 'L';
+      const y0 = bass ? yB : yT;
       ctx.save();
       ctx.globalAlpha = isDone ? 0.35 : 1;
       let t = ev.time;
       let prev = null;
       for (const q of splitValue(ev.dur * toQ)) {
         const x = xAt(t);
-        const head = this.drawNote(x, ev, q, g, ev.hand === 'L' ? yB : yT, ev.hand === 'L', isCurrent && t === ev.time);
-        if (prev) this.drawTie(prev, head, g);
-        prev = head;
+        const hl = isCurrent && t === ev.time;
+        let heads;
+        if (evs.length === 1) {
+          heads = [this.drawNote(x, ev, q, g, y0, bass, hl)];
+        } else {
+          heads = evs.map((e) => this.drawNote(x, e, q, g, y0, bass, hl, true));
+          this.drawChordStem(x, heads, q, g, bass);
+        }
+        if (prev) heads.forEach((h, i) => this.drawTie(prev[i], h, g));
+        prev = heads;
         t += q / toQ;
       }
-      // name label: melody above the staff when there are two hands, otherwise below
-      ctx.fillStyle = noteColor(ev.midi);
+      // label: chord symbol for chords, otherwise the note name
+      // (melody above the staff when there are two hands, otherwise below)
+      const label = evs.length > 1 && ev.chord ? ev.chord : noteName(ev.midi);
+      ctx.fillStyle = evs.length > 1 ? INK : noteColor(ev.midi);
       ctx.font = `800 ${Math.round(g * (isCurrent ? 1.55 : 1.3))}px "Baloo 2", Nunito, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      const labelY = ev.hand === 'L' ? yB + 4 * g + 3.4 * g : grand ? yT - 3 * g : yT + 4 * g + 3.6 * g;
-      ctx.fillText(noteName(ev.midi), x0, labelY);
+      const labelY = bass ? yB + 4 * g + 3.4 * g : grand ? yT - 3 * g : yT + 4 * g + 3.6 * g;
+      ctx.fillText(label, x0, labelY);
       ctx.restore();
     }
     ctx.restore();
@@ -172,7 +190,7 @@ export class SheetView {
   }
 
   // Draws one notehead (+ stem, flags, dot, sharp, ledger lines). Returns head geometry for ties.
-  drawNote(x, ev, q, g, y0, bass, highlight) {
+  drawNote(x, ev, q, g, y0, bass, highlight, noStem = false) {
     const { ctx } = this;
     const d = dia(ev.midi);
     const ref = bass ? 18 : 30; // bottom line: G2 (bass) / E4 (treble)
@@ -224,29 +242,9 @@ export class SheetView {
     }
 
     // stem + flags
-    if (q < 4) {
-      const middle = bass ? 22 : 34;
-      const up = d < middle;
-      const sx = up ? x + rx - 0.8 : x - rx + 0.8;
-      const len = g * 3.4;
-      const ey = up ? y - len : y + len;
-      ctx.strokeStyle = INK;
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.moveTo(sx, y);
-      ctx.lineTo(sx, ey);
-      ctx.stroke();
-      const flags = q <= 0.25 + 1e-6 ? 2 : q <= 0.75 + 1e-6 ? 1 : 0;
-      ctx.fillStyle = INK;
-      for (let i = 0; i < flags; i++) {
-        const fy = up ? ey + i * g * 0.9 : ey - i * g * 0.9;
-        const dir = up ? 1 : -1;
-        ctx.beginPath();
-        ctx.moveTo(sx, fy);
-        ctx.bezierCurveTo(sx + g * 0.2, fy + dir * g * 1.0, sx + g * 1.5, fy + dir * g * 1.2, sx + g * 0.9, fy + dir * g * 2.4);
-        ctx.bezierCurveTo(sx + g * 1.2, fy + dir * g * 1.5, sx + g * 0.4, fy + dir * g * 1.3, sx, fy + dir * g * 1.0);
-        ctx.fill();
-      }
+    if (q < 4 && !noStem) {
+      const up = d < (bass ? 22 : 34);
+      this.drawStem(up ? x + rx - 0.8 : x - rx + 0.8, y, up ? y - g * 3.4 : y + g * 3.4, up, q, g);
     }
 
     // dot for dotted values
@@ -257,7 +255,42 @@ export class SheetView {
       ctx.arc(x + rx + g * 0.55, onLine ? y - g / 2 : y, g * 0.17, 0, Math.PI * 2);
       ctx.fill();
     }
-    return { x, y, rx, below: d >= (bass ? 22 : 34) };
+    return { x, y, rx, d, below: d >= (bass ? 22 : 34) };
+  }
+
+  // One stem (with flags) from y1 to y2.
+  drawStem(sx, y1, y2, up, q, g) {
+    const { ctx } = this;
+    ctx.strokeStyle = INK;
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(sx, y1);
+    ctx.lineTo(sx, y2);
+    ctx.stroke();
+    const flags = q <= 0.25 + 1e-6 ? 2 : q <= 0.75 + 1e-6 ? 1 : 0;
+    ctx.fillStyle = INK;
+    for (let i = 0; i < flags; i++) {
+      const fy = up ? y2 + i * g * 0.9 : y2 - i * g * 0.9;
+      const dir = up ? 1 : -1;
+      ctx.beginPath();
+      ctx.moveTo(sx, fy);
+      ctx.bezierCurveTo(sx + g * 0.2, fy + dir * g * 1.0, sx + g * 1.5, fy + dir * g * 1.2, sx + g * 0.9, fy + dir * g * 2.4);
+      ctx.bezierCurveTo(sx + g * 1.2, fy + dir * g * 1.5, sx + g * 0.4, fy + dir * g * 1.3, sx, fy + dir * g * 1.0);
+      ctx.fill();
+    }
+  }
+
+  // Shared stem for a chord: runs through all heads and on past the outermost one.
+  drawChordStem(x, heads, q, g, bass) {
+    if (q >= 4) return;
+    const avg = heads.reduce((t, h) => t + h.d, 0) / heads.length;
+    const up = avg < (bass ? 22 : 34);
+    const ys = heads.map((h) => h.y);
+    const top = Math.min(...ys);
+    const low = Math.max(...ys);
+    const rx = heads[0].rx;
+    if (up) this.drawStem(x + rx - 0.8, low, top - g * 3.4, true, q, g);
+    else this.drawStem(x - rx + 0.8, top, low + g * 3.4, false, q, g);
   }
 
   ledger(x, y, rx) {

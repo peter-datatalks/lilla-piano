@@ -34,7 +34,7 @@ export function checkSongs() {
     if (!song.titleEn) issues.push('no titleEn');
     if (!['easy', 'medium', 'hard'].includes(song.level)) issues.push(`bad level ${song.level}`);
     let range = '';
-    try { const b1 = buildSong(song, 'one'); const b2 = buildSong(song, 'two'); range = `1 hand ${label(b1.lo)}–${label(b1.hi)}, 2 hands ${label(b2.lo)}–${label(b2.hi)}`; } catch (e) { issues.push(e.message); }
+    try { const b1 = buildSong(song, 'one'); const b2 = buildSong(song, 'two'); const b3 = buildSong(song, 'chords'); range = `1 hand ${label(b1.lo)}–${label(b1.hi)}, 2 hands ${label(b2.lo)}–${label(b2.hi)}, chords ${label(b3.lo)}–${label(b3.hi)}`; } catch (e) { issues.push(e.message); }
     problems += issues.length;
     lines.push(`${issues.length ? '✗' : '✓'} ${song.country}/${song.title} [${song.level}, ${full.length} bars, ${range}]${issues.map((x) => `\n    ${x}`).join('')}`);
   }

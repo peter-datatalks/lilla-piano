@@ -97,11 +97,76 @@ function leftHand(song) {
   return events.filter((e) => e.time < end - 1e-6).map((e) => ({ ...e, dur: Math.min(e.dur, end - e.time) }));
 }
 
+// Chords mode (hard): full triads in the left hand, with a bass note on the strong beats.
+// 2/4 oom-pah, 3/4 oom-pah-pah, 4/4 bass-chord-fifth-chord, 6/8 bass then chord.
+// Triads are voiced between C3 and B3, each choosing the inversion closest to the previous
+// chord (smooth voice leading, so the hand barely moves); bass notes sit between E2 and D#3.
+const isMinor = (tok) => /^[A-G][#b]?m(?!aj)/.test(tok);
+
+function triadVoicing(tok, prev) {
+  const root = chordRoot(tok);
+  const pcs = [root, root + (isMinor(tok) ? 3 : 4), root + 7].map((x) => ((x % 12) + 12) % 12);
+  const options = [];
+  for (let low = 48; low < 60; low++) {
+    if (!pcs.includes(low % 12)) continue;
+    const notes = [low];
+    for (let m = low + 1; notes.length < 3 && m < low + 12; m++) if (pcs.includes(m % 12)) notes.push(m);
+    if (notes.length === 3 && notes[2] < 60) options.push(notes);
+  }
+  const target = prev || [52, 55, 59];
+  const cost = (v) => v.reduce((t, m, i) => t + Math.abs(m - target[i]), 0);
+  return options.sort((a, b) => cost(a) - cost(b))[0];
+}
+
+const bassNote = (pcRoot, offset = 0) => 40 + ((((pcRoot + offset) - 4) % 12) + 12) % 12; // E2..D#3
+
+function chordHand(song) {
+  if (!song.chords) return [];
+  const bpb = song.beatsPerBar;
+  const eighths = bpb === 6 && song.bpm >= 150;
+  const bars = song.chords.split(/\s+/).filter((x) => x && x !== '|');
+  const events = [];
+  let prev = null;
+  const add = (time, dur, midis, chord) => midis.forEach((midi) => events.push({ time, dur, midi, hand: 'L', chord }));
+  bars.forEach((bar, i) => {
+    const start = (song.pickup || 0) + i * bpb;
+    const segs = bar.split('.');
+    const segLen = bpb / segs.length;
+    segs.forEach((tok, j) => {
+      const st = start + j * segLen;
+      const triad = triadVoicing(tok, prev);
+      prev = triad;
+      const root = chordRoot(tok);
+      if (eighths && segLen === 6) { // 6/8: bass, then chord
+        add(st, 3, [bassNote(root)], tok);
+        add(st + 3, 3, triad, tok);
+      } else if (!eighths && segLen === 4) { // bass - chord - fifth - chord
+        add(st, 1, [bassNote(root)], tok);
+        add(st + 1, 1, triad, tok);
+        add(st + 2, 1, [bassNote(root, 7)], tok);
+        add(st + 3, 1, triad, tok);
+      } else if (!eighths && segLen === 3) { // oom-pah-pah
+        add(st, 1, [bassNote(root)], tok);
+        add(st + 1, 1, triad, tok);
+        add(st + 2, 1, triad, tok);
+      } else if (!eighths && segLen === 2) { // oom-pah
+        add(st, 1, [bassNote(root)], tok);
+        add(st + 1, 1, triad, tok);
+      } else { // short segments: one block chord
+        add(st, segLen, triad, tok);
+      }
+    });
+  });
+  const end = parseMelody(song.melody).reduce((t, e) => Math.max(t, e.time + e.dur), 0);
+  return events.filter((e) => e.time < end - 1e-6).map((e) => ({ ...e, dur: Math.min(e.dur, end - e.time) }));
+}
+
 // Song -> { events, steps, length, lo, hi }. A step is every note that starts at the same time.
-// hands: 'one' = melody only, 'two' = melody + generated left hand.
+// hands: 'one' = melody only, 'two' = melody + simple left hand, 'chords' = melody + full chords.
 export function buildSong(song, hands = 'one') {
   const rests = [];
-  const events = [...parseMelody(song.melody, rests), ...(hands === 'two' ? leftHand(song) : [])].sort(
+  const lh = hands === 'two' ? leftHand(song) : hands === 'chords' ? chordHand(song) : [];
+  const events = [...parseMelody(song.melody, rests), ...lh].sort(
     (a, b) => a.time - b.time || a.midi - b.midi,
   );
   const steps = [];
