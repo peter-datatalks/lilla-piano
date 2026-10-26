@@ -21,7 +21,7 @@ const state = {
   view: 'free',
   instrument: instrumentById(store.get('instrument', 'piano')).id,
   instrumentL: store.get('instrumentL', null), // left-hand instrument (null = same as right)
-  pickHand: 'R', // which hand the instrument picker is choosing for
+  target: 'both', // which hand(s) a tapped instrument goes to: 'both' | 'L' | 'R'
   recent: store.get('recent', ['piano', 'violin', 'flute', 'trumpet', 'alto_sax', 'xylophone']),
   freeOctave: null, // lowest octave shown in free play
   song: null,
@@ -110,43 +110,62 @@ function onUp(midi, src) {
 /* ---------- instruments ---------- */
 
 // Top bar: the most recently used instruments (current one first in the list).
+// Instrument row: the instruments in use plus recent ones. Tapping one assigns it to the
+// hand(s) chosen in the L | L+R | R selector. When the hands differ, badges show which is which.
 function renderInstruments() {
-  const lh = $('#lh-inst');
-  lh.innerHTML = `<span class="inst-icon">${iconFor(instFor('L'))}</span><span class="lh-badge">${t('handL')}</span>`;
-  lh.classList.toggle('set', splitActive());
-  lh.title = `${t('leftHand')}: ${state.instrumentL ? t(`inst.${state.instrumentL}`) : t('sameAsRight')}`;
+  document.querySelectorAll('.hand-target button').forEach((b) => b.setAttribute('aria-checked', b.dataset.target === state.target));
+  const right = state.instrument;
+  const left = instFor('L');
+  const split = splitActive();
+  const inUse = split ? [left, right] : [right];
+  const list = [...inUse, ...state.recent.filter((id) => !inUse.includes(id))].slice(0, Math.max(6, inUse.length + 4));
+  const ready = instrumentReady(right, kb.lo, kb.hi);
   const box = $('#instruments');
   box.innerHTML = '';
-  const ready = instrumentReady(state.instrument, kb.lo, kb.hi);
-  for (const id of state.recent) {
+  for (const id of list) {
     const inst = instrumentById(id);
+    const isR = id === right;
+    const isL = split && id === left;
     const b = document.createElement('button');
     b.className = 'inst-btn';
+    b.classList.toggle('on-left', isL);
+    b.classList.toggle('loading', isR && !ready);
     b.style.setProperty('--fc', FAMILIES.find((f) => f.id === inst.family).color);
-    b.classList.toggle('loading', inst.id === state.instrument && !ready);
     b.setAttribute('role', 'radio');
-    b.setAttribute('aria-checked', inst.id === state.instrument);
-    b.setAttribute('aria-label', t(`inst.${inst.id}`));
-    const rBadge = inst.id === state.instrument && splitActive() ? `<span class="rh-badge">${t('handR')}</span>` : '';
-    b.innerHTML = `<span class="inst-icon">${iconFor(inst.id)}</span><span class="inst-name">${t(`inst.${inst.id}`)}</span>${rBadge}`;
-    b.onclick = () => selectInstrument(inst.id);
+    b.setAttribute('aria-checked', isR || isL);
+    const who = isL ? t('leftHand') : isR && split ? t('rightHand') : '';
+    b.setAttribute('aria-label', `${t(`inst.${id}`)}${who ? ` (${who})` : ''}`);
+    const badges = `${isL ? `<span class="lh-badge">${t('handL')}</span>` : ''}${isR && split ? `<span class="rh-badge">${t('handR')}</span>` : ''}`;
+    b.innerHTML = `<span class="inst-icon">${iconFor(id)}</span><span class="inst-name">${t(`inst.${id}`)}</span>${badges}`;
+    b.onclick = () => selectInstrument(id, state.target);
     box.append(b);
   }
 }
 
-function selectInstrument(id, hand = 'R') {
+function setTarget(target) {
+  state.target = target;
+  renderInstruments();
+  if (!$('#inst-sheet').classList.contains('hidden')) openSheet(target);
+}
+
+// target: 'both' (one instrument for both hands), 'L' or 'R' (only that hand). id null = left follows right.
+function selectInstrument(id, target = 'both') {
   unlock();
-  if (hand === 'L') {
-    state.instrumentL = id; // null = same as right hand
-    store.set('instrumentL', id);
-    track('instrument', { instrument: id || 'same', hands: 'L' });
+  const oldRight = state.instrument;
+  if (target === 'L') {
+    state.instrumentL = id && id !== state.instrument ? id : null;
   } else {
+    if (target === 'R' && !state.instrumentL && id !== oldRight) state.instrumentL = oldRight; // left keeps its sound
+    if (target === 'both') state.instrumentL = null;
     state.instrument = id;
-    if (!state.recent.includes(id)) state.recent = [id, ...state.recent].slice(0, 6);
-    store.set('instrument', id);
-    store.set('recent', state.recent);
-    track('instrument', { instrument: id });
+    if (state.instrumentL === id) state.instrumentL = null;
   }
+  if (id && !state.recent.includes(id)) state.recent = [id, ...state.recent].slice(0, 6);
+  store.set('instrument', state.instrument);
+  store.set('instrumentL', state.instrumentL);
+  store.set('recent', state.recent);
+  track('instrument', { instrument: id || 'same', hands: target });
+  const hand = target === 'L' ? 'L' : 'R';
   renderInstruments();
   applySplit();
   preloadCurrent();
@@ -169,13 +188,14 @@ function preloadCurrent() {
   preloadInstrument(id, kb.lo, kb.hi).then(() => { if (state.instrument === id) renderInstruments(); });
 }
 
-function openSheet(hand = state.pickHand) {
-  state.pickHand = hand;
-  document.querySelectorAll('.hand-tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.hand === hand));
-  const current = hand === 'L' ? state.instrumentL : state.instrument;
+function openSheet(target = state.target) {
+  state.target = target;
+  renderInstruments();
+  document.querySelectorAll('.hand-tab').forEach((b) => b.setAttribute('aria-selected', b.dataset.hand === target));
+  const current = target === 'L' ? instFor('L') : state.instrument;
   const body = $('#sheet-body');
   body.innerHTML = '';
-  if (hand === 'L') {
+  if (target === 'L') {
     const same = document.createElement('button');
     same.className = 'inst-card same-card';
     same.classList.toggle('selected', !state.instrumentL);
@@ -195,7 +215,7 @@ function openSheet(hand = state.pickHand) {
       b.className = 'inst-card';
       b.classList.toggle('selected', inst.id === current);
       b.innerHTML = `<span class="inst-icon">${iconFor(inst.id)}</span><span class="inst-name">${t(`inst.${inst.id}`)}</span>`;
-      b.onclick = () => { closeSheet(); selectInstrument(inst.id, hand); };
+      b.onclick = () => { closeSheet(); selectInstrument(inst.id, target); };
       grid.append(b);
     }
     sec.append(grid);
@@ -896,9 +916,9 @@ function confetti() {
 document.querySelectorAll('.mode-btn').forEach((b) => (b.onclick = () => { unlock(); setView(b.dataset.go); }));
 $('#oct-down').onclick = () => shiftOctave(-1);
 $('#oct-up').onclick = () => shiftOctave(1);
-$('#more-inst').onclick = () => { unlock(); openSheet('R'); };
-$('#lh-inst').onclick = () => { unlock(); openSheet('L'); };
+$('#more-inst').onclick = () => { unlock(); openSheet(); };
 document.querySelectorAll('.hand-tab').forEach((b) => (b.onclick = () => openSheet(b.dataset.hand)));
+document.querySelectorAll('.hand-target button').forEach((b) => (b.onclick = () => setTarget(b.dataset.target)));
 $('#sheet-close').onclick = closeSheet;
 $('#offline-btn').onclick = saveOffline;
 $('#inst-sheet').onclick = (e) => { if (e.target.id === 'inst-sheet') closeSheet(); };
