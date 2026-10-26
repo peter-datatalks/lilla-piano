@@ -5,7 +5,8 @@ import { SONGS, LEVELS, COUNTRIES, THEMES } from './songs.js';
 import { buildSong, fitRange, noteColor, noteName, eventName, setNoteNames } from './music.js';
 import { LANGS, t, getLang, setLang, translateDom, songTitles } from './i18n.js';
 import { brandHTML, brandMini } from './brand.js';
-import { getName, setName, hasAskedName, recordPlay, favourites, track } from './profile.js';
+import { getName, setName, hasAskedName, recordPlay, favourites, track, songScores, saveScore, migrateDone } from './profile.js';
+import { newRun, scoreRun, starsText } from './score.js';
 import { Keyboard } from './keyboard.js';
 import { Cascade } from './cascade.js';
 import { SheetView } from './sheet.js';
@@ -41,6 +42,7 @@ const state = {
 
 // Older saves: done[id] === true meant "played" before hands existed; theme ids were Swedish.
 for (const [id, v] of Object.entries(state.done)) if (v === true) state.done[id] = { one: true };
+migrateDone(state.done);
 state.theme = { classic: 'children', jul: 'christmas', midsommar: 'midsummer' }[state.theme] || state.theme;
 if (state.theme !== 'all' && !THEMES.includes(state.theme)) state.theme = 'all';
 if (state.country !== 'all' && !COUNTRIES.includes(state.country)) state.country = 'all';
@@ -656,14 +658,14 @@ function escapeHtml(s) {
 
 function songCard(s, ownColour = false) {
   const { main, sub } = songTitles(s);
-  const done = state.done[s.id] || {};
+  const best = Math.max(0, ...Object.values(songScores(s.id)).map((r) => r.stars || 0));
   const b = document.createElement('button');
   b.className = 'song-card';
   if (ownColour) b.style.setProperty('--lc', LEVEL_STYLE[s.level].color);
   b.innerHTML = `<span class="song-flag">${COUNTRY_FLAG[s.country] || ''}</span>
     <span class="song-emoji">${s.emoji}</span>
     <span class="song-name">${main}</span>${sub ? `<span class="song-sub">${sub}</span>` : ''}
-    <span class="song-done">${done.one ? '☝️' : ''}${done.two ? '🙌' : ''}${done.chords ? '💪' : ''}</span>`;
+    ${best ? `<span class="song-done" title="${t('bestStars')}">${starsText(best)}</span>` : ''}`;
   b.onclick = () => { unlock(); askHands(s); };
   return b;
 }
@@ -695,8 +697,12 @@ function askHands(song) {
   state.pendingSong = song;
   const { main } = songTitles(song);
   $('#hands-song').innerHTML = `<span class="song-emoji">${song.emoji}</span> ${main}`;
-  const done = state.done[song.id] || {};
-  document.querySelectorAll('#hands-sheet .hands-done').forEach((el) => { el.hidden = !done[el.dataset.done]; });
+  const scores = songScores(song.id);
+  document.querySelectorAll('#hands-sheet .hands-done').forEach((el) => {
+    const r = scores[el.dataset.done];
+    el.hidden = !r;
+    if (r) el.innerHTML = `<span class="best-stars">${starsText(r.stars)}</span>${r.best ? `<span class="best-score">🏆 ${fmtScore(r.best)}</span>` : ''}`;
+  });
   $('#hands-sheet').classList.remove('hidden');
 }
 
@@ -734,13 +740,22 @@ function renderSongHead() {
   $('#song-title').innerHTML = `<span class="song-emoji">${song.emoji}</span>
     <span class="song-title-text"><span class="song-title-main">${main}</span>${sub ? `<small>${sub}</small>` : ''}</span>
     <span class="stars" style="color:${style.color}">${'★'.repeat(style.stars)}</span>
-    <button class="link-mini" id="copy-link" title="${t('copyLink')}" aria-label="${t('copyLink')}">🔗</button>`;
+    <button class="link-mini" id="copy-link" title="${t('copyLink')}" aria-label="${t('copyLink')}">🔗</button>
+    ${bestBadge()}`;
   $('#copy-link').onclick = copySongLink;
   const btn = $('#btn-hands');
   btn.innerHTML = [['one', '☝️'], ['two', '🙌'], ['chords', '💪']]
     .map(([h, icon]) => `<span data-h="${h}" class="${state.hands === h ? 'on' : ''}">${icon}</span>`).join('');
   btn.title = t({ one: 'oneHand', two: 'twoHands', chords: 'chordHands' }[state.hands]);
 }
+
+function bestBadge() {
+  const r = songScores(state.song.id)[state.hands];
+  if (!r) return '';
+  return `<span class="best-badge" title="${t('yourBest')}"><span class="best-stars">${starsText(r.stars)}</span>${r.best ? ` ${fmtScore(r.best)}` : ''}</span>`;
+}
+
+const fmtScore = (n) => n.toLocaleString(getLang() === 'sv' ? 'sv-SE' : 'en-GB');
 
 function setProgress(f) { $('#progress').style.width = `${Math.round(f * 100)}%`; }
 
@@ -833,7 +848,7 @@ function startGuided() {
   recordPlay(state.song.id);
   track('play', songEvent());
   state.mode = 'guided';
-  state.guided = { i: 0, hit: new Set(), lastInput: performance.now() };
+  state.guided = { i: 0, hit: new Set(), lastInput: performance.now(), run: newRun(state.built.steps.length) };
   $('#btn-play').classList.remove('pulse');
   $('#btn-play').classList.add('active');
   kb.setGuided(true);
@@ -859,11 +874,13 @@ function guidedInput(midi) {
     g.hit.add(midi);
     kb.markHit(midi);
     if (step.notes.every((n) => g.hit.has(n.midi))) {
+      g.run.at[g.i] = performance.now();
       g.i++;
       if (g.i >= state.built.steps.length) finish();
       else showStep();
     }
   } else {
+    g.run.wrong[g.i]++;
     kb.nudge(step.notes); // gentle wiggle, never a "wrong" sound
   }
 }
@@ -874,6 +891,7 @@ setInterval(() => {
   if (state.mode !== 'guided' || !g || document.hidden) return;
   if (performance.now() - g.lastInput < 6000) return;
   g.lastInput = performance.now();
+  g.run.hinted[g.i] = true;
   const step = state.built.steps[g.i];
   step.notes.forEach((n) => { const v = playNote(instFor(n.hand), n.midi, 0.35); setTimeout(() => v.release(), 500); });
   kb.nudge(step.notes);
@@ -881,16 +899,42 @@ setInterval(() => {
 
 function finish() {
   setProgress(1);
+  const result = scoreRun(state.built.steps, state.guided.run);
+  const prev = saveScore(state.song.id, state.hands, result);
   state.done[state.song.id] = { ...state.done[state.song.id], [state.hands]: true };
-  track('complete', songEvent());
+  track('complete', { ...songEvent(), score: result.score, stars: result.stars });
   store.set('done', state.done);
   stopAll();
   cascade.current = -1;
+  renderSongHead();
   setTimeout(() => {
     jingle();
-    $('#celebrate').classList.remove('hidden');
+    showCelebration(result, prev);
     confetti();
   }, 250);
+}
+
+// Stars pop in one by one, the score counts up, and a returning player sees their best.
+function showCelebration({ score, stars }, { prevBest, firstTime }) {
+  const name = getName();
+  $('#celebrate-title').textContent = name ? t('bravoName').replace('{name}', name) : t('bravo');
+  $('#celebrate-stars').innerHTML = [1, 2, 3]
+    .map((i) => `<span class="cstar ${i <= stars ? 'on' : ''}" style="animation-delay:${0.15 + i * 0.25}s">★</span>`).join('');
+  const newBest = !firstTime && score > prevBest;
+  $('#celebrate-best').innerHTML = newBest ? `🏆 ${t('newBest')}`
+    : firstTime ? '' : `${t('yourBest')}: ${fmtScore(prevBest)}`;
+  $('#celebrate-best').className = `celebrate-best${newBest ? ' new' : ''}`;
+  $('#celebrate').classList.remove('hidden');
+  const el = $('#celebrate-score');
+  const start = performance.now();
+  const tick = (now) => {
+    const f = Math.min(1, (now - start) / 900);
+    el.textContent = fmtScore(Math.round((score * (1 - (1 - f) ** 3)) / 10) * 10);
+    if (f < 1) requestAnimationFrame(tick);
+  };
+  el.textContent = '0';
+  requestAnimationFrame(tick);
+  setTimeout(() => { el.textContent = fmtScore(score); }, 1000); // in case animation frames are paused
 }
 
 /* ---------- note views: falling notes, sheet music, do-re-mi ---------- */

@@ -17,7 +17,7 @@
  */
 
 const SHEET = 'events';
-const HEADERS = ['received', 'ts', 'deviceId', 'name', 'lang', 'type', 'song', 'hands', 'view', 'instrument'];
+const HEADERS = ['received', 'ts', 'deviceId', 'name', 'lang', 'type', 'song', 'hands', 'view', 'instrument', 'score', 'stars'];
 
 function sheet_() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -26,6 +26,8 @@ function sheet_() {
     sh = ss.insertSheet(SHEET);
     sh.appendRow(HEADERS);
     sh.setFrozenRows(1);
+  } else if (sh.getLastColumn() < HEADERS.length) {
+    sh.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]); // sheets made before score/stars existed
   }
   return sh;
 }
@@ -55,6 +57,8 @@ function doPost(e) {
       clean_(ev.hands, 10),
       clean_(ev.view, 10),
       clean_(ev.instrument, 30),
+      ev.score == null ? '' : Number(ev.score) || 0,
+      ev.stars == null ? '' : Number(ev.stars) || 0,
     ]);
     if (rows.length) {
       const sh = sheet_();
@@ -76,6 +80,7 @@ function doGet(e) {
   const rows = values.map((r) => ({
     ts: r[1] || (r[0] instanceof Date ? r[0].toISOString() : String(r[0])),
     deviceId: r[2], name: r[3], lang: r[4], type: r[5], song: r[6], hands: r[7], view: r[8], instrument: r[9],
+    score: r[10] === '' ? null : r[10], stars: r[11] === '' ? null : r[11],
   }));
   return json_({ rows });
 }

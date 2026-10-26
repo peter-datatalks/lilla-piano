@@ -326,7 +326,7 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; }
 .song-card .song-name { font-family: var(--font-display); font-size: 17px; font-weight: 700; text-align: center; line-height: 1.1; }
 .song-sub { font-size: 12px; color: var(--muted-foreground); text-align: center; line-height: 1.15; }
 .song-flag { position: absolute; top: 12px; left: 10px; font-size: 16px; }
-.song-done { position: absolute; top: 12px; right: 8px; font-size: 15px; letter-spacing: 1px; }
+.song-done { position: absolute; top: 10px; right: 10px; font-size: 15px; letter-spacing: 1px; color: oklch(72% 0.16 80); }
 .empty { color: var(--muted-foreground); font-size: 18px; text-align: center; margin-top: 30px; }
 
 /* song view */
@@ -665,7 +665,10 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; }
 .hands-emoji { font-size: clamp(48px, 10vw, 72px); line-height: 1.1; }
 .hands-choice strong { font-family: var(--font-display); font-size: 24px; font-weight: 700; }
 .hands-choice small { font-size: 14px; color: var(--muted-foreground); text-align: center; }
-.hands-done { position: absolute; top: 8px; right: 12px; font-size: 22px; }
+.hands-done { position: absolute; top: 8px; right: 12px; display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; }
+.hands-done[hidden] { display: none; }
+.hands-done .best-stars { font-size: 20px; letter-spacing: 1px; color: oklch(72% 0.16 80); }
+.hands-done .best-score { font-size: 13px; font-weight: 800; color: var(--muted-foreground); }
 @media (max-height: 520px) {
   .hands-choice { padding: 10px; }
   .hands-emoji { font-size: 44px; }
@@ -673,8 +676,24 @@ h1, h2, h3 { font-family: var(--font-display); font-weight: 700; }
 
 /* celebration */
 .celebrate-card { padding: 26px 34px; text-align: center; }
-.celebrate-stars { font-size: 48px; letter-spacing: 6px; }
-.celebrate-card h2 { margin: 6px 0 16px; font-size: 42px; color: var(--primary); }
+.celebrate-stars { display: flex; justify-content: center; gap: 8px; font-size: 64px; line-height: 1; }
+.cstar { color: oklch(88% 0.02 80); opacity: 0; transform: scale(0.3); animation: star-pop 0.45s cubic-bezier(.3,1.6,.5,1) forwards; }
+.cstar.on { color: oklch(78% 0.17 80); text-shadow: 0 3px 0 oklch(65% 0.15 70); }
+@keyframes star-pop { to { opacity: 1; transform: scale(1); } }
+.celebrate-card h2 { margin: 8px 0 4px; font-size: 38px; color: var(--primary); }
+.celebrate-score { font-family: var(--font-display); font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.celebrate-score small { font-family: Nunito, sans-serif; font-size: 16px; color: var(--muted-foreground); }
+.celebrate-best { min-height: 26px; margin: 2px 0 14px; font-size: 16px; font-weight: 700; color: var(--muted-foreground); }
+.celebrate-best.new { color: var(--accent); animation: pulse 1.2s ease-in-out 3; }
+.best-badge { font-size: 0.55em; font-family: Nunito, sans-serif; font-weight: 800; white-space: nowrap; color: var(--muted-foreground); }
+.best-badge .best-stars { color: oklch(72% 0.16 80); letter-spacing: 1px; }
+@media (max-height: 520px) {
+  .celebrate-card { padding: 16px 26px; }
+  .celebrate-stars { font-size: 44px; }
+  .celebrate-card h2 { font-size: 28px; }
+  .celebrate-score { font-size: 26px; }
+  .celebrate-best { margin-bottom: 8px; }
+}
 .celebrate-actions { display: flex; gap: 12px; justify-content: center; }
 .celebrate-actions .big-btn span { display: inline; }
 .celebrate-actions .big-btn { width: auto; padding: 0 20px; }

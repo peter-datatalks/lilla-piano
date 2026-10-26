@@ -45,6 +45,46 @@ export function favourites(limit = 5) {
     .map(([id]) => id);
 }
 
+/* ---------- best scores, kept per player name on this device ---------- */
+
+// scores: { playerKey: { songId: { hands: { best, stars, plays, last, at } } } }
+const playerKey = () => getName().trim().toLowerCase() || '_';
+
+export function songScores(songId) {
+  return read('scores', {})[playerKey()]?.[songId] || {};
+}
+
+/** Saves a finished run; returns the previous best so the celebration can say "new best". */
+export function saveScore(songId, hands, { score, stars }) {
+  const all = read('scores', {});
+  const mine = (all[playerKey()] ||= {});
+  const song = (mine[songId] ||= {});
+  const prev = song[hands] || { best: 0, stars: 0, plays: 0 };
+  song[hands] = {
+    best: Math.max(prev.best, score),
+    stars: Math.max(prev.stars, stars),
+    plays: prev.plays + 1,
+    last: score,
+    at: new Date().toISOString(),
+  };
+  write('scores', all);
+  return { prevBest: prev.best, prevStars: prev.stars, firstTime: prev.plays === 0 };
+}
+
+/** Songs finished before scoring existed count as one star for the current player. */
+export function migrateDone(done) {
+  if (read('scoresMigrated', false)) return;
+  const all = read('scores', {});
+  const mine = (all[playerKey()] ||= {});
+  for (const [id, hands] of Object.entries(done || {})) {
+    for (const [h, ok] of Object.entries(hands || {})) {
+      if (ok && !mine[id]?.[h]) ((mine[id] ||= {})[h] = { best: 0, stars: 1, plays: 1, last: 0, at: null });
+    }
+  }
+  write('scores', all);
+  write('scoresMigrated', true);
+}
+
 /* ---------- usage events → Google Sheet ---------- */
 
 const MAX_QUEUE = 500;
