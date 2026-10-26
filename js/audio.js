@@ -263,10 +263,11 @@ function playSynth(presetId, midi, vel = 0.8, when) {
   return voice;
 }
 
-// Short happy arpeggio for celebrations.
+// Short happy arpeggio for celebrations: kept soft so it sits below a played piano note
+// (the overlapping high notes add up and sound much louder than their level suggests).
 export function jingle() {
   const t = now();
-  [60, 64, 67, 72, 76, 79, 84].forEach((m, i) => playSynth('glock', m, 0.7, t + i * 0.09));
+  [60, 64, 67, 72, 76, 79, 84].forEach((m, i) => playSynth('glock', m, 0.24 - i * 0.015, t + i * 0.09));
 }
 
 /* ---------- recorded samples ---------- */
