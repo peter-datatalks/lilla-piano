@@ -610,4 +610,85 @@ export const SONGS_CLASSICAL_E = [
              F4 G#4 A4 C5 B4 A4 | A4:4 R:1`,
     chords: 'A Dm Gm Dm A Dm E Am E Am',
   },
+  // Fantaisie-Impromptu Op. 66 (Chopin, 1834; published 1855) — the cantabile theme of the middle section (Moderato
+  //  cantabile), bars 43–58. Original D-flat major, 2/2 (counted here in quarters) - moved down a semitone to C (F#4–G5).
+  //  The B-flat tied from bar 46 into 47 (and 54–55) is written as note + rest; the written-out turn in bar 57 is kept.
+  //  The upbeat at the end of bar 58 is left out.
+  //  Source: Chopin First Editions (Fryderyk Chopin Institute, CC BY 4.0), https://github.com/pl-wnifc/humdrum-chopin-first-editions
+  //  kern/066-1-Sam.krn (converted mechanically). Cross-check: MU 'ChopinFF/O66/chopin_fantaisie-impromptu/' MIDI —
+  //  same notes apart from ornaments (it adds turns in bars 49 and 53).
+  //  Chords from its left hand. Public domain music. Confidence: high.
+  {
+    id: 'chopin-fantaisie-impromptu',
+    country: 'pl',
+    themes: ['classical'],
+    title: 'Fantaisie-Impromptu',
+    titleEn: 'Fantaisie-Impromptu (Middle Theme)',
+    composer: 'Chopin',
+    aka: ['Op. 66', "I'm Always Chasing Rainbows", 'Fantasie-Impromptu', 'Moderato cantabile'],
+    emoji: '🌈',
+    level: 'medium',
+    bpm: 72,
+    beatsPerBar: 4,
+    melody: `G4:2 A4:0.5 G4:0.5 C5:0.5 D5:0.5 | E5:2 G5:2 | F5 E5 D5 E5:0.75 C5:0.25 | G4:2 A4:2 |
+             R:2 Bb4:0.5 A4:0.5 D5:0.5 E5:0.5 | F5 E5 D5 E5 | C5:2 E5:1.5 D5:0.5 | D5:4 |
+             G4:2 A4:0.5 G4:0.5 C5:0.5 D5:0.5 | E5:2 G5:2 | F5 E5 D5 E5:0.75 C5:0.25 | G4:2 A4:2 |
+             R:2 Bb4:0.5 A4:0.5 D5:0.5 E5:0.5 | F5 E5 D5 E5 |
+             C5:1.5 F#4:0.125 G4:0.125 A4:0.125 G4:0.125 E5:1.5 D5:0.5 | D5:2 C5 R:1`,
+    chords: 'C C G.C G.F A Dm C.D G G C G.C G.F A Dm C G.C',
+  },
+  // Mazurka Op. 7 No. 1 (Chopin, 1832) — Original B-flat major, 3/4 - moved down a minor sixth to D major (G#3–F#5).
+  //  Bars 13–24: the 12-bar theme in its second, closing statement (bars 1–11 are the same). The first edition writes the
+  //  upbeat figures as "8 – 16 rest – 16", kept here.
+  //  Source: Chopin First Editions (Fryderyk Chopin Institute, CC BY 4.0), https://github.com/pl-wnifc/humdrum-chopin-first-editions
+  //  kern/007-1-KI-001.krn (converted mechanically). Chords from its left hand. Public domain music. Confidence: high.
+  {
+    id: 'chopin-mazurka-op7-1',
+    country: 'pl',
+    themes: ['classical'],
+    title: 'Mazurek B-dur',
+    titleEn: 'Mazurka in B-flat Major',
+    composer: 'Chopin',
+    aka: ['Op. 7 No. 1', 'Mazurka', 'Mazurek'],
+    emoji: '💃',
+    level: 'medium',
+    bpm: 132,
+    beatsPerBar: 3,
+    melody: `A3:0.5 R:0.25 A3:0.25 B3 C#4 | D4:0.5 R:0.25 E4:0.25 F#4 G4:0.5 A4:0.5 | B4:0.5 R:0.25 C#5:0.25 D5 C#5:0.5 B4:0.5 |
+             D5:0.5 R:0.25 D5:0.25 F#4:2 | B4:0.5 R:0.25 B4:0.25 C#4:2 | F#4:0.5 R:0.25 F#4:0.25 G#3:2 |
+             A3:0.5 R:0.25 C#4:0.25 E4:0.5 G4:0.5 B4:0.75 A4:0.25 | F#5:0.5 R:0.25 E5:0.25 D5:0.5 B4:0.5 A4 |
+             D5:0.5 R:0.25 D5:0.25 C#4:2 | A4:0.5 R:0.25 A4:0.25 G#3:2 | A3:0.5 R:0.25 C#4:0.25 E4:0.5 G4:0.5 F#4:0.5 E4:0.5 |
+             F#4:0.5 R:0.25 A3:0.25 D4 C#4:0.5 D4:0.5`,
+    chords: 'A D G D A D A D A D A D',
+  },
+  // Ave Maria (Ellens dritter Gesang), D 839 (Schubert, 1825) — the WHOLE first stanza of the voice part, bars 3–14,
+  //  including the ornate middle (sextuplets and dotted 32nds). Original B-flat major, 4/4 - moved up a tone to C (G4–G5).
+  //  The C tied within bar 8 is merged; grace notes dropped. (The existing 'schubert-ave-maria' entry has only the opening.)
+  //  Source: OS 'Schubert,_Franz/Op.52/6_Ellens_Gesang_III,_D.839_(Ave_Maria)/lc6389103.mxl' (MusicXML; converted mechanically).
+  //  Cross-check: MU 'SchubertF/D839/SchubertF-D839_AveMaria/' MIDI — same notes apart from grace notes.
+  //  Chords from the OS piano part. Public domain. Confidence: high.
+  {
+    id: 'schubert-ave-maria-full',
+    country: 'at',
+    themes: ['classical'],
+    title: 'Ave Maria (ganze Strophe)',
+    titleEn: 'Ave Maria (Full Verse)',
+    composer: 'Schubert',
+    aka: ['Ellens dritter Gesang', 'D 839', 'Op. 52 No. 6', 'Ave Maria'],
+    emoji: '🙏',
+    level: 'hard',
+    bpm: 52,
+    beatsPerBar: 4,
+    melody: `C5:1.5 B4:0.25 C5:0.25 E5:1.75 D5:0.25 | C5 R:1 D5 C5:0.25 B4:0.25 A4:0.25 B4:0.25 |
+             C5 R:0.5 E5:0.5 E5:0.75 D5:0.125 C5:0.125 B4:0.25 A4:0.25 E5:0.25 F#5:0.25 |
+             E5 D#5:0.75 B4:0.25 D5:0.75 C5:0.25 B4:1/6 D5:1/6 E5:1/6 F5:1/6 D5:1/6 B4:1/6 |
+             C5:1.5 E5:0.25 D5:0.25 D5:0.75 B4:0.25 A4:1/6 C#5:1/6 E5:1/6 G5:1/6 E5:1/6 C#5:1/6 |
+             D5:7/6 A4:1/6 B4:1/6 C5:1/6 B4:1/6 A4:1/6 G4 R:0.5 G4:0.5 |
+             D5:0.75 D5:0.25 D5:0.375 C#5:0.125 D5:0.375 E5:0.125 D5:0.375 E5:0.125 C5:0.5 R:0.5 C5:0.5 |
+             D5:0.75 D5:0.25 D5:1/6 C#5:1/6 D5:1/6 F5:1/6 E5:1/6 D5:1/6 C5 R:0.5 C5:0.5 |
+             D5:0.75 D5:0.25 E5:0.375 E5:0.125 E5:1/6 D5:1/6 E5:1/6 F5:0.5 F5:0.5 R:0.75 A4:0.25 |
+             D5:0.5 D5:0.5 C5:1/6 B4:1/6 C5:1/6 Eb5:1/6 D5:1/6 C5:1/6 D5:1.5 R:0.5 |
+             C5:1.5 B4:0.25 C5:0.25 E5:1.75 D5:0.25 | C5 R:3`,
+    chords: 'C Am.Dm C B.G Am.Em G G.C G.Am E.Dm D.G C C',
+  },
 ];

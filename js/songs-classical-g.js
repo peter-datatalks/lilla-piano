@@ -8,6 +8,129 @@
 // MU = https://www.mutopiaproject.org/ftp/
 
 export const SONGS_CLASSICAL_G = [
+  // Vltava (Die Moldau, Má vlast No. 2, 1874; published 1880) — the river theme, 8 bars with upbeat.
+  //  Original E minor, 6/8 - moved down a fifth to A minor (range E4–F5). Counted in eighths. The B tied inside bar 4 is one note.
+  //  Source: LilyPond on https://en.wikipedia.org/wiki/Má_vlast (Vltava section). Only one notated source used. Chords simplified.
+  //  Public domain (Smetana d. 1884). Confidence: high.
+  {
+    id: 'smetana-vltava',
+    country: 'cz',
+    themes: ['classical'],
+    title: 'Vltava',
+    titleEn: 'The Moldau',
+    composer: 'Smetana',
+    aka: ['Má vlast', 'My Country', 'Die Moldau', 'Moldau'],
+    emoji: '🏞️',
+    level: 'medium',
+    bpm: 176,
+    beatsPerBar: 6,
+    pickup: 1,
+    melody: `E4 |
+             A4:2 B4 C5:2 D5 | E5:2 E5 E5:3 | F5:3 F5:3 | E5:5 E5 | D5:3 D5:2 D5 | C5:2 D5 C5:2 C5 | B4:3 B4:2 B4 | A4:2 R:3`,
+    chords: 'Am Am F Am Dm C E Am',
+  },
+  // Шехеразада (Scheherazade, Op. 35, 1888), III "The Young Prince and the Young Princess" — violin theme, 8 bars with upbeat.
+  //  Original G major, 6/8, kept. Counted in eighths. The grace notes in bar 7 are dropped; the B tied inside bar 2 is one note.
+  //  Source: LilyPond on https://en.wikipedia.org/wiki/Scheherazade_(Rimsky-Korsakov) (third-movement theme).
+  //  Only one notated source used. Chords simplified. Public domain (Rimsky-Korsakov d. 1908). Confidence: high.
+  {
+    id: 'rimsky-korsakov-scheherazade',
+    country: 'ru',
+    themes: ['classical'],
+    title: 'Шехеразада',
+    titleEn: 'Scheherazade (The Young Prince and Princess)',
+    composer: 'Rimsky-Korsakov',
+    aka: ['Scheherazade', 'Op. 35', 'The Young Prince and the Young Princess'],
+    emoji: '👸',
+    level: 'medium',
+    bpm: 160,
+    beatsPerBar: 6,
+    pickup: 2,
+    melody: `B4 C5 |
+             D5:1.5 E5:0.5 D5 B4:1.5 A4:0.5 G4 | B4:4 B4 C5 | D5 E5:0.5 D5:0.5 E5:0.5 D5:0.5 C5:0.5 B4:0.5 C5:0.5 B4:0.5 A4:0.5 G4:0.5 | B4:3 E4 E4 G4 |
+             A4:1.5 B4:0.5 A4 G4 F#4 G4 | E4:3 G4:2 F#4 | E4 F#4 G4 A4 G4:1.5 F#4:0.5 | G4:4`,
+    chords: 'G G G Em Am.D Em Am.D G',
+  },
+  // Chanson de matin (Op. 15 No. 2, 1899) — the opening melody, 8 bars.
+  //  Original G major, 2/4 - moved down a fifth to C. The long notes at the end of each half are tied over (note + rest bar).
+  //  Source: LilyPond on https://en.wikipedia.org/wiki/Chanson_de_Matin. Only one notated source used. Chords simplified.
+  //  Public domain (Elgar d. 1934; published 1899). Confidence: medium-high.
+  {
+    id: 'elgar-chanson-de-matin',
+    country: 'gb',
+    themes: ['classical'],
+    title: 'Chanson de matin',
+    titleEn: 'Morning Song',
+    composer: 'Elgar',
+    aka: ['Op. 15 No. 2', 'Chanson de Matin'],
+    emoji: '🌄',
+    level: 'easy',
+    bpm: 80,
+    beatsPerBar: 2,
+    melody: `C5 C5 | C5:0.5 B4:0.5 A4:0.5 B4:0.25 C5:0.25 | G4:0.5 F4:0.5 D4 | R:2 |
+             E5 E5 | E5:0.5 D5:0.5 C5:0.5 D5:0.25 E5:0.25 | C5:0.5 B4:0.5 G4 | R:2`,
+    chords: 'C C G G C C G G',
+  },
+  // The Great Gate of Kiev (Pictures at an Exhibition, 1874; published 1886) — opening hymn, bars 1–8 (top voice of the chords).
+  //  Original E-flat major, 2/2 - moved down a minor third to C; written in 4/4 (quarter = beat).
+  //  Source: MU + 'MussorgskyM/pictures-at-an-exhibition/' (great-gate, LilyPond + MIDI, converted mechanically).
+  //  Cross-check: https://en.wikipedia.org/wiki/Pictures_at_an_Exhibition (LilyPond, bars 1–8) — identical.
+  //  Chords from the Mutopia left hand (simplified). Public domain (Mussorgsky d. 1881). Confidence: high.
+  {
+    id: 'mussorgsky-great-gate-of-kiev',
+    country: 'ru',
+    themes: ['classical'],
+    title: 'Богатырские ворота',
+    titleEn: 'The Great Gate of Kiev',
+    composer: 'Mussorgsky',
+    aka: ['Pictures at an Exhibition', 'The Bogatyr Gates', 'Great Gate of Kyiv'],
+    emoji: '🏛️',
+    level: 'easy',
+    bpm: 112,
+    beatsPerBar: 4,
+    melody: `C5:4 | D5:4 | E5:2 C5 E5 | D5:2 G4:2 | E5 G5 D5 C5 | B4:2 G4:2 | E5 G5 D5 C5 | B4:2 G4:2`,
+    chords: 'C G Am G C G.Em C G.Em',
+  },
+  // Largo (Symphony No. 9 "From the New World", Op. 95, 1893), 2nd movement — cor anglais solo, bars 7–18.
+  //  Original D-flat major, 4/4 - moved down a semitone to C. Source: MU + 'DvorakA/O95/Sym9/' (Mvt2_Largo, LilyPond + MIDI,
+  //  converted mechanically). Chords from the Mutopia string parts (simplified). Public domain (Dvořák d. 1904). Confidence: high.
+  {
+    id: 'dvorak-new-world-largo',
+    country: 'cz',
+    themes: ['classical', 'lullaby'],
+    title: 'Largo (Z Nového světa)',
+    titleEn: 'Largo (New World Symphony)',
+    composer: 'Dvořák',
+    aka: ['Going Home', 'From the New World', 'Symphony No. 9', 'Op. 95'],
+    emoji: '🏡',
+    level: 'easy',
+    bpm: 56,
+    beatsPerBar: 4,
+    melody: `E4:0.75 G4:0.25 G4 E4:0.75 D4:0.25 C4 | D4:0.75 E4:0.25 G4:0.75 E4:0.25 D4:2 | E4:0.75 G4:0.25 G4 E4:0.75 D4:0.25 C4 | D4:0.5 E4:0.5 D4:0.75 C4:0.25 C4:2 |
+             A4:0.75 C5:0.25 C5 B4:0.5 G4:0.5 A4 | A4:0.5 C5:0.5 B4:0.5 G4:0.5 A4:2 | A4:0.75 C5:0.25 C5 B4:0.5 G4:0.5 A4 | A4:0.5 C5:0.5 B4:0.5 G4:0.5 A4:2 |
+             E4:0.75 G4:0.25 G4 E4:0.5 D4:0.5 C4 | D4:0.75 E4:0.25 G4:0.75 E4:0.25 D4:2 | E4:0.75 G4:0.25 G4 C5:0.75 D5:0.25 E5 | D5:0.75 C5:0.25 D5:0.5 A4:0.5 C5:2`,
+    chords: 'C G C G.C F F F F C G C F.C',
+  },
+  // Danse napolitaine (Swan Lake, Op. 20, Act III) — the cornet tune, 8 bars (its second statement, which ends on the tonic).
+  //  Moved to C, 2/4. Source: MU + 'TchaikovskyPI/dansenapolitaine/' (a public-domain Mutopia setting for trumpet and piano;
+  //  the trumpet line is Tchaikovsky's melody; converted mechanically). Chords from its piano part (simplified).
+  //  Only one notated source used. Public domain (Tchaikovsky d. 1893). Confidence: medium-high.
+  {
+    id: 'tchaikovsky-neapolitan-dance',
+    country: 'ru',
+    themes: ['classical'],
+    title: 'Неаполитанский танец',
+    titleEn: 'Neapolitan Dance (Swan Lake)',
+    composer: 'Tchaikovsky',
+    aka: ['Swan Lake', 'Danse napolitaine', 'Op. 20'],
+    emoji: '🎺',
+    level: 'medium',
+    bpm: 80,
+    beatsPerBar: 2,
+    melody: `R:0.5 G4:0.25 A4:0.25 C5:0.25 B4:0.25 A4:0.25 G4:0.25 | B4:0.5 R:0.5 B4 | B4:0.5 A4:0.25 B4:0.25 C5:0.25 B4:0.25 A4:0.25 B4:0.25 | A4:0.5 R:0.5 G4 |
+             G4:0.5 G4:0.25 G4:0.25 A4:0.25 G4:0.25 F4:0.25 E4:0.25 | G4:0.5 R:0.5 F4 | F4:0.5 F4:0.25 F4:0.25 G4:0.25 F4:0.25 E4:0.25 D4:0.25 | C4:2`,
+    chords: 'C Dm G C C G G C',
+  },
   // Bryllupsdag på Troldhaugen (Wedding Day at Troldhaugen, Lyric Pieces Op. 65 No. 6, 1896) — main march theme, bars 3–10 with upbeat.
   //  Original D major, 4/4 - moved down a major third to B-flat (in C the arpeggio would climb to A5).
   //  Source: MU + 'GriegE/O65/troldhaugen/' (LilyPond + MIDI, converted mechanically). Chords from its left hand (simplified).

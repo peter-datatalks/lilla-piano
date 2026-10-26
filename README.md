@@ -56,4 +56,6 @@ so installed copies pick up the new files.
 - Instrument samples: FluidR3_GM soundfont (MIT licence) via gleitz/midi-js-soundfonts
 - Song melodies: traditional or public domain; sources are noted next to each song in `js/songs*.js`
 - Turkish folk melodies (türküler and two ninniler): transcribed from the [SymbTr](https://github.com/MTG/SymbTr) corpus by the Music Technology Group, Universitat Pompeu Fabra, licensed CC BY-NC-SA 4.0. The melodies are traditional; the transcriptions may only be used non-commercially, with attribution.
+- Chopin pieces marked "CFE" in js/songs-classical-e.js: from *Chopin First Editions* by the Fryderyk Chopin Institute (github.com/pl-wnifc/humdrum-chopin-first-editions), licensed CC BY 4.0.
+- Classical themes: mostly from the [Mutopia Project](https://www.mutopiaproject.org) public-domain editions, plus the CC0 [OpenScore](https://github.com/OpenScore) Lieder corpus and the music21 corpus; each piece's source is noted in its comment.
 - Moose artwork from Lilla Lingua

@@ -390,4 +390,50 @@ export const SONGS_CLASSICAL_C = [
              E4:0.5 E4:0.5 E4:0.5 F4:0.5 E4 E4:0.5 F4:0.5 | E4:0.5 E4:0.5 E4:0.5 F4:0.5 E4 E4:0.5 F4:0.5 | E4:0.5 D4:0.25 E4:0.25 F4:0.5 E4:0.5 D4 R`,
     chords: 'C C F.G C C F.G',
   },
+  // La Réjouissance (Music for the Royal Fireworks, HWV 351, 4th movement) — the trumpet tune, upbeat and bars 1–8
+  //  (the first strain, ending in the dominant).
+  //  Original D major, 4/4 - moved down a ninth (a tone and an octave) to C. The final eighth rest is left out to balance the upbeat.
+  //  Source: MU + 'HandelGF/BWV351/LaRej/LaRej.mid' — a trumpet-and-organ edition whose trumpet part is Handel's first
+  //  trumpet line (converted mechanically). Only one notated source used; chords from its organ part. Public domain. Confidence: medium-high.
+  {
+    id: 'handel-la-rejouissance',
+    country: 'de',
+    themes: ['classical', 'celebrations'],
+    title: 'La Réjouissance',
+    titleEn: 'Royal Fireworks: La Réjouissance',
+    composer: 'Handel',
+    aka: ['Music for the Royal Fireworks', 'Feuerwerksmusik', 'HWV 351', 'Händel', 'Fireworks'],
+    emoji: '🎆',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 4,
+    pickup: 0.5,
+    melody: `G3:0.5 | C4:0.5 C4:0.5 C4:0.5 C4:0.5 C4:0.25 D4:0.25 E4:0.25 D4:0.25 C4:0.5 C4:0.25 D4:0.25 | E4:0.5 E4:0.5 E4:0.5 E4:0.5 E4:0.25 F4:0.25 G4:0.25 F4:0.25 E4:0.5 E4:0.25 F4:0.25 |
+             G4:0.5 G4:0.5 G4:0.5 G4:0.5 G4:1.5 C5:0.5 | G4:0.5 E4:0.5 R:0.5 C5:0.5 G4:0.5 E4:0.5 R:0.5 G4:0.5 | G4:0.5 A4:0.25 G4:0.25 F4:0.5 E4:0.5 D4:1.5 G4:0.5 |
+             G4:0.5 A4:0.25 G4:0.25 F4:0.5 E4:0.5 D4:0.75 E4:0.25 D4:0.75 E4:0.25 | D4:0.25 E4:0.25 D4:0.25 E4:0.25 D4:0.25 E4:0.25 D4:0.25 E4:0.25 D4:1.5 D4:0.5 |
+             E4:0.25 F#4:0.25 G4:0.25 A4:0.25 F#4:0.75 G4:0.25 G4:1.5`,
+    chords: 'C C C C C.G C.G G D.G',
+  },
+  // Pifa (Pastoral Symphony, Messiah, HWV 56, no. 13) — the shepherds' music before the Christmas story; first violins,
+  //  bars 1–11 (the whole first section).
+  //  Original C major, 12/8 (counted in eighths) - moved down an octave. The note tied from bar 9 into bar 10 is written as a rest.
+  //  Source: MU + 'HandelGF/HWV56/Messiah/Messiah-13.mid' (converted mechanically).
+  //  Only one notated source used; chords from the bass and inner parts (a long C pedal at first). Public domain. Confidence: high.
+  {
+    id: 'handel-pifa',
+    country: 'de',
+    themes: ['classical', 'christmas'],
+    title: 'Pifa (Pastoral Symphony)',
+    titleEn: 'Pastoral Symphony',
+    composer: 'Handel',
+    aka: ['Messiah', 'HWV 56', 'Pifa', 'Pastoral Symphony', 'Händel'],
+    emoji: '🐑',
+    level: 'medium',
+    bpm: 150,
+    beatsPerBar: 12,
+    melody: `C4:2 D4 E4:2 F4 G4:3 A4:3 | G4:1.5 F4:0.5 E4 F4:3 E4:3 F4:0.5 G4:0.5 A4:2 | G4:1.5 F4:0.5 E4 F4:3 E4:5 D4 | E4:1.5 F4:0.5 G4 F4:1.5 G4:0.5 E4 D4:3 G4:2 D4 |
+             E4:2 D4 E4:1.5 D4:0.5 C4 D4:3 E4:0.5 F4:0.5 G4:2 | E4:2 D4:0.25 E4:0.25 F4:0.5 E4:3 D4:2 G3 G4:3 | G4:3 F4:3 F4:1.5 E4:0.5 D4 E4:2 C4 | D4:2 C4 D4:2 E4 F4:2 C4 F4:3 |
+             F4:3 E4:1.5 D4:0.5 E4 D4:2 G3 G4:3 | R:1.5 F4:0.5 E4 F4:1.5 E4:0.5 D4 C4:3 F4:0.5 G4:0.5 A4:2 | G4:1.5 F4:0.5 E4 E4:2 D4 C4:6`,
+    chords: 'C C C C.G G G F.Dm Bb.F C.G G.C C',
+  },
 ];
