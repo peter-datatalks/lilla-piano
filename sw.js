@@ -1,12 +1,12 @@
 // Service worker: makes Lilla Piano work offline once it has been opened online.
 // - App files: network first (always the newest version when online), cached copy when offline
 //   or when the network takes longer than 3 seconds.
-// - Google Fonts: cached the first time they load.
-// - Instrument samples are cached by js/samples.js itself (Cache Storage "lp-samples-v1").
+// - Fonts are app files too (assets/fonts/, no Google requests).
+// - Instrument samples (assets/sounds/) are cached by js/samples.js itself (Cache Storage "lp-samples-v1"),
+//   so the service worker leaves them alone.
 
 // Bump the version when releasing so every device downloads the new app files.
-const SHELL = 'lp-shell-v38';
-const FONTS = 'lp-fonts-v1';
+const SHELL = 'lp-shell-v39';
 
 const APP_FILES = [
   './',
@@ -14,6 +14,13 @@ const APP_FILES = [
   'manifest.webmanifest',
   'icon.svg',
   'css/style.css',
+  'css/fonts.css',
+  'assets/fonts/Baloo2-latin.woff2',
+  'assets/fonts/Baloo2-latin-ext.woff2',
+  'assets/fonts/Nunito-latin.woff2',
+  'assets/fonts/Nunito-latin-ext.woff2',
+  'assets/fonts/Nunito-cyrillic.woff2',
+  'assets/fonts/Nunito-cyrillic-ext.woff2',
   'assets/moose.png',
   'assets/apple-touch-icon.png',
   'js/app.js',
@@ -45,6 +52,7 @@ const APP_FILES = [
   'js/config.js',
   'js/profile.js',
   'js/score.js',
+  'js/credits.js',
 ];
 
 self.addEventListener('install', (event) => {
@@ -56,7 +64,7 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
-    const keep = [SHELL, FONTS, 'lp-samples-v1'];
+    const keep = [SHELL, 'lp-samples-v1'];
     for (const key of await caches.keys()) if (!keep.includes(key)) await caches.delete(key);
     await self.clients.claim();
   })());
@@ -67,26 +75,12 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
 
-  // fonts: cache first
-  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
-    event.respondWith(cacheFirst(FONTS, req));
-    return;
-  }
+  if (url.origin !== self.location.origin) return;
+  // instrument samples: samples.js keeps its own cache of them
+  if (url.pathname.includes('/assets/sounds/')) return;
   // our own files: network first, cache as fallback
-  if (url.origin === self.location.origin) {
-    event.respondWith(networkFirst(SHELL, req));
-  }
-  // everything else (instrument samples) goes to the network; samples.js caches those itself
+  event.respondWith(networkFirst(SHELL, req));
 });
-
-async function cacheFirst(name, req) {
-  const cache = await caches.open(name);
-  const hit = await cache.match(req);
-  if (hit) return hit;
-  const res = await fetch(req);
-  if (res.ok || res.type === 'opaque') cache.put(req, res.clone());
-  return res;
-}
 
 async function networkFirst(name, req) {
   const cache = await caches.open(name);

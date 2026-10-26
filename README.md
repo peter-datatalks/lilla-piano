@@ -53,9 +53,10 @@ so installed copies pick up the new files.
 
 ## Credits
 
-- Instrument samples: FluidR3_GM soundfont (MIT licence) via gleitz/midi-js-soundfonts
+- Instrument samples: FluidR3_GM by Frank Wen (MIT), rendered to MP3 by gleitz/midi-js-soundfonts (MIT; set released under CC BY 3.0). Hosted with the app in `assets/sounds/`; notices in `LICENSES/`.
+- Fonts: Baloo 2 and Nunito (SIL OFL 1.1), hosted with the app in `assets/fonts/`; notices in `LICENSES/`.
+- The in-app **Credits & licences** screen (link at the bottom of the Songs page) shows the required attributions.
 - Song melodies: traditional or public domain; sources are noted next to each song in `js/songs*.js`
-- Turkish folk melodies (türküler and two ninniler): transcribed from the [SymbTr](https://github.com/MTG/SymbTr) corpus by the Music Technology Group, Universitat Pompeu Fabra, licensed CC BY-NC-SA 4.0. The melodies are traditional; the transcriptions may only be used non-commercially, with attribution.
 - Chopin pieces marked "CFE" in js/songs-classical-e.js: from *Chopin First Editions* by the Fryderyk Chopin Institute (github.com/pl-wnifc/humdrum-chopin-first-editions), licensed CC BY 4.0.
 - Classical themes: mostly from the [Mutopia Project](https://www.mutopiaproject.org) public-domain editions, plus the CC0 [OpenScore](https://github.com/OpenScore) Lieder corpus and the music21 corpus; each piece's source is noted in its comment.
-- Moose artwork from Lilla Lingua
+- Moose artwork from Lilla Lingua (owned by the app's owner; AI-generated with ChatGPT/Claude)

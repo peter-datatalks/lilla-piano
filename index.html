@@ -11,9 +11,9 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/Baloo2-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/Nunito-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -143,13 +143,22 @@
       <button class="link-btn" id="welcome-skip" type="button" data-i18n="skip"></button>
     </div>
   </div>
+  <div class="sheet hidden" id="credits-sheet">
+    <div class="sheet-card credits-card" role="dialog" data-i18n-label="credits">
+      <div class="sheet-head">
+        <h2 data-i18n="credits"></h2>
+        <button class="round-btn" id="credits-close" data-i18n-label="close">✕</button>
+      </div>
+      <div class="credits-body" id="credits-body"></div>
+    </div>
+  </div>
   <div class="greeting hidden" id="greeting" role="status"></div>
 
   <div class="celebrate hidden" id="celebrate">
     <div class="celebrate-card">
       <div class="celebrate-stars" id="celebrate-stars"></div>
       <h2 id="celebrate-title"></h2>
-      <div class="celebrate-score"><span id="celebrate-score">0</span> <small data-i18n="points"></small></div>
+      <div class="celebrate-score"><span id="celebrate-score">0</span> <small id="celebrate-max"></small></div>
       <div class="celebrate-best" id="celebrate-best"></div>
       <div class="celebrate-actions">
         <button class="big-btn play" id="btn-again">🔁<span data-i18n="again"></span></button>

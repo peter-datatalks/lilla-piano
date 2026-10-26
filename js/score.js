@@ -42,7 +42,11 @@ export function scoreRun(steps, run) {
   const accuracy = n ? base / (POINTS.clean * n) : 1;
   const stars = accuracy >= 0.85 ? 3 : accuracy >= 0.6 ? 2 : 1;
   const score = Math.round((base + bonus) / 10) * 10;
-  return { score, stars, accuracy, rhythm: ratios.length ? bonus / (RHYTHM_BONUS * ratios.length) : 0 };
+  const max = maxScore(n);
+  return { score, max, stars, accuracy, rhythm: ratios.length ? bonus / (RHYTHM_BONUS * ratios.length) : 0 };
 }
+
+/** Best possible score: every note right first time (100) and on the beat (+20 from the second note on). */
+export const maxScore = (n) => Math.round((POINTS.clean * n + RHYTHM_BONUS * Math.max(0, n - 1)) / 10) * 10;
 
 export const starsText = (n, max = 3) => '★'.repeat(n) + '☆'.repeat(Math.max(0, max - n));

@@ -7,6 +7,7 @@ import { LANGS, t, getLang, setLang, translateDom, songTitles } from './i18n.js'
 import { brandHTML, brandMini } from './brand.js';
 import { getName, setName, hasAskedName, recordPlay, favourites, track, songScores, saveScore, migrateDone } from './profile.js';
 import { newRun, scoreRun, starsText } from './score.js';
+import { CREDITS_HTML } from './credits.js';
 import { Keyboard } from './keyboard.js';
 import { Cascade } from './cascade.js';
 import { SheetView } from './sheet.js';
@@ -570,7 +571,19 @@ function renderLibraryHome(lib) {
   }
   ctry.append(ctryGrid);
   lib.append(ctry);
+
+  const foot = document.createElement('footer');
+  foot.className = 'lib-foot';
+  foot.innerHTML = `<button class="link-btn" type="button">${escapeHtml(t('credits'))}</button>`;
+  foot.querySelector('button').onclick = openCredits;
+  lib.append(foot);
 }
+
+function openCredits() {
+  $('#credits-body').innerHTML = CREDITS_HTML;
+  $('#credits-sheet').classList.remove('hidden');
+}
+function closeCredits() { $('#credits-sheet').classList.add('hidden'); }
 
 function renderCollection(lib, p) {
   const all = p.kind === 'theme'
@@ -915,7 +928,7 @@ function finish() {
 }
 
 // Stars pop in one by one, the score counts up, and a returning player sees their best.
-function showCelebration({ score, stars }, { prevBest, firstTime }) {
+function showCelebration({ score, max, stars }, { prevBest, firstTime }) {
   const name = getName();
   $('#celebrate-title').textContent = name ? t('bravoName').replace('{name}', name) : t('bravo');
   $('#celebrate-stars').innerHTML = [1, 2, 3]
@@ -933,6 +946,7 @@ function showCelebration({ score, stars }, { prevBest, firstTime }) {
     if (f < 1) requestAnimationFrame(tick);
   };
   el.textContent = '0';
+  $('#celebrate-max').textContent = t('ofMax').replace('{max}', fmtScore(max));
   requestAnimationFrame(tick);
   setTimeout(() => { el.textContent = fmtScore(score); }, 1000); // in case animation frames are paused
 }
@@ -1071,6 +1085,8 @@ $('#inst-sheet').onclick = (e) => { if (e.target.id === 'inst-sheet') closeSheet
 $('#song-back').onclick = () => { if (state.openedFromLibrary) history.back(); else setView('library'); };
 document.querySelectorAll('.view-switch button').forEach((b) => (b.onclick = () => setSongView(b.dataset.songview)));
 $('#hands-close').onclick = closeHands;
+$('#credits-close').onclick = closeCredits;
+$('#credits-sheet').onclick = (e) => { if (e.target.id === 'credits-sheet') closeCredits(); };
 $('#hands-sheet').onclick = (e) => { if (e.target.id === 'hands-sheet') closeHands(); };
 document.querySelectorAll('.hands-choice').forEach((b) => (b.onclick = () => {
   closeHands();
@@ -1136,6 +1152,7 @@ window.addEventListener('keydown', (e) => {
   if (e.target.closest?.('input, textarea')) return;
   if (e.key === 'Escape' && !$('#inst-sheet').classList.contains('hidden')) { closeSheet(); return; }
   if (e.key === 'Escape' && !$('#hands-sheet').classList.contains('hidden')) { closeHands(); return; }
+  if (e.key === 'Escape' && !$('#credits-sheet').classList.contains('hidden')) { closeCredits(); return; }
   if (e.key === 'Escape' && state.view === 'song') setView('library');
   if (state.view === 'free' && (e.key === 'z' || e.key === 'x')) {
     state.freeOctave += e.key === 'x' ? 1 : -1;

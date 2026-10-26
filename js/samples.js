@@ -1,7 +1,8 @@
-// Loads recorded notes (FluidR3_GM, MIT licence) one note at a time, on demand.
+// Loads recorded notes one note at a time, on demand: FluidR3_GM by Frank Wen (MIT), rendered to MP3 by
+// gleitz/midi-js-soundfonts (CC BY 3.0), hosted with the app in assets/sounds/ (see LICENSES/FluidR3_GM.txt).
 // Files are kept in Cache Storage when available (secure origins), so they work offline later.
 
-const BASE = 'https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/';
+const BASE = new URL('../assets/sounds/FluidR3_GM/', import.meta.url).href;
 const FILE_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
 const CACHE = 'lp-samples-v1';
 const LOWEST = 21; // A0
