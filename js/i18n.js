@@ -197,10 +197,16 @@ export function translateDom(root = document) {
 
 // Song titles: the original title, plus a translation underneath when it helps.
 // Swedish UI shows Swedish songs without a subtitle; everything else gets the English title.
-// Classical pieces show "Composer · English title" underneath.
+// Folk songs: original title, translation underneath.
+// Classical pieces: the familiar English title first ("The Swan"), then "Composer · original title"
+// (so "Le cygne" or "Лебединое озеро" don't hide famous pieces).
 export function songTitles(song) {
+  if (song.composer) {
+    const main = song.titleEn || song.title;
+    const original = song.title !== main ? song.title : '';
+    return { main, sub: [song.composer, original].filter(Boolean).join(' · ') };
+  }
   const sameLang = (lang === 'sv' && song.country === 'se');
   const translation = sameLang || song.titleEn === song.title ? '' : song.titleEn;
-  const sub = song.composer ? [song.composer, translation].filter(Boolean).join(' · ') : translation;
-  return { main: song.title, sub };
+  return { main: song.title, sub: translation };
 }
