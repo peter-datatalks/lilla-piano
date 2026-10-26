@@ -350,4 +350,49 @@ export const SONGS_CLASSICAL_F = [
              E4:1.5 A4:0.25 C5:0.25 | E5:1.5 C5:0.5 | B4:1.5 C5:0.25 D5:0.25 | C5:2`,
     chords: 'Am Am E Am E E Dm.E Am Am Am E Am',
   },
+  // Ungarischer Tanz Nr. 6 (piano solo version, Vivace) — the opening theme, upbeat + bars 2–10 (top voice of the thirds).
+  //  Original D-flat major, 2/4 - moved down a semitone to C (F4–C5). The opening chord is left out; mordents become the main note.
+  //  The upbeat is tied into the next bar (and bars 5–6, 9–10 likewise); each tie is written as the note plus a rest.
+  //  The last bar is shortened to balance the upbeat; the phrase ends on the dominant before the forte section.
+  //  Source: IA 'brahmshungariand0256unse' (G. Schirmer, 1893, Brahms's own piano-solo arrangement), p. 24.
+  //  Pitches checked with a notehead/staff-line detector on the scan. Chords simplified. Public domain (Brahms d. 1897). Confidence: high.
+  {
+    id: 'brahms-hungarian-dance-6',
+    country: 'de',
+    themes: ['classical'],
+    title: 'Ungarischer Tanz Nr. 6',
+    titleEn: 'Hungarian Dance No. 6',
+    composer: 'Brahms',
+    aka: ['Hungarian Dance No. 6', 'Ungarische Tänze', 'Brahms Hungarian Dance'],
+    emoji: '🎻',
+    level: 'medium',
+    bpm: 112,
+    beatsPerBar: 2,
+    pickup: 1,
+    melody: `G4 |
+             R:0.5 G4:0.5 F#4:0.5 G4:0.5 | A4 G4 | C5 G4 | B4 A4 | R:0.5 A4:0.5 G#4:0.5 A4:0.5 | Bb4 A4 | G4 F4 | A4 G4 | R:0.5 G4:0.5`,
+    chords: 'C F C G G G G F G',
+  },
+  // Gaudeamus igitur — the old student song that Brahms quotes as the grand finale of his Academic Festival Overture, Op. 80 (1880).
+  //  Soprano part of the traditional four-part setting, B-flat major, 3/4 - moved up a tone to C (G4–G5).
+  //  The first strain (bars 1–4) is repeated in the source; it is written once here. The final tied note is shortened to its first bar.
+  //  Source: https://en.wikipedia.org/wiki/Gaudeamus_igitur (LilyPond score, SATB; converted by hand). Chords from its bass part.
+  //  Not checked against Brahms's orchestral score (there the tune is in C, with his own harmony). Public domain. Confidence: medium-high.
+  {
+    id: 'brahms-gaudeamus-igitur',
+    country: 'de',
+    themes: ['classical'],
+    title: 'Gaudeamus igitur',
+    titleEn: 'Gaudeamus igitur (Academic Festival Overture)',
+    composer: 'Brahms',
+    aka: ['Academic Festival Overture', 'Akademische Festouvertüre', 'Op. 80', 'student song'],
+    emoji: '🎓',
+    level: 'medium',
+    bpm: 96,
+    beatsPerBar: 3,
+    melody: `C5:0.75 G4:0.25 G4 C5 | A4:0.75 A4:0.25 A4:2 | B4:0.75 C5:0.25 D5 B4 | C5:0.5 E5:0.5 C5:2 |
+             B4:0.75 C5:0.25 D5 D5 | E5:0.5 C5:0.5 D5 D5 | B4:0.75 C5:0.25 D5 D5 | E5:0.5 C5:0.5 D5 D5 |
+             C5:0.75 B4:0.25 A4:0.5 F5:0.5 E5:0.5 D5:0.5 | E5 D5 C5 | C5:0.75 B4:0.25 A4:0.5 F5:0.5 E5:0.5 D5:0.5 | G5 B4 C5`,
+    chords: 'C F G C G C.G G C.G C.F G.Am C.F G.C',
+  },
 ];

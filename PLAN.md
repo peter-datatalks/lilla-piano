@@ -74,7 +74,7 @@ Guided play also greys out every key except the next one, which glows and bounce
 - [ ] Finger numbers on the falling notes (1–5), as in ROLI's Cascade view
 - [ ] Score and streak counter for older children
 - [x] 19 songs, transcribed from published scores (Tegnér's "Sjung med oss, Mamma!", Wikimedia Commons, folkwiki), each with a source comment, and filterable by theme (Barnvisor, Jul, Lucia, Midsommar)
-- [x] 215 songs: 37 classical themes (Bach to Holst) plus folk and children's songs from Sweden, Hungary, Ukraine, Turkey and Christmas songs from England, the USA, France, Germany and Austria; filterable by country and theme, searchable (accents, Cyrillic and Turkish letters, alternative titles), each with its own link (#/song/<id>)
+- [x] 334 songs: 156 classical themes from 44 composers (Bach to Joplin) plus folk and children's songs from Sweden, Hungary, Ukraine, Turkey and Christmas songs from England, the USA, France, Germany and Austria; filterable by country and theme, searchable (accents, Cyrillic and Turkish letters, alternative titles), each with its own link (#/song/<id>)
 - [x] `tools/check-songs.js`: checks bar lengths, pickup, chord count and range for every song
 - [ ] Still to find notation for: Hej tomtegubbar, Staffan var en stalledräng, Prästens lilla kråka, Vi äro musikanter, Tre små gummor (retry folkwiki.se / abcnotation.com)
 - [ ] Not public domain (leave out unless licensed): Vi gå över daggstänkta berg (Edwin Ericsson, d. 1968), Lilla snigel (1957, composer unknown), My Way
