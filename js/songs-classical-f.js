@@ -261,4 +261,93 @@ export const SONGS_CLASSICAL_F = [
              E5:0.75 F5:0.25 E5:0.5 D5:0.5 C5:0.5 B4:0.5 A4 | E5:0.75 F5:0.25 E5:0.5 D5:0.5 C5:0.5 B4:0.5 A4 | E5 E4 A4:2 | E5 E4 A4:2`,
     chords: 'Am Am Am Am Am Am Am Am',
   },
+  // Abendsegen "Abends, will ich schlafen gehn" (Hänsel und Gretel, Act 2, "Evening Prayer") — Gretel's line, the whole prayer (21 bars).
+  //  Original D major, 4/4 - moved down a tone to C (C4–F5). Hänsel sings the same words in parallel a third or sixth lower.
+  //  Source: IA 'hnselundgretelmrhum1894p' (B. Schott's Söhne vocal score, 1894), pp. 76–77.
+  //  Chords simplified from the piano part. Public domain (Humperdinck d. 1921). Confidence: high.
+  {
+    id: 'humperdinck-abendsegen',
+    country: 'de',
+    themes: ['classical', 'lullaby', 'children'],
+    title: 'Abends, will ich schlafen gehn',
+    titleEn: 'Evening Prayer',
+    composer: 'Humperdinck',
+    aka: ['Abendsegen', 'Hänsel und Gretel', 'Hansel and Gretel', 'Children\'s Prayer', 'When at Night I Go to Sleep'],
+    emoji: '😇',
+    level: 'medium',
+    bpm: 63,
+    beatsPerBar: 4,
+    melody: `C4 E4 E4 G4 | A4 G4 G4:2 | C5 G4 G4 E4 | E4 D4:0.5 C4:0.5 D4:1.5 R:0.5 | F4 F4 E4 E4 | D4:2 C4 R |
+             G4 G4 G4 F4 | F4:1.5 E4:0.5 D4 R | Ab4 Ab4 G4:1.5 A4:0.5 | Bb4:2 A4 R | C5 C5 B4:1.5 C5:0.5 | D5:2 C5 R |
+             F4 A4 A4 C5 | C5:2 G4 R | G4 Bb4 Bb4 D5 | D5:2 A4 R | A4 C5 C5 E5 | E5 D5 C5 F#4 | G4 A4 B4 C5 | F5:2 E5:1.5 D5:0.5 | C5:2 R:2`,
+    chords: 'C F C G Dm.C G.C C G Fm.F C G G.C F C Gm Dm Am D G G C',
+  },
+  // "O du mein holder Abendstern" (Tannhäuser, Act 3, "Song to the Evening Star") — Wolfram's romance, the first 12 bars.
+  //  Original G major, 6/8 (baritone) - moved up an octave and a fourth to C (E4–G5). Counted in eighths (beatsPerBar 6).
+  //  Source: IA 'tannhuserundders00wagn' (Edition Peters vocal score, ed. 1914), p. 229.
+  //  Cross-check: IA 'toeveningstarodu00wagn' (instrumental transcription, 1904), p. 4 — same notes an octave higher.
+  //  Chords simplified. Public domain (Wagner d. 1883). Confidence: high.
+  {
+    id: 'wagner-evening-star',
+    country: 'de',
+    themes: ['classical', 'lullaby'],
+    title: 'O du mein holder Abendstern',
+    titleEn: 'Song to the Evening Star',
+    composer: 'Wagner',
+    aka: ['Evening Star', 'Lied an den Abendstern', 'Tannhäuser', 'Tannhauser'],
+    emoji: '⭐',
+    level: 'medium',
+    bpm: 150,
+    beatsPerBar: 6,
+    melody: `C5:3 G5:2 F#5 | F5:3 F5:2 E5 | Eb5:3 Eb5:2 D5 | C5:6 |
+             C5:3 B4:2 C5 | E5:3 E5:2 C5 | G4:3 G4:2 F4 | E4:6 |
+             R:3 C5:3 | F5:2 F5 F5:2 E5 | Eb5:3 Eb5:2 D5 | C5:6`,
+    chords: 'C Dm Cm C C Em G C C F Cm C',
+  },
+  // Pilgerchor "Beglückt darf nun dich, o Heimat" (Tannhäuser, Act 3, "Pilgrims' Chorus") — top voice (1st tenors), pickup + 16 bars.
+  //  Original E-flat major, 3/4 - moved down a minor third to C (D4–D5). The last bar is shortened to balance the pickup.
+  //  Source: IA 'tannhuserundders00wagn' (Edition Peters vocal score, ed. 1914), p. 218.
+  //  Only one notated source found; a few inner chord notes make the top line slightly uncertain in bars 6 and 9.
+  //  Chords simplified from the piano part. Public domain (Wagner d. 1883). Confidence: medium-high.
+  {
+    id: 'wagner-pilgrims-chorus',
+    country: 'de',
+    themes: ['classical'],
+    title: 'Pilgerchor',
+    titleEn: "Pilgrims' Chorus",
+    composer: 'Wagner',
+    aka: ['Beglückt darf nun dich, o Heimat', 'Tannhäuser', 'Tannhauser', 'Pilgrims Chorus'],
+    emoji: '🚶',
+    level: 'medium',
+    bpm: 60,
+    beatsPerBar: 3,
+    pickup: 1,
+    melody: `G4 |
+             C5:2 G4 | E4:2 E4:1/3 F4:1/3 G4:1/3 | G4 A4 G4 | G4 F4 A4 | D5:2 C5 | B4:2 F4:1/3 G4:1/3 A4:1/3 | C5 A4 G4:0.75 E4:0.25 | E4 D4 G4:0.75 A4:0.25 |
+             A4 G4 A4 | A4:2 G4:0.75 A4:0.25 | A4 G4 A4 | A4:2 A4 | G4 F4 G4:1/3 A4:1/3 B4:1/3 | C5 B4 A4 | Bb4 A4:1.5 G4:0.5 | G4:2`,
+    chords: 'C C C F D G C C.G F F F D G Am Gm C',
+  },
+  // Ungarischer Tanz Nr. 5 (piano solo version, Allegro) — the main theme, bars 1–12 (top voice).
+  //  Original F-sharp minor, 2/4 - moved up a minor third to A minor (A3–E5). Bars 9–12 are written in octaves in the score;
+  //  the lower notes of the octaves are used. The trill-like turn in bar 7 is kept as written (16ths).
+  //  Source: IA 'brahmshungariand0256unse' (G. Schirmer, 1893, Brahms's own piano-solo arrangement), p. 20.
+  //  Pitches checked with a notehead/staff-line detector on the scan. Theme based on a csárdás by Béla Kéler (d. 1882).
+  //  Chords simplified from the left hand. Public domain (Brahms d. 1897). Confidence: high.
+  {
+    id: 'brahms-hungarian-dance-5',
+    country: 'de',
+    themes: ['classical'],
+    title: 'Ungarischer Tanz Nr. 5',
+    titleEn: 'Hungarian Dance No. 5',
+    composer: 'Brahms',
+    aka: ['Hungarian Dance No. 5', 'Ungarische Tänze', 'Brahms Hungarian Dance', 'Csárdás'],
+    emoji: '💃',
+    level: 'hard',
+    bpm: 100,
+    beatsPerBar: 2,
+    melody: `E4:1.5 A4:0.5 | C5:1.5 A4:0.5 | G#4:1.5 A4:0.25 B4:0.25 | A4:2 |
+             F4:0.5 R:1 G4:0.25 A4:0.25 | E4:0.5 R:1.5 | D4:0.25 C4:0.25 C4:0.25 B3:0.25 B3:0.75 E4:0.25 | A3:2 |
+             E4:1.5 A4:0.25 C5:0.25 | E5:1.5 C5:0.5 | B4:1.5 C5:0.25 D5:0.25 | C5:2`,
+    chords: 'Am Am E Am E E Dm.E Am Am Am E Am',
+  },
 ];

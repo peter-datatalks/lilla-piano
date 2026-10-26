@@ -540,4 +540,62 @@ export const SONGS_CLASSICAL_G = [
              C5:1.5 C5:0.5 | B4 A4 | G4:2 | G4 R`,
     chords: 'C Am Dm G G G C C Am G G E Am F C C',
   },
+  // Csárdás (1904), opening Largo — the violin theme, 8 bars with upbeat (violin bars 5–13 of the original).
+  //  Original D minor, 4/4 (after a 2/4 piano introduction) - moved up a fifth to A minor (range E4–F5).
+  //  Grace notes are dropped; the A and the B-flat tied inside bars 1, 2, 5 and 6 are one note each. The last bar is cut to
+  //  balance the 1.5-beat upbeat (the final D, an original quarter note followed by a quarter rest, becomes an eighth).
+  //  Sources: violin part scan of an early edition, https://commons.wikimedia.org/wiki/File:Csardas_Monti_-_32_nhịp_đầu.png
+  //  (public domain, read by eye), checked against the engraving https://commons.wikimedia.org/wiki/File:Monti_Csárdás.png
+  //  (CC BY 3.0) and G. dos Santos's violin part (IMSLP #23575, mirrored at https://archive.org/details/imslp-monti-vittorio).
+  //  All three agree note for note. Chords simplified from dos Santos's guitar part (IMSLP #23576). Public domain (Monti d. 1922).
+  //  Confidence: high (melody), medium (chords).
+  {
+    id: 'monti-csardas-largo',
+    country: 'it',
+    themes: ['classical'],
+    title: 'Csárdás – Largo',
+    titleEn: 'Csárdás – Largo',
+    composer: 'Monti',
+    aka: ['Czardas', 'Csardas'],
+    emoji: '🎻',
+    level: 'medium',
+    bpm: 50,
+    beatsPerBar: 4,
+    pickup: 1.5,
+    melody: `E4:0.5 F4:0.5 E4:0.5 |
+             E5:2.5 C5:0.5 C5:0.5 D5:0.5 | C5:0.5 B4:0.5 F5:2.5 F4:0.5 |
+             F4:0.5 E4:0.5 G#4:0.5 B4:0.5 D5:0.5 D5:0.5 C5:0.5 G4:0.5 |
+             B4:0.5 A4:0.5 A4:0.25 G#4:0.25 A4:0.25 B4:0.25 C5:0.5 E4:0.5 F4:0.5 E4:0.5 |
+             E5:2.5 C5:0.5 C5:0.5 D5:0.5 | C5:0.5 B4:0.5 F5:2.5 F4:0.5 |
+             F4:0.5 E4:0.5 A4:0.5 G#4:0.5 D5:1.5 B4:0.5 | B4:0.5 A4:0.5 A4:0.5 G#4:0.5 A4:0.5`,
+    chords: 'Am Dm E Am Am Dm E Am',
+  },
+  // Csárdás (1904), Allegro vivo — the main theme, 16 bars (violin bars 22–37 of the original, first time through).
+  //  Original D minor, 2/4 - moved down a fourth to A minor (range E4–F5). The octave leap D5–D6 in bar 1 would be A4–A5
+  //  after transposing; the high A is played an octave lower (A4 A4). Staccato sixteenths are kept as written.
+  //  Sources: violin part scan of an early edition, https://commons.wikimedia.org/wiki/File:Csardas_Monti_-_32_nhịp_đầu.png
+  //  (public domain, read by eye), checked against G. dos Santos's violin part (IMSLP #23575, mirrored at
+  //  https://archive.org/details/imslp-monti-vittorio). Both agree note for note. Chords simplified from dos Santos's
+  //  guitar part (IMSLP #23576). Public domain (Monti d. 1922). Confidence: high (melody), medium (chords).
+  {
+    id: 'monti-csardas-allegro',
+    country: 'it',
+    themes: ['classical'],
+    title: 'Csárdás – Allegro vivo',
+    titleEn: 'Csárdás – Allegro vivo',
+    composer: 'Monti',
+    aka: ['Czardas', 'Csardas'],
+    emoji: '💃',
+    level: 'hard',
+    bpm: 112,
+    beatsPerBar: 2,
+    melody: `A4:0.5 A4:0.5 R:0.5 F5:0.5 | R:0.5 E5:0.5 R:0.5 C5:0.5 | B4:0.5 A4 G#4:0.5 | A4 A4:0.5 R:0.5 |
+             A4:0.25 B4:0.25 C5:0.25 B4:0.25 A4:0.25 B4:0.25 C5:0.25 B4:0.25 | A4:0.25 B4:0.25 C5:0.25 B4:0.25 A4:0.25 B4:0.25 C5:0.25 A4:0.25 |
+             C5:0.5 B4 A#4:0.5 | B4 B4:0.5 R:0.5 |
+             D5:0.25 E5:0.25 F5:0.25 E5:0.25 D5:0.25 E5:0.25 F5:0.25 E5:0.25 | D5:0.25 E5:0.25 F5:0.25 E5:0.25 D5:0.25 F5:0.25 E5:0.25 D5:0.25 |
+             C5:0.25 D5:0.25 E5:0.25 D5:0.25 C5:0.25 D5:0.25 E5:0.25 D5:0.25 | C5:0.25 D5:0.25 E5:0.25 D5:0.25 C5:0.25 E5:0.25 D5:0.25 C5:0.25 |
+             E4:0.25 F#4:0.25 G#4:0.25 A4:0.25 B4:0.25 C5:0.25 D5:0.25 E5:0.25 | F5:0.25 E5:0.25 D5:0.25 C5:0.25 B4:0.25 A4:0.25 G#4:0.25 B4:0.25 |
+             B4:0.5 A4 G#4:0.5 | A4 R`,
+    chords: 'Am Am Am Am Am Am B B Dm Dm Am Am E E Am.E Am',
+  },
 ];
