@@ -458,4 +458,49 @@ export const SONGS_CLASSICAL_C = [
              C4:0.25 C5:0.25 E5:0.25 D5:0.25 E5:0.25 C5:0.25 E5:0.25 C5:0.25 C4:0.25 C5:0.25 E5:0.25 D5:0.25 E5:0.25 C5:0.25 E5:0.25 B4:0.25`,
     chords: 'C F G C',
   },
+  // Brich an, o schönes Morgenlicht (Christmas Oratorio, BWV 248, no. 12) — Schop's chorale tune in Bach's setting;
+  //  soprano, upbeat and bars 1–12 (the first part once, without its repeat).
+  //  Original G major, 4/4 - moved down a fifth to C.
+  //  Source: MU + 'BachJS/BWV248/Bach_BrichAn/Bach_BrichAn.mid' (Breitkopf & Härtel 1856; converted mechanically,
+  //  checked against the soprano line of the .ly file). Chords from Bach's lower voices. Public domain. Confidence: high.
+  {
+    id: 'bach-brich-an',
+    country: 'de',
+    themes: ['classical', 'christmas'],
+    title: 'Brich an, o schönes Morgenlicht',
+    titleEn: 'Break Forth, O Beauteous Heavenly Light',
+    composer: 'J. S. Bach',
+    aka: ['BWV 248', 'Weihnachtsoratorium', 'Christmas Oratorio', 'Schop'],
+    emoji: '🌅',
+    level: 'easy',
+    bpm: 72,
+    beatsPerBar: 4,
+    pickup: 1,
+    melody: `C4 | C4 D4 E4:0.5 F#4:0.5 G4 | G4 F#4 G4 E4 | F4 E4 D4 E4 | D4:2 C4 D4 | D4 E4 F4 F4 | E4:0.5 D4:0.5 E4 D4 E4 |
+             E4 E4 F4:0.5 G4:0.5 A4 | A4 G#4 A4 B4 | C5 E4 F4 E4 | D4:2 D4 G4 | A4 G4 F4 E4:0.5 F4:0.5 | D4:2 C4`,
+    chords: 'Dm.G D.G F.C G.C G.Dm A.Dm A.Dm E.Am C.Am D.G F.C G.C',
+  },
+  // Concerto in A minor, Op. 3 No. 6, RV 356 (L'estro armonico), 1st movement (Allegro) — first violin, bars 1–7
+  //  (the opening ritornello up to its first cadence; the rising arpeggio that leads on from bar 7 is left out).
+  //  Original A minor, 4/4 - moved down an octave.
+  //  Source: MU + 'VivaldiA/O3/vivaldi-o3/vivaldi-o3-mids.zip' (no. 6, score.mid; converted mechanically).
+  //  Only one notated source used; chords from the lower strings and bass. Public domain. Confidence: high.
+  {
+    id: 'vivaldi-concerto-a-minor-op3-6',
+    country: 'it',
+    themes: ['classical'],
+    title: 'Concerto a-Moll, Op. 3 Nr. 6',
+    titleEn: 'Violin Concerto in A Minor',
+    composer: 'Vivaldi',
+    aka: ["L'estro armonico", 'RV 356', 'Op. 3 No. 6', 'A minor concerto'],
+    emoji: '🎻',
+    level: 'medium',
+    bpm: 100,
+    beatsPerBar: 4,
+    melody: `E4:0.5 A4:0.5 A4:0.5 A4:0.5 A4:0.5 A4:0.5 C5:0.25 B4:0.25 A4:0.5 | C5:0.25 B4:0.25 A4:0.5 C5:0.25 B4:0.25 A4:0.5 G4:0.25 F4:0.25 E4:0.5 D4:0.25 C4:0.25 B3:0.5 |
+             E4:0.5 C4:0.5 A3:0.5 A3:0.5 A4:0.5 A4:0.5 A4:0.5 A4:0.5 | A4:0.5 A4:0.25 G4:0.25 F4:0.25 E4:0.25 F4:0.5 D4:0.5 G4:0.5 G4:0.5 G4:0.5 |
+             G4:0.5 G4:0.25 F4:0.25 E4:0.25 D4:0.25 E4:0.5 C4:0.5 F4:0.5 F4:0.5 F4:0.5 | F4:0.5 F4:0.25 E4:0.25 D4:0.25 C4:0.25 D4:0.5 B3:0.5 E4:0.5 E4:0.5 E4:0.5 |
+             E4:0.5 E4:0.25 D4:0.25 C4:0.25 B3:0.25 C4:0.5 A3:0.5 R:1.5`,
+    chords: 'Am Am Am Dm.G C.F Dm.E Am',
+  },
 ];
