@@ -12,6 +12,10 @@ const INK = '#4a3a2c';
 const dia = (m) => (Math.floor(m / 12) - 1) * 7 + LETTER_OF_PC[pc(m)];
 
 // Split a length (in quarters) into drawable note values, tied together.
+// Triplet notes (1/3, 2/3, 1/6 of a quarter…) are drawn with the note shape they're written as
+// (1/3 -> eighth) and a small 3 above.
+const isTriplet = (q) => Math.abs(q * 3 - Math.round(q * 3)) < 1e-4 && Math.abs(q * 4 - Math.round(q * 4)) > 1e-4;
+
 function splitValue(q) {
   const parts = [];
   let left = q;
@@ -140,8 +144,16 @@ export class SheetView {
       ctx.globalAlpha = isDone ? 0.35 : 1;
       let t = ev.time;
       let prev = null;
-      for (const q of splitValue(ev.dur * toQ)) {
+      const total = ev.dur * toQ;
+      const triplet = isTriplet(total);
+      for (const q of triplet ? [total * 1.5] : splitValue(total)) {
         const x = xAt(t);
+        if (triplet) {
+          ctx.fillStyle = INK;
+          ctx.font = `italic 700 ${Math.round(g * 1.1)}px "Baloo 2", Nunito, sans-serif`;
+          ctx.textAlign = 'center';
+          ctx.fillText('3', x, y0 - g * 1.4);
+        }
         const hl = isCurrent && t === ev.time;
         let heads;
         if (evs.length === 1) {
@@ -152,7 +164,7 @@ export class SheetView {
         }
         if (prev) heads.forEach((h, i) => this.drawTie(prev[i], h, g));
         prev = heads;
-        t += q / toQ;
+        t += triplet ? ev.dur : q / toQ;
       }
       // label: chord symbol for chords, otherwise the note name
       // (melody above the staff when there are two hands, otherwise below)

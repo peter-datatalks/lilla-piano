@@ -5,7 +5,7 @@
 // - Instrument samples are cached by js/samples.js itself (Cache Storage "lp-samples-v1").
 
 // Bump the version when releasing so every device downloads the new app files.
-const SHELL = 'lp-shell-v27';
+const SHELL = 'lp-shell-v28';
 const FONTS = 'lp-fonts-v1';
 
 const APP_FILES = [
@@ -36,6 +36,11 @@ const APP_FILES = [
   'js/songs-xmas-eu.js',
   'js/songs-classical-a.js',
   'js/songs-classical-b.js',
+  'js/songs-classical-c.js',
+  'js/songs-classical-d.js',
+  'js/songs-classical-e.js',
+  'js/songs-classical-f.js',
+  'js/songs-classical-g.js',
   'js/songs-anthems.js',
   'js/config.js',
   'js/profile.js',

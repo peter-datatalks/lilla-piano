@@ -50,7 +50,7 @@ const LEVEL_STYLE = {
   medium: { stars: 2, color: '#fb8c00' },
   hard: { stars: 3, color: '#e53935' },
 };
-const COUNTRY_FLAG = { se: '🇸🇪', hu: '🇭🇺', ua: '🇺🇦', tr: '🇹🇷', gb: '🇬🇧', us: '🇺🇸', de: '🇩🇪', at: '🇦🇹', fr: '🇫🇷', it: '🇮🇹', ru: '🇷🇺', no: '🇳🇴', cz: '🇨🇿', pl: '🇵🇱' };
+const COUNTRY_FLAG = { se: '🇸🇪', hu: '🇭🇺', ua: '🇺🇦', tr: '🇹🇷', gb: '🇬🇧', us: '🇺🇸', de: '🇩🇪', at: '🇦🇹', fr: '🇫🇷', it: '🇮🇹', ru: '🇷🇺', no: '🇳🇴', cz: '🇨🇿', pl: '🇵🇱', es: '🇪🇸' };
 const THEME_EMOJI = {
   all: '🎵', children: '🧸', animals: '🐾', movement: '💃', everyday: '🏡', lullaby: '🌙',
   celebrations: '🎉', christmas: '🎄', lucia: '🕯️', midsummer: '🌸', anthems: '🎺', classical: '🎻',
@@ -519,6 +519,25 @@ function renderLibrary() {
     p.className = 'empty';
     p.textContent = t('noSongs');
     lib.append(p);
+  }
+  // Classical: one section per composer (cards keep their difficulty stripe)
+  if (state.theme === 'classical' && !query) {
+    const surname = (c) => c.replace(/^([A-Z]\.\s*)+/, '').trim();
+    const composers = [...new Set(visible.map((x) => x.composer).filter(Boolean))]
+      .sort((a, b) => surname(a).localeCompare(surname(b)));
+    for (const composer of composers) {
+      const songs = visible.filter((x) => x.composer === composer)
+        .sort((a, b) => LEVELS.indexOf(a.level) - LEVELS.indexOf(b.level));
+      const sec = document.createElement('section');
+      sec.className = 'level composer';
+      sec.innerHTML = `<h2 class="level-title">${escapeHtml(composer)}<small>${songs.length}</small></h2>`;
+      const grid = document.createElement('div');
+      grid.className = 'song-grid';
+      for (const x of songs) grid.append(songCard(x, true));
+      sec.append(grid);
+      lib.append(sec);
+    }
+    return;
   }
   for (const lvl of LEVELS) {
     const songs = visible.filter((x) => x.level === lvl);

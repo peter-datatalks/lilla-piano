@@ -55,6 +55,14 @@ export function parseNote(s) {
   return (Number(m[3]) + 1) * 12 + PC[m[1]] + acc;
 }
 
+// Note length in beats: "0.5", "1.5", or a fraction for triplets ("1/3" = one note of a
+// quarter-note triplet, "2/3", "1/6"…).
+export function parseDur(d) {
+  if (!d) return 1;
+  if (d.includes('/')) { const [a, b] = d.split('/'); return Number(a) / Number(b); }
+  return parseFloat(d);
+}
+
 // "C4 D4:0.5 R:1 | E4:2" -> events. Duration is in beats (default 1), R is a rest.
 // Rests are collected into `rests` when an array is passed.
 function parseMelody(str, rests = null) {
@@ -63,7 +71,7 @@ function parseMelody(str, rests = null) {
   for (const tok of str.split(/\s+/)) {
     if (!tok || tok === '|') continue;
     const [n, d] = tok.split(':');
-    const dur = d ? parseFloat(d) : 1;
+    const dur = parseDur(d);
     if (n !== 'R') events.push({ time: t, dur, midi: parseNote(n), hand: 'R', ...(/^[A-G]b\d/.test(n) && { flat: true }) });
     else if (rests) rests.push({ time: t, dur });
     t += dur;

@@ -13,9 +13,14 @@ import { SONGS_XMAS_EN } from './songs-xmas-en.js';
 import { SONGS_XMAS_EU } from './songs-xmas-eu.js';
 import { SONGS_CLASSICAL_A } from './songs-classical-a.js';
 import { SONGS_CLASSICAL_B } from './songs-classical-b.js';
+import { SONGS_CLASSICAL_C } from './songs-classical-c.js';
+import { SONGS_CLASSICAL_D } from './songs-classical-d.js';
+import { SONGS_CLASSICAL_E } from './songs-classical-e.js';
+import { SONGS_CLASSICAL_F } from './songs-classical-f.js';
+import { SONGS_CLASSICAL_G } from './songs-classical-g.js';
 
 export const LEVELS = ['easy', 'medium', 'hard'];
-export const COUNTRIES = ['se', 'hu', 'ua', 'tr', 'gb', 'us', 'de', 'at', 'fr', 'it', 'ru', 'no', 'cz', 'pl'];
+export const COUNTRIES = ['se', 'hu', 'ua', 'tr', 'gb', 'us', 'de', 'at', 'fr', 'it', 'ru', 'no', 'cz', 'pl', 'es'];
 export const THEMES = ['children', 'animals', 'movement', 'everyday', 'lullaby', 'celebrations', 'christmas', 'lucia', 'midsummer', 'anthems', 'classical'];
 
 const SONGS_SE = [
@@ -353,4 +358,6 @@ const SONGS_SE = [
   },
 ];
 
-export const SONGS = [...SONGS_SE, ...SONGS_SE_EXTRA, ...SONGS_HU, ...SONGS_UA, ...SONGS_TR, ...SONGS_XMAS_EN, ...SONGS_XMAS_EU, ...SONGS_CLASSICAL_A, ...SONGS_CLASSICAL_B, ...SONGS_ANTHEMS];
+export const SONGS = [...SONGS_SE, ...SONGS_SE_EXTRA, ...SONGS_HU, ...SONGS_UA, ...SONGS_TR, ...SONGS_XMAS_EN, ...SONGS_XMAS_EU, ...SONGS_CLASSICAL_A, ...SONGS_CLASSICAL_B,
+  ...SONGS_CLASSICAL_C, ...SONGS_CLASSICAL_D, ...SONGS_CLASSICAL_E, ...SONGS_CLASSICAL_F, ...SONGS_CLASSICAL_G,
+  ...SONGS_ANTHEMS];

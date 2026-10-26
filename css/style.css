@@ -1106,3 +1106,6 @@ input { user-select: text; -webkit-user-select: text; font: inherit; }
 .inst-btn .lh-badge { left: -4px; right: auto; }
 .inst-btn .rh-badge { right: -4px; }
 .hand-tab .tab-badge + .tab-badge { margin-left: -2px; }
+
+/* classical library grouped by composer */
+.level.composer .level-title { font-size: 22px; margin-top: 2px; }

@@ -15,7 +15,7 @@ const keyStore = {
 };
 
 const songById = new Map(SONGS.map((s) => [s.id, s]));
-const FLAG = { se: '🇸🇪', hu: '🇭🇺', ua: '🇺🇦', tr: '🇹🇷', gb: '🇬🇧', us: '🇺🇸', de: '🇩🇪', at: '🇦🇹', fr: '🇫🇷', it: '🇮🇹', ru: '🇷🇺', no: '🇳🇴', cz: '🇨🇿', pl: '🇵🇱' };
+const FLAG = { se: '🇸🇪', hu: '🇭🇺', ua: '🇺🇦', tr: '🇹🇷', gb: '🇬🇧', us: '🇺🇸', de: '🇩🇪', at: '🇦🇹', fr: '🇫🇷', it: '🇮🇹', ru: '🇷🇺', no: '🇳🇴', cz: '🇨🇿', pl: '🇵🇱', es: '🇪🇸' };
 const isPlay = (r) => r.type === 'play' || r.type === 'listen';
 const day = (ts) => String(ts).slice(0, 10);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

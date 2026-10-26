@@ -2,10 +2,10 @@
 // Run in the browser console on the dev server:
 //   (await import('/tools/check-songs.js')).checkSongs()
 import { SONGS } from '../js/songs.js';
-import { buildSong, noteName } from '../js/music.js';
+import { buildSong, noteName, parseDur } from '../js/music.js';
 
 const beats = (bar) => bar.split(/\s+/).filter(Boolean)
-  .reduce((t, tok) => t + (tok.includes(':') ? parseFloat(tok.split(':')[1]) : 1), 0);
+  .reduce((t, tok) => t + (tok.includes(':') ? parseDur(tok.split(':')[1]) : 1), 0);
 const label = (m) => `${noteName(m)}${Math.floor(m / 12) - 1}`;
 
 export function checkSongs() {
@@ -19,11 +19,11 @@ export function checkSongs() {
     const bars = song.melody.split('|').map((b) => b.trim()).filter(Boolean);
     const pickup = song.pickup || 0;
     const full = pickup ? bars.slice(1) : bars;
-    if (pickup && Math.abs(beats(bars[0]) - pickup) > 1e-6) issues.push(`pickup has ${beats(bars[0])} beats, expected ${pickup}`);
+    if (pickup && Math.abs(beats(bars[0]) - pickup) > 1e-4) issues.push(`pickup has ${beats(bars[0])} beats, expected ${pickup}`);
     full.forEach((b, i) => {
       const s = beats(b);
       const last = i === full.length - 1;
-      if (Math.abs(s - song.beatsPerBar) > 1e-6 && !(last && Math.abs(s + pickup - song.beatsPerBar) < 1e-6)) {
+      if (Math.abs(s - song.beatsPerBar) > 1e-4 && !(last && Math.abs(s + pickup - song.beatsPerBar) < 1e-4)) {
         issues.push(`bar ${i + 1} has ${s} beats`);
       }
     });
