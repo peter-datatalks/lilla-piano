@@ -24,6 +24,7 @@
       <button class="mode-btn" data-go="free" data-i18n-label="free">🎹<span data-i18n="free"></span></button>
       <button class="mode-btn" data-go="library" data-i18n-label="songs">⭐<span data-i18n="songs"></span></button>
     </nav>
+    <button class="inst-chip" id="inst-chip" data-i18n-label="chooseInstrument"></button>
     <div class="hand-target" role="radiogroup" data-i18n-label="chooseHands">
       <button role="radio" data-target="L"><span class="tab-badge l" data-i18n="handL"></span></button>
       <button role="radio" data-target="both"><span class="tab-badge l" data-i18n="handL"></span><span class="tab-badge r" data-i18n="handR"></span></button>
@@ -32,7 +33,7 @@
     <div class="instruments" id="instruments" role="radiogroup" aria-label="Instrument"></div>
     <button class="more-btn" id="more-inst" data-i18n-label="chooseInstrument">🎼<span data-i18n="more"></span></button>
     <button class="icon-btn lang-btn" id="lang-btn" data-i18n-label="language"></button>
-    <button class="icon-btn" id="fullscreen-btn" data-i18n-label="fullscreen">⛶</button>
+    <button class="icon-btn fs-btn" id="fullscreen-btn" data-i18n-label="fullscreen">⛶</button>
   </header>
 
   <main class="stage">
@@ -54,6 +55,7 @@
         <button class="round-btn" id="song-back" data-i18n-label="back">⬅</button>
         <div class="song-title" id="song-title"></div>
         <div class="song-actions">
+          <button class="inst-chip" id="inst-chip-song" data-i18n-label="chooseInstrument"></button>
           <button class="hands-toggle" id="btn-hands" data-i18n-label="switchHands"></button>
           <button class="big-btn listen" id="btn-listen">👂<span data-i18n="listen"></span></button>
           <button class="big-btn play" id="btn-play">🎹<span data-i18n="play"></span></button>
@@ -61,6 +63,7 @@
             <button class="round-btn" id="btn-tempo" data-i18n-label="tempo" aria-haspopup="menu">🐇</button>
             <div class="speed-menu hidden" id="speed-menu" role="menu"></div>
           </div>
+          <button class="icon-btn fs-btn song-fs" data-i18n-label="fullscreen">⛶</button>
         </div>
       </div>
       <div class="progress"><div class="progress-fill" id="progress"></div></div>

@@ -113,6 +113,10 @@ function onUp(midi, src) {
 // Instrument row: the instruments in use plus recent ones. Tapping one assigns it to the
 // hand(s) chosen in the L | L+R | R selector. When the hands differ, badges show which is which.
 function renderInstruments() {
+  const chipHtml = splitActive()
+    ? `<span class="inst-icon">${iconFor(instFor('L'))}<span class="lh-badge">${t('handL')}</span></span><span class="inst-icon">${iconFor(state.instrument)}<span class="rh-badge">${t('handR')}</span></span>`
+    : `<span class="inst-icon">${iconFor(state.instrument)}</span>`;
+  document.querySelectorAll('.inst-chip').forEach((b) => { b.innerHTML = `${chipHtml}<span class="chip-caret">▾</span>`; });
   document.querySelectorAll('.hand-target button').forEach((b) => b.setAttribute('aria-checked', b.dataset.target === state.target));
   const right = state.instrument;
   const left = instFor('L');
@@ -307,7 +311,7 @@ function currentHash() {
   if (state.view === 'song' && state.song) {
     return `#/song/${state.song.id}/${state.hands}${state.songView !== 'notes' ? `?view=${state.songView}` : ''}`;
   }
-  return state.view === 'library' ? '#/songs' : '#/';
+  return state.view === 'library' ? libraryHash() : '#/';
 }
 
 function syncUrl(replace = false) {
@@ -338,7 +342,12 @@ function route() {
         askHands(song);
       }
     } else if (page === 'songs') {
-      setView('library');
+      const params = new URLSearchParams(query || '');
+      if (id === 'theme' && COLLECTIONS.includes(hands)) state.lib = { kind: 'theme', id: hands, sub: params.get('country') };
+      else if (id === 'country' && COUNTRIES.includes(hands)) state.lib = { kind: 'country', id: hands, sub: params.get('theme') };
+      else state.lib = { kind: 'home' };
+      if (state.view === 'library') renderLibrary();
+      else setView('library');
     } else {
       setView('free');
     }
@@ -355,7 +364,7 @@ function showToast(html) {
   toast.innerHTML = html;
   toast.classList.remove('hidden');
   clearTimeout(greet.timer);
-  greet.timer = setTimeout(() => toast.classList.add('hidden'), 2500);
+  greet.timer = setTimeout(() => toast.classList.add('hidden'), Math.max(2500, html.length * 60));
 }
 
 async function copySongLink() {
@@ -447,37 +456,63 @@ function chip(label, emoji, active, onclick) {
   return b;
 }
 
+/* ---------- song library: home (collections + countries) → collection → songs ---------- */
+
+// Collections shown on the library home, in this order (only those with songs appear).
+const COLLECTIONS = ['children', 'christmas', 'classical', 'lullaby', 'animals', 'movement', 'everyday', 'celebrations', 'lucia', 'midsummer', 'anthems'];
+const isClassical = (s) => s.themes?.includes('classical');
+
+// Where the library is: { kind: 'home' } | { kind: 'theme', id, sub: country|null } | { kind: 'country', id, sub: theme|null }
+state.lib = { kind: 'home' };
+
+function openLibrary(path) {
+  state.lib = path;
+  if (state.view !== 'library') { setView('library'); return; }
+  renderLibrary();
+  $('#library').scrollTop = 0;
+  syncUrl();
+}
+
+function libraryHash() {
+  const p = state.lib;
+  if (p.kind === 'theme') return `#/songs/theme/${p.id}${p.sub ? `?country=${p.sub}` : ''}`;
+  if (p.kind === 'country') return `#/songs/country/${p.id}${p.sub ? `?theme=${p.sub}` : ''}`;
+  return '#/songs';
+}
+
 function renderLibrary() {
   const lib = $('#library');
-  lib.innerHTML = `<div class="library-brand">${brandHTML()}</div>`;
-  const inCountry = (s) => state.country === 'all' || s.country === state.country;
-  const inTheme = (s) => state.theme === 'all' || s.themes?.includes(state.theme);
-  const query = searchKey(state.search);
-  const inSearch = (s) => !query || searchKey(`${s.title} ${s.titleEn} ${s.composer || ''} ${(s.aka || []).join(' ')}`).includes(query);
+  lib.innerHTML = '';
+  if (state.lib.kind === 'home') renderLibraryHome(lib);
+  else renderCollection(lib, state.lib);
+}
 
-  // filter row 1: where the songs come from
-  const countries = document.createElement('div');
-  countries.className = 'theme-chips';
-  for (const c of ['all', ...COUNTRIES.filter((c) => SONGS.some((s) => s.country === c))]) {
-    countries.append(chip(t(`country.${c}`), c === 'all' ? '🌍' : COUNTRY_FLAG[c], c === state.country, () => {
-      state.country = c;
-      store.set('country', c);
-      renderLibrary();
-    }));
-  }
-  // filter row 2: themes that have songs for the chosen country
-  const themes = document.createElement('div');
-  themes.className = 'theme-chips';
-  const available = THEMES.filter((th) => SONGS.some((s) => inCountry(s) && s.themes?.includes(th)));
-  if (state.theme !== 'all' && !available.includes(state.theme)) state.theme = 'all';
-  for (const th of ['all', ...available]) {
-    themes.append(chip(t(`theme.${th}`), THEME_EMOJI[th], th === state.theme, () => {
-      state.theme = th;
-      store.set('theme', th);
-      renderLibrary();
-    }));
-  }
-  // search box (ignores accents, spaces and punctuation: "kis karacsony" finds "Kiskarácsony")
+function tile(emoji, label, count, onclick, extraClass = '') {
+  const b = document.createElement('button');
+  b.className = `lib-tile ${extraClass}`;
+  b.innerHTML = `<span class="lib-tile-emoji">${emoji}</span><span class="lib-tile-name">${escapeHtml(label)}</span><span class="lib-tile-count">${count}</span>`;
+  b.onclick = onclick;
+  return b;
+}
+
+function section(title, small = '') {
+  const sec = document.createElement('section');
+  sec.className = 'level';
+  sec.innerHTML = `<h2 class="level-title">${title}${small ? `<small>${small}</small>` : ''}</h2>`;
+  return sec;
+}
+
+function renderLibraryHome(lib) {
+  lib.innerHTML = `<div class="library-brand">${brandHTML()}</div>`;
+  const name = getName();
+  const hello = document.createElement('button');
+  hello.className = 'hello-chip';
+  hello.innerHTML = name ? `👋 ${t('hi').replace('{name}', escapeHtml(name))} <span>✏️</span>` : `👋 ${t('whoPlays')} <span>✏️</span>`;
+  hello.onclick = () => openWelcome(true);
+  lib.append(hello);
+
+  // search over everything (ignores accents, spaces and punctuation: "kis karacsony" finds "Kiskarácsony")
+  const query = searchKey(state.search);
   const search = document.createElement('div');
   search.className = 'song-search';
   search.innerHTML = `<span>🔎</span><input type="search" id="song-search" enterkeyhint="search" placeholder="${escapeHtml(t('searchSongs'))}" value="${escapeHtml(state.search)}">${state.search ? '<button type="button" aria-label="✕">✕</button>' : ''}`;
@@ -491,65 +526,108 @@ function renderLibrary() {
   };
   const clear = search.querySelector('button');
   if (clear) clear.onclick = () => { state.search = ''; renderLibrary(); };
-  lib.append(search, countries, themes);
+  lib.append(search);
 
-  // greeting + favourites (the 5 songs this device plays most)
-  const name = getName();
-  const hello = document.createElement('button');
-  hello.className = 'hello-chip';
-  hello.innerHTML = name ? `👋 ${t('hi').replace('{name}', escapeHtml(name))} <span>✏️</span>` : `👋 ${t('whoPlays')} <span>✏️</span>`;
-  hello.onclick = () => openWelcome(true);
-  lib.querySelector('.library-brand').after(hello);
-  const favs = favourites(5).map((id) => SONGS.find((s) => s.id === id)).filter(Boolean);
-  if (favs.length && state.country === 'all' && state.theme === 'all' && !query) {
-    const sec = document.createElement('section');
-    sec.className = 'level favourites';
-    sec.style.setProperty('--lc', 'oklch(80% 0.13 85)');
-    sec.innerHTML = `<h2 class="level-title"><span class="stars">❤️</span>${name ? t('favouritesOf').replace('{name}', escapeHtml(name)) : t('favourites')}<small>${t('favouritesDesc')}</small></h2>`;
+  if (query) {
+    const hits = SONGS.filter((s) => searchKey(`${s.title} ${s.titleEn} ${s.composer || ''} ${(s.aka || []).join(' ')}`).includes(query));
+    if (!hits.length) lib.append(Object.assign(document.createElement('p'), { className: 'empty', textContent: t('noSongs') }));
+    renderGroups(lib, hits, false);
+    return;
+  }
+
+  // favourites (the 5 songs this device plays most)
+  const favs = favourites(5).map((id) => SONGS.find((x) => x.id === id)).filter(Boolean);
+  if (favs.length) {
+    const sec = section(`<span class="stars">❤️</span>${name ? t('favouritesOf').replace('{name}', escapeHtml(name)) : t('favourites')}`, t('favouritesDesc'));
+    sec.classList.add('favourites');
     const grid = document.createElement('div');
     grid.className = 'song-grid';
-    favs.forEach((s) => grid.append(songCard(s, true)));
+    favs.forEach((x) => grid.append(songCard(x, true)));
     sec.append(grid);
     lib.append(sec);
   }
 
-  const visible = SONGS.filter((s) => inCountry(s) && inTheme(s) && inSearch(s));
-  if (!visible.length) {
-    const p = document.createElement('p');
-    p.className = 'empty';
-    p.textContent = t('noSongs');
-    lib.append(p);
+  // collections
+  const cols = section(t('collections'));
+  const colGrid = document.createElement('div');
+  colGrid.className = 'tile-grid';
+  for (const th of COLLECTIONS) {
+    const n = SONGS.filter((x) => x.themes?.includes(th)).length;
+    if (n) colGrid.append(tile(THEME_EMOJI[th], t(`theme.${th}`), n, () => openLibrary({ kind: 'theme', id: th, sub: null }), `theme-${th}`));
   }
-  // Classical: one section per composer (cards keep their difficulty stripe)
-  if (state.theme === 'classical' && !query) {
+  cols.append(colGrid);
+  lib.append(cols);
+
+  // countries (folk, children's and seasonal songs; classical lives under its own collection)
+  const ctry = section(t('countries'));
+  const ctryGrid = document.createElement('div');
+  ctryGrid.className = 'tile-grid';
+  for (const c of COUNTRIES) {
+    const n = SONGS.filter((x) => x.country === c && !isClassical(x)).length;
+    if (n) ctryGrid.append(tile(COUNTRY_FLAG[c], t(`country.${c}`), n, () => openLibrary({ kind: 'country', id: c, sub: null })));
+  }
+  ctry.append(ctryGrid);
+  lib.append(ctry);
+}
+
+function renderCollection(lib, p) {
+  const all = p.kind === 'theme'
+    ? SONGS.filter((x) => x.themes?.includes(p.id))
+    : SONGS.filter((x) => x.country === p.id && !isClassical(x));
+  const emoji = p.kind === 'theme' ? THEME_EMOJI[p.id] : COUNTRY_FLAG[p.id];
+  const title = p.kind === 'theme' ? t(`theme.${p.id}`) : t(`country.${p.id}`);
+
+  const head = document.createElement('div');
+  head.className = 'lib-head';
+  head.innerHTML = `<button class="round-btn" aria-label="${escapeHtml(t('back'))}">⬅</button><h2><span>${emoji}</span>${escapeHtml(title)}<small>${all.length}</small></h2>`;
+  head.querySelector('button').onclick = () => openLibrary({ kind: 'home' });
+  lib.append(head);
+
+  // sub-filter: countries inside a collection, collections inside a country (only when it helps)
+  const options = p.kind === 'theme'
+    ? COUNTRIES.filter((c) => all.some((x) => x.country === c))
+    : COLLECTIONS.filter((th) => th !== 'classical' && all.some((x) => x.themes?.includes(th)));
+  if (p.id !== 'classical' && options.length > 1) {
+    const chips = document.createElement('div');
+    chips.className = 'theme-chips';
+    chips.append(chip(t('country.all'), p.kind === 'theme' ? '🌍' : '🎵', !p.sub, () => openLibrary({ ...p, sub: null })));
+    for (const o of options) {
+      const label = p.kind === 'theme' ? t(`country.${o}`) : t(`theme.${o}`);
+      const icon = p.kind === 'theme' ? COUNTRY_FLAG[o] : THEME_EMOJI[o];
+      chips.append(chip(label, icon, p.sub === o, () => openLibrary({ ...p, sub: o })));
+    }
+    lib.append(chips);
+  }
+  const songs = !p.sub ? all : all.filter((x) => (p.kind === 'theme' ? x.country === p.sub : x.themes?.includes(p.sub)));
+  renderGroups(lib, songs, p.kind === 'theme' && p.id === 'classical');
+}
+
+// Songs grouped by composer (classical) or by level.
+function renderGroups(lib, songs, byComposer) {
+  if (byComposer) {
     const surname = (c) => c.replace(/^([A-Z]\.\s*)+/, '').trim();
-    const composers = [...new Set(visible.map((x) => x.composer).filter(Boolean))]
-      .sort((a, b) => surname(a).localeCompare(surname(b)));
+    const composers = [...new Set(songs.map((x) => x.composer).filter(Boolean))].sort((a, b) => surname(a).localeCompare(surname(b)));
     for (const composer of composers) {
-      const songs = visible.filter((x) => x.composer === composer)
-        .sort((a, b) => LEVELS.indexOf(a.level) - LEVELS.indexOf(b.level));
-      const sec = document.createElement('section');
-      sec.className = 'level composer';
-      sec.innerHTML = `<h2 class="level-title">${escapeHtml(composer)}<small>${songs.length}</small></h2>`;
+      const list = songs.filter((x) => x.composer === composer).sort((a, b) => LEVELS.indexOf(a.level) - LEVELS.indexOf(b.level));
+      const sec = section(escapeHtml(composer), list.length);
+      sec.classList.add('composer');
       const grid = document.createElement('div');
       grid.className = 'song-grid';
-      for (const x of songs) grid.append(songCard(x, true));
+      list.forEach((x) => grid.append(songCard(x, true)));
       sec.append(grid);
       lib.append(sec);
     }
     return;
   }
   for (const lvl of LEVELS) {
-    const songs = visible.filter((x) => x.level === lvl);
-    if (!songs.length) continue;
+    const list = songs.filter((x) => x.level === lvl);
+    if (!list.length) continue;
     const style = LEVEL_STYLE[lvl];
-    const sec = document.createElement('section');
-    sec.className = 'level';
+    const sec = section(`<span class="stars">${'★'.repeat(style.stars)}</span>${t(`level.${lvl}`)}`, t(`levelDesc.${lvl}`));
     sec.style.setProperty('--lc', style.color);
-    sec.innerHTML = `<h2 class="level-title"><span class="stars">${'★'.repeat(style.stars)}</span>${t(`level.${lvl}`)}<small>${t(`levelDesc.${lvl}`)}</small></h2>`;
     const grid = document.createElement('div');
     grid.className = 'song-grid';
-    for (const s of songs) grid.append(songCard(s));
+    list.forEach((x) => grid.append(songCard(x)));
     sec.append(grid);
     lib.append(sec);
   }
@@ -932,10 +1010,15 @@ function confetti() {
 
 /* ---------- wiring ---------- */
 
-document.querySelectorAll('.mode-btn').forEach((b) => (b.onclick = () => { unlock(); setView(b.dataset.go); }));
+document.querySelectorAll('.mode-btn').forEach((b) => (b.onclick = () => {
+  unlock();
+  if (b.dataset.go === 'library') openLibrary({ kind: 'home' });
+  else setView(b.dataset.go);
+}));
 $('#oct-down').onclick = () => shiftOctave(-1);
 $('#oct-up').onclick = () => shiftOctave(1);
 $('#more-inst').onclick = () => { unlock(); openSheet(); };
+document.querySelectorAll('.inst-chip').forEach((b) => (b.onclick = () => { unlock(); openSheet(); }));
 document.querySelectorAll('.hand-tab').forEach((b) => (b.onclick = () => openSheet(b.dataset.hand)));
 document.querySelectorAll('.hand-target button').forEach((b) => (b.onclick = () => setTarget(b.dataset.target)));
 $('#sheet-close').onclick = closeSheet;
@@ -994,12 +1077,16 @@ document.addEventListener('click', () => $('#speed-menu').classList.add('hidden'
 $('#btn-again').onclick = () => { $('#celebrate').classList.add('hidden'); startGuided(); };
 $('#btn-more').onclick = () => { $('#celebrate').classList.add('hidden'); setView('library'); };
 
-const fsBtn = $('#fullscreen-btn');
-if (!document.fullscreenEnabled) fsBtn.hidden = true;
-fsBtn.onclick = () => {
+const installedApp = navigator.standalone || matchMedia('(display-mode: standalone), (display-mode: fullscreen)').matches;
+document.querySelectorAll('.fs-btn').forEach((fsBtn) => {
+  if (!document.fullscreenEnabled && installedApp) fsBtn.hidden = true; // already fullscreen from the Home Screen
+  fsBtn.onclick = toggleFullscreen;
+});
+function toggleFullscreen() {
+  if (!document.fullscreenEnabled) { showToast(t('fullscreenHint')); return; } // iPhone: Add to Home Screen instead
   if (document.fullscreenElement) document.exitFullscreen();
   else document.documentElement.requestFullscreen().then(() => screen.orientation?.lock?.('landscape').catch(() => {})).catch(() => {});
-};
+}
 
 window.addEventListener('keydown', (e) => {
   if (e.target.closest?.('input, textarea')) return;

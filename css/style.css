@@ -1109,3 +1109,103 @@ input { user-select: text; -webkit-user-select: text; font: inherit; }
 
 /* classical library grouped by composer */
 .level.composer .level-title { font-size: 22px; margin-top: 2px; }
+
+/* ---------- library home: collection and country tiles ---------- */
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+}
+.lib-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: 104px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  background: var(--card);
+  border: 2px solid var(--border);
+  box-shadow: var(--lift);
+  text-align: left;
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.lib-tile:active { transform: translateY(2px); box-shadow: var(--lift-pressed); }
+.lib-tile-emoji { font-size: 38px; line-height: 1.1; }
+.lib-tile-name { font-family: var(--font-display); font-size: 18px; font-weight: 700; line-height: 1.1; }
+.lib-tile-count {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  min-width: 28px;
+  padding: 2px 8px;
+  border-radius: 14px;
+  background: var(--muted);
+  color: var(--muted-foreground);
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+.lib-tile.theme-classical { background: oklch(96% 0.025 300); }
+.lib-tile.theme-christmas { background: oklch(96% 0.03 25); }
+.lib-tile.theme-children { background: oklch(96% 0.04 90); }
+
+/* collection page header */
+.lib-head { display: flex; align-items: center; gap: 12px; padding-top: 6px; }
+.lib-head h2 { display: flex; align-items: center; gap: 10px; margin: 0; font-size: 28px; }
+.lib-head h2 span { font-size: 34px; }
+.lib-head h2 small { font-family: Nunito, sans-serif; font-size: 15px; color: var(--muted-foreground); }
+
+@media (max-width: 600px) {
+  .tile-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .lib-tile { min-height: 88px; padding: 10px 12px; }
+  .lib-tile-emoji { font-size: 30px; }
+  .lib-tile-name { font-size: 16px; }
+  .lib-head h2 { font-size: 22px; }
+}
+
+/* ---------- compact instrument button (phones and short screens) ---------- */
+
+.inst-chip {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  height: 46px;
+  padding: 0 10px 0 6px;
+  border-radius: 30px;
+  background: var(--sun);
+  border: 2px solid oklch(80% 0.13 85);
+  box-shadow: var(--lift);
+  flex: 0 0 auto;
+}
+.inst-chip .inst-icon { position: relative; width: 32px; height: 32px; }
+.inst-chip .lh-badge, .inst-chip .rh-badge { position: absolute; bottom: -6px; min-width: 16px; height: 16px; font-size: 10px; }
+.inst-chip .lh-badge { left: -4px; right: auto; }
+.inst-chip .rh-badge { right: -4px; }
+.chip-caret { font-size: 12px; color: var(--sun-foreground); }
+
+@media (max-width: 900px), (max-height: 520px) {
+  .topbar .hand-target,
+  .topbar .instruments,
+  .topbar .more-btn { display: none; }
+  .inst-chip { display: flex; }
+  .topbar #inst-chip { margin-right: auto; }
+  .topbar { gap: 8px; }
+}
+@media (max-height: 520px) {
+  .inst-chip { height: 44px; }
+}
+/* the song header only needs its own button when the top bar is hidden (short screens) */
+@media (min-height: 521px) { .song-actions .inst-chip { display: none; } }
+/* fullscreen lives in the top bar; on short screens (top bar hidden in songs) it moves into the song header */
+.song-actions .song-fs { display: none; flex: 0 0 auto; }
+@media (max-height: 520px) { .song-actions .song-fs:not([hidden]) { display: inline-flex; } }
+/* narrow portrait phones: title on its own line, controls below spread across the width */
+@media (max-width: 520px) and (min-height: 521px) {
+  .song-head { flex-wrap: wrap; row-gap: 8px; }
+  .song-actions { flex: 1 0 100%; justify-content: space-between; gap: 6px; }
+  .song-actions .big-btn { width: 48px; height: 48px; }
+  .song-actions .round-btn { width: 46px; height: 46px; }
+}
