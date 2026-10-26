@@ -8,6 +8,46 @@
 // MU = https://www.mutopiaproject.org/ftp/
 
 export const SONGS_CLASSICAL_G = [
+  // Nimrod (Enigma Variations, Op. 36, Variation IX, 1899) — the theme, bars 1–8.
+  //  Original E-flat major, 3/4 - moved down a minor third to C. The upbeat of bar 9 at the end of bar 8 is left out (rest).
+  //  Source: piano-duet edition, Novello, London 1905, Primo part p. 31, scan at https://archive.org/details/variationsonano00elgagoog
+  //  (Harvard copy, read by eye). Only one notated source used. Chords simplified. Public domain (Elgar d. 1934). Confidence: high (melody), medium (chords).
+  {
+    id: 'elgar-nimrod',
+    country: 'gb',
+    themes: ['classical'],
+    title: 'Nimrod',
+    titleEn: 'Nimrod (Enigma Variations)',
+    composer: 'Elgar',
+    aka: ['Enigma Variations', 'Op. 36', 'Variation IX'],
+    emoji: '🌳',
+    level: 'medium',
+    bpm: 52,
+    beatsPerBar: 3,
+    melody: `E4:0.5 C4:0.5 F4 D4 | G4 D4 D4:0.5 F4:0.5 | E4:0.5 G4:0.5 C5 D4 | B4 C4 D4:0.5 F4:0.5 |
+             E4:0.5 G4:0.5 C5 F#4 | B4 E4 F4:0.5 A4:0.5 | C5:0.5 A4:0.5 F#4:1.5 G4:0.5 | G4:0.5 E4:0.5 D4:1.5 R:0.5`,
+    chords: 'C.F G C G C.D Em.F D G',
+  },
+  // Åses død (The Death of Åse, Peer Gynt Suite No. 1, Op. 46 No. 2) — bars 1–8 (the first phrase).
+  //  Original B minor, 4/4 - moved down a tone to A minor (and up an octave from this piano setting's low register).
+  //  Source: MU + 'GriegE/O46/02-lamortdase/' (piano arrangement, Kunkel Brothers 1891; converted mechanically).
+  //  Chords from its left hand (simplified). Public domain (Grieg d. 1907). Confidence: high.
+  {
+    id: 'grieg-death-of-ase',
+    country: 'no',
+    themes: ['classical'],
+    title: 'Åses død',
+    titleEn: 'The Death of Åse',
+    composer: 'Grieg',
+    aka: ['Peer Gynt', 'Op. 46 No. 2', "Aase's Death"],
+    emoji: '🕊️',
+    level: 'easy',
+    bpm: 56,
+    beatsPerBar: 4,
+    melody: `E4 A4 B4:2 | E4 A4 B4:2 | C5 B4:0.5 E4:0.5 A4 B4:0.5 C5:0.5 | D5 C5:0.5 F#4:0.5 B4:1.5 R:0.5 |
+             E4 A4 B4:2 | E4 A4 B4:2 | D5 C5:0.5 F#4:0.5 B4 C5:0.5 D5:0.5 | G#4:0.5 D4:0.5 A4:2 R`,
+    chords: 'Am.E Am.E Am Dm.E Am Am Dm.E Am',
+  },
   // Vltava (Die Moldau, Má vlast No. 2, 1874; published 1880) — the river theme, 8 bars with upbeat.
   //  Original E minor, 6/8 - moved down a fifth to A minor (range E4–F5). Counted in eighths. The B tied inside bar 4 is one note.
   //  Source: LilyPond on https://en.wikipedia.org/wiki/Má_vlast (Vltava section). Only one notated source used. Chords simplified.

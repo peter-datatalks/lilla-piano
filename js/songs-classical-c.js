@@ -436,4 +436,26 @@ export const SONGS_CLASSICAL_C = [
              F4:3 E4:1.5 D4:0.5 E4 D4:2 G3 G4:3 | R:1.5 F4:0.5 E4 F4:1.5 E4:0.5 D4 C4:3 F4:0.5 G4:0.5 A4:2 | G4:1.5 F4:0.5 E4 E4:2 D4 C4:6`,
     chords: 'C C C C.G G G F.Dm Bb.F C.G G.C C',
   },
+  // Prélude (Cello Suite No. 1 in G major, BWV 1007) — the broken-chord opening, bars 1–4.
+  //  Original G major, 4/4, for cello - moved up two octaves and a fourth to C so it lies in the middle of the keyboard.
+  //  Source: MU + 'BachJS/BWV1007/bwv1007/bwv1007.mid' (converted mechanically).
+  //  Only one notated source used; the chords are the harmonies Bach spells out in the arpeggios. Public domain. Confidence: high.
+  {
+    id: 'bach-cello-suite-1-prelude',
+    country: 'de',
+    themes: ['classical'],
+    title: 'Prélude (Cellosuite Nr. 1)',
+    titleEn: 'Cello Suite No. 1: Prelude',
+    composer: 'J. S. Bach',
+    aka: ['BWV 1007', 'Cello Suite No. 1', 'Prelude', 'Suite für Violoncello'],
+    emoji: '🎻',
+    level: 'medium',
+    bpm: 66,
+    beatsPerBar: 4,
+    melody: `C4:0.25 G4:0.25 E5:0.25 D5:0.25 E5:0.25 G4:0.25 E5:0.25 G4:0.25 C4:0.25 G4:0.25 E5:0.25 D5:0.25 E5:0.25 G4:0.25 E5:0.25 G4:0.25 |
+             C4:0.25 A4:0.25 F5:0.25 E5:0.25 F5:0.25 A4:0.25 F5:0.25 A4:0.25 C4:0.25 A4:0.25 F5:0.25 E5:0.25 F5:0.25 A4:0.25 F5:0.25 A4:0.25 |
+             C4:0.25 B4:0.25 F5:0.25 E5:0.25 F5:0.25 B4:0.25 F5:0.25 B4:0.25 C4:0.25 B4:0.25 F5:0.25 E5:0.25 F5:0.25 B4:0.25 F5:0.25 B4:0.25 |
+             C4:0.25 C5:0.25 E5:0.25 D5:0.25 E5:0.25 C5:0.25 E5:0.25 C5:0.25 C4:0.25 C5:0.25 E5:0.25 D5:0.25 E5:0.25 C5:0.25 E5:0.25 B4:0.25`,
+    chords: 'C F G C',
+  },
 ];
