@@ -6,7 +6,7 @@
 //   so the service worker leaves them alone.
 
 // Bump the version when releasing so every device downloads the new app files.
-const SHELL = 'lp-shell-v39';
+const SHELL = 'lp-shell-v40';
 
 const APP_FILES = [
   './',

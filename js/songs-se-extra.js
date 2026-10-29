@@ -260,4 +260,27 @@ export const SONGS_SE_EXTRA = [
              C4 C4 C4 D4 | E4 E4:0.5 E4:0.5 E4 E4 | D4 D4:0.5 D4:0.5 G4 G4 | C4:3`,
     chords: 'C C G C C C G C C C G C C C G C C C G C C C G C',
   },
+  // En elefant balanserade — Swedish words to the traditional Spanish/Latin American counting song
+  //   "Un elefante se balanceaba" (anonymous, oral tradition). Only the title is used, no lyrics.
+  //   Source: Mama Lisa's World score https://www.mamalisa.com/images/scores/un_elefante.jpg
+  //   (page https://www.mamalisa.com/?t=es&p=317), C major, 4/4, 8 bars - no transposition.
+  //   The Swedish chord sheets (svenskabarnvisor.se: G and D7) give the same I-V harmony a fifth up.
+  //   Confidence: high (single clear score; the tune is short and unambiguous).
+  {
+    id: 'en-elefant-balanserade',
+    country: 'se',
+    themes: ['children', 'animals', 'movement'],
+    title: 'En elefant balanserade',
+    titleEn: 'One Elephant Went Balancing',
+    aka: ['Un elefante se balanceaba'],
+    emoji: '🐘',
+    level: 'easy',
+    bpm: 104,
+    beatsPerBar: 4,
+    melody: `G4 G4:0.5 F4:0.5 E4 E4 | G4:0.5 G4:0.5 G4:0.5 F4:0.5 E4 E4 |
+             G4 G4:0.5 G4:0.5 A4:0.5 G4:0.5 F4:0.5 E4:0.5 | F4:2 D4:2 |
+             F4 F4:0.5 E4:0.5 D4 D4 | F4:0.5 F4:0.5 F4:0.5 E4:0.5 D4 D4 |
+             G4 G4:0.5 G4:0.5 G4:0.5 F4:0.5 E4:0.5 D4:0.5 | E4:2 C4:2`,
+    chords: 'C C G G G G C.G C',
+  },
 ];
