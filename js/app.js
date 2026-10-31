@@ -5,7 +5,8 @@ import { SONGS, LEVELS, COUNTRIES, THEMES } from './songs.js';
 import { buildSong, fitRange, noteColor, noteName, eventName, setNoteNames } from './music.js';
 import { LANGS, t, getLang, setLang, translateDom, songTitles } from './i18n.js';
 import { brandHTML, brandMini } from './brand.js';
-import { getName, setName, hasAskedName, recordPlay, favourites, track, songScores, saveScore, migrateDone } from './profile.js';
+import { getName, setName, hasAskedName, recordPlay, favourites, track, songScores, saveScore, migrateDone, myTunes, saveTune, deleteTune, tuneId } from './profile.js';
+import { arrangeTune } from './arrange.js';
 import { newRun, scoreRun, starsText } from './score.js';
 import { CREDITS_HTML } from './credits.js';
 import { Keyboard } from './keyboard.js';
@@ -103,11 +104,13 @@ function onDown(midi, src) {
   voices.set(src, playNote(instFor(handFor(midi)), midi, 0.85));
   if (state.view === 'free') spawnFloat(midi);
   if (state.mode === 'guided') guidedInput(midi);
+  if (rec) recordDown(midi, src);
 }
 
 function onUp(midi, src) {
   voices.get(src)?.release();
   voices.delete(src);
+  if (rec) recordUp(src);
 }
 
 /* ---------- instruments ---------- */
@@ -289,6 +292,8 @@ if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.
 
 function setView(v) {
   stopAll();
+  if (rec && v !== 'free') stopRecording();
+  stopTunePlayback();
   state.view = v;
   app.dataset.view = v;
   document.querySelectorAll('.mode-btn').forEach((b) =>
@@ -333,10 +338,11 @@ function route() {
     const view = new URLSearchParams(query || '').get('view');
     closeSheet();
     closeHands();
+    closeTunes();
     $('#celebrate').classList.add('hidden');
     if (page === 'song') {
-      const song = SONGS.find((s) => s.id === id);
-      if (!song) { setView('library'); return; }
+      const song = findSong(id);
+      if (!song) { setView(id?.startsWith('tune-') ? 'free' : 'library'); return; }
       if (['notes', 'sheet', 'solfege'].includes(view) && view !== state.songView) setSongView(view);
       if (['one', 'two', 'chords'].includes(hands)) {
         openSong(song, hands);
@@ -446,6 +452,180 @@ function spawnFloat(midi) {
   n.style.setProperty('--drift', `${(Math.random() - 0.5) * 60}px`);
   n.addEventListener('animationend', () => n.remove());
   area.append(n);
+}
+
+/* ---------- free play: record tunes, play them back, make them into songs ---------- */
+
+const MAX_REC_MS = 3 * 60 * 1000;
+let rec = null; // { start, notes, open: Map(src -> note), timer }
+
+function toggleRecording() {
+  unlock();
+  if (rec) stopRecording();
+  else startRecording();
+}
+
+function startRecording() {
+  stopTunePlayback();
+  rec = { start: performance.now(), notes: [], open: new Map() };
+  rec.timer = setInterval(() => {
+    const ms = performance.now() - rec.start;
+    if (ms > MAX_REC_MS) { stopRecording(); return; }
+    renderRecBar();
+  }, 250);
+  renderRecBar();
+}
+
+function recordDown(midi, src) {
+  if (state.view !== 'free') return;
+  const n = { m: midi, t: Math.round(performance.now() - rec.start), d: null, i: instFor(handFor(midi)) };
+  rec.open.get(src) && closeNote(rec.open.get(src));
+  rec.open.set(src, n);
+  rec.notes.push(n);
+}
+
+function closeNote(n) { if (n.d == null) n.d = Math.max(30, Math.round(performance.now() - rec.start - n.t)); }
+
+function recordUp(src) {
+  const n = rec.open.get(src);
+  if (n) closeNote(n);
+  rec.open.delete(src);
+}
+
+function stopRecording() {
+  const r = rec;
+  rec = null;
+  clearInterval(r.timer);
+  r.open.forEach(closeNote);
+  renderRecBar();
+  if (!r.notes.length) { showToast(`⏺ ${t('nothingRecorded')}`); return; }
+  const count = myTunes().length + 1;
+  const tune = saveTune({
+    id: tuneId(),
+    name: t('tuneName').replace('{n}', count),
+    emoji: TUNE_EMOJI[Math.floor(Math.random() * TUNE_EMOJI.length)],
+    at: new Date().toISOString(),
+    notes: r.notes,
+  });
+  track('record', { notes: tune.notes.length, ms: tune.notes.at(-1).t + tune.notes.at(-1).d });
+  showToast(t('tuneSaved'));
+  openTunes(tune.id);
+}
+
+const TUNE_EMOJI = ['🐱', '🐶', '🦊', '🐻', '🐰', '🐸', '🦁', '🐼', '🐨', '🐯', '🦄', '🐝', '🐞', '🐢', '🐳', '🦋'];
+
+function renderRecBar() {
+  const btn = $('#rec-btn');
+  btn.classList.toggle('on', !!rec);
+  const secs = rec ? Math.floor((performance.now() - rec.start) / 1000) : 0;
+  btn.querySelector('.rec-label').textContent = rec ? `${t('recording')} ${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}` : t('record');
+  const n = myTunes().length;
+  $('#tunes-count').textContent = n ? n : '';
+  $('#tunes-btn').hidden = !n && !rec;
+}
+
+// Playback of the recording exactly as it was played (with the instrument used for each note).
+let tunePlayer = null; // { id, stop() }
+
+function playTune(tune) {
+  const wasThis = tunePlayer?.id === tune.id;
+  stopTunePlayback();
+  if (wasThis) { renderTunes(); return; }
+  unlock();
+  const t0 = now() + 0.15;
+  const voicesOut = [];
+  const timers = [];
+  for (const n of tune.notes) {
+    const at = t0 + n.t / 1000;
+    const v = playNote(n.i || state.instrument, n.m, 0.85, at);
+    v.release(at + (n.d || 300) / 1000);
+    voicesOut.push(v);
+    if (state.view === 'free') {
+      timers.push(setTimeout(() => { kb.setPlaying(n.m, true); spawnFloat(n.m); }, n.t + 150));
+      timers.push(setTimeout(() => kb.setPlaying(n.m, false), n.t + (n.d || 300) + 150));
+    }
+  }
+  const end = tune.notes.reduce((x, n) => Math.max(x, n.t + (n.d || 300)), 0);
+  timers.push(setTimeout(() => { stopTunePlayback(); renderTunes(); }, end + 400));
+  tunePlayer = { id: tune.id, stop() { timers.forEach(clearTimeout); voicesOut.forEach((v) => v.kill()); kb.clearPlaying(); } };
+  track('playTune', { notes: tune.notes.length });
+  renderTunes();
+}
+
+function stopTunePlayback() {
+  if (tunePlayer) { tunePlayer.stop(); tunePlayer = null; }
+}
+
+function openTunes(highlight = null) {
+  state.tuneHighlight = highlight;
+  renderTunes();
+  $('#tunes-sheet').classList.remove('hidden');
+}
+
+function closeTunes() {
+  $('#tunes-sheet').classList.add('hidden');
+  stopTunePlayback();
+}
+
+function fmtDuration(ms) {
+  const s = Math.max(1, Math.round(ms / 1000));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+
+function renderTunes() {
+  const list = $('#tunes-list');
+  const tunes = myTunes();
+  if (!tunes.length) { list.innerHTML = `<p class="tunes-empty">${t('noTunes')}</p>`; return; }
+  const date = new Intl.DateTimeFormat(getLang() === 'sv' ? 'sv-SE' : 'en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  list.innerHTML = '';
+  for (const tune of tunes) {
+    const last = tune.notes.at(-1);
+    const best = Object.values(songScores(`tune-${tune.id}`)).sort((x, y) => y.stars - x.stars)[0];
+    const row = document.createElement('div');
+    row.className = `tune-row${state.tuneHighlight === tune.id ? ' new' : ''}`;
+    const playing = tunePlayer?.id === tune.id;
+    row.innerHTML = `<span class="tune-emoji">${tune.emoji}</span>
+      <span class="tune-info">
+        <input class="tune-name" maxlength="40" value="${escapeHtml(tune.name)}" aria-label="${t('renameTune')}" enterkeyhint="done">
+        <small>${t('notesCount').replace('{n}', tune.notes.length)} · ${fmtDuration(last.t + last.d)} · ${date.format(new Date(tune.at))}${best ? ` · <span class="best-stars">${starsText(best.stars)}</span>` : ''}</small>
+      </span>
+      <button class="round-btn tune-play${playing ? ' on' : ''}" aria-label="${t(playing ? 'stopTune' : 'playTune')}">${playing ? '⏹' : '▶'}</button>
+      <button class="big-btn play tune-song">✨<span>${t('makeSong')}</span></button>
+      <button class="round-btn tune-del" aria-label="${t('deleteTune')}" title="${t('deleteTune')}">🗑</button>`;
+    const input = row.querySelector('.tune-name');
+    input.onchange = () => {
+      const name = input.value.trim().slice(0, 40);
+      if (name) saveTune({ ...tune, name }); else input.value = tune.name;
+    };
+    input.onkeydown = (e) => { if (e.key === 'Enter') input.blur(); };
+    row.querySelector('.tune-play').onclick = () => playTune(myTunes().find((x) => x.id === tune.id) || tune);
+    row.querySelector('.tune-song').onclick = () => makeSong(tune.id);
+    row.querySelector('.tune-del').onclick = () => {
+      if (!confirm(t('confirmDelete').replace('{name}', tune.name))) return;
+      if (tunePlayer?.id === tune.id) stopTunePlayback();
+      deleteTune(tune.id);
+      renderTunes();
+      renderRecBar();
+    };
+    list.append(row);
+  }
+}
+
+// Own tunes are arranged afresh every time they are opened (so improvements to the arranger reach old tunes).
+function findSong(id) {
+  if (!id?.startsWith('tune-')) return SONGS.find((s) => s.id === id);
+  const tune = myTunes().find((x) => `tune-${x.id}` === id);
+  return tune ? arrangeTune(tune) : null;
+}
+
+function makeSong(id) {
+  const tune = myTunes().find((x) => x.id === id);
+  const song = tune && arrangeTune(tune);
+  if (!song || buildSong(song, 'one').steps.length < 3) { showToast(t('tooShort')); return; }
+  track('makeSong', { notes: tune.notes.length, bars: song.chords.split(' ').length, key: song.key, metre: song.beatsPerBar, bpm: song.bpm });
+  closeTunes();
+  openSong(song, 'chords');
+  setTimeout(listen, 400); // play the new song straight away
 }
 
 /* ---------- library ---------- */
@@ -748,14 +928,17 @@ function openSong(song, hands) {
 function renderSongHead() {
   const song = state.song;
   if (!song) return;
-  const { main, sub } = songTitles(song);
+  const { main, sub } = song.mine
+    ? { main: escapeHtml(song.title), sub: `✨ ${t('magicSong')} · ${t(song.key === 'Am' ? 'keyMinor' : 'keyMajor')} · ${song.beatsPerBar}/4` }
+    : songTitles(song);
   const style = LEVEL_STYLE[song.level];
+  // own tunes live on this device only, so there is no link to share
   $('#song-title').innerHTML = `<span class="song-emoji">${song.emoji}</span>
     <span class="song-title-text"><span class="song-title-main">${main}</span>${sub ? `<small>${sub}</small>` : ''}</span>
     <span class="stars" style="color:${style.color}">${'★'.repeat(style.stars)}</span>
-    <button class="link-mini" id="copy-link" title="${t('copyLink')}" aria-label="${t('copyLink')}">🔗</button>
+    ${song.mine ? '' : `<button class="link-mini" id="copy-link" title="${t('copyLink')}" aria-label="${t('copyLink')}">🔗</button>`}
     ${bestBadge()}`;
-  $('#copy-link').onclick = copySongLink;
+  if (!song.mine) $('#copy-link').onclick = copySongLink;
   const btn = $('#btn-hands');
   btn.innerHTML = [['one', '☝️'], ['two', '🙌'], ['chords', '💪']]
     .map(([h, icon]) => `<span data-h="${h}" class="${state.hands === h ? 'on' : ''}">${icon}</span>`).join('');
@@ -1074,6 +1257,10 @@ document.querySelectorAll('.mode-btn').forEach((b) => (b.onclick = () => {
   else setView(b.dataset.go);
 }));
 $('#oct-down').onclick = () => shiftOctave(-1);
+$('#rec-btn').onclick = toggleRecording;
+$('#tunes-btn').onclick = () => { unlock(); openTunes(); };
+$('#tunes-close').onclick = closeTunes;
+$('#tunes-sheet').onclick = (e) => { if (e.target.id === 'tunes-sheet') closeTunes(); };
 $('#oct-up').onclick = () => shiftOctave(1);
 $('#more-inst').onclick = () => { unlock(); openSheet(); };
 document.querySelectorAll('.inst-chip').forEach((b) => (b.onclick = () => { unlock(); openSheet(); }));
@@ -1082,7 +1269,9 @@ document.querySelectorAll('.hand-target button').forEach((b) => (b.onclick = () 
 $('#sheet-close').onclick = closeSheet;
 $('#offline-btn').onclick = saveOffline;
 $('#inst-sheet').onclick = (e) => { if (e.target.id === 'inst-sheet') closeSheet(); };
-$('#song-back').onclick = () => { if (state.openedFromLibrary) history.back(); else setView('library'); };
+$('#song-back').onclick = () => {
+  if (state.song?.mine) { setView('free'); openTunes(); } else if (state.openedFromLibrary) history.back(); else setView('library');
+};
 document.querySelectorAll('.view-switch button').forEach((b) => (b.onclick = () => setSongView(b.dataset.songview)));
 $('#hands-close').onclick = closeHands;
 $('#credits-close').onclick = closeCredits;
@@ -1153,6 +1342,7 @@ window.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !$('#inst-sheet').classList.contains('hidden')) { closeSheet(); return; }
   if (e.key === 'Escape' && !$('#hands-sheet').classList.contains('hidden')) { closeHands(); return; }
   if (e.key === 'Escape' && !$('#credits-sheet').classList.contains('hidden')) { closeCredits(); return; }
+  if (e.key === 'Escape' && !$('#tunes-sheet').classList.contains('hidden')) { closeTunes(); return; }
   if (e.key === 'Escape' && state.view === 'song') setView('library');
   if (state.view === 'free' && (e.key === 'z' || e.key === 'x')) {
     state.freeOctave += e.key === 'x' ? 1 : -1;
@@ -1187,6 +1377,8 @@ function applyLang(lang) {
   if (state.mode !== 'listen') $('#btn-listen').innerHTML = `👂<span>${t('listen')}</span>`;
   if (state.view === 'library') renderLibrary();
   if (!$('#inst-sheet').classList.contains('hidden')) openSheet();
+  if (!$('#tunes-sheet').classList.contains('hidden')) renderTunes();
+  renderRecBar();
   if (state.mode === 'guided') showStep();
 }
 
@@ -1199,6 +1391,7 @@ $('#welcome-form').onsubmit = (e) => {
   const name = setName($('#welcome-name').value);
   closeWelcome();
   if (state.view === 'library') renderLibrary();
+  renderRecBar(); // tunes are kept per player
   if (name) greet();
 };
 $('#welcome-skip').onclick = () => {

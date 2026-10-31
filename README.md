@@ -36,6 +36,8 @@ so installed copies pick up the new files.
 - **Name and greeting:** on the first visit the app asks for a name. It's stored on that device, and the app says hi on later visits.
 - **Favourites:** the library shows the 5 songs most played on the device.
 - **Usage events:** visits, plays, listens, finished songs and instrument changes are queued on the device and sent to a Google Sheet when online.
+- **My tunes:** in free play, ⏺ Record saves what the child plays (per player, on the device, up to 50 tunes). Each tune can be played back as recorded, renamed or deleted.
+- **Make a song:** ✨ turns a recording into a song with chords (`js/arrange.js`). It runs on the device using music theory, with no AI model or server. It finds the beat, snaps the rhythm, picks 4/4 or 3/4, moves the tune to C major or A minor, adds a home-note ending if needed and chooses one or two chords per bar. The result plays in the normal song view (listen, play along, scores).
 - **Admin page:** statistics are at `/admin.html` (not linked from the app).
 
 ### Connect the Google Sheet (once)

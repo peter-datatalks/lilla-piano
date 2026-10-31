@@ -71,6 +71,34 @@ export function saveScore(songId, hands, { score, stars }) {
   return { prevBest: prev.best, prevStars: prev.stars, firstTime: prev.plays === 0 };
 }
 
+/* ---------- recorded tunes (free play), kept per player name on this device ---------- */
+
+// tunes: { playerKey: [{ id, name, emoji, at, notes: [{ m, t, d, i }] }] }, newest first
+const MAX_TUNES = 50;
+
+export function myTunes() {
+  return read('tunes', {})[playerKey()] || [];
+}
+
+export function saveTune(tune) {
+  const all = read('tunes', {});
+  const list = (all[playerKey()] ||= []);
+  const i = list.findIndex((x) => x.id === tune.id);
+  if (i >= 0) list[i] = tune;
+  else list.unshift(tune);
+  all[playerKey()] = list.slice(0, MAX_TUNES);
+  write('tunes', all);
+  return tune;
+}
+
+export function deleteTune(id) {
+  const all = read('tunes', {});
+  all[playerKey()] = (all[playerKey()] || []).filter((x) => x.id !== id);
+  write('tunes', all);
+}
+
+export const tuneId = () => newId().slice(0, 8);
+
 /** Songs finished before scoring existed count as one star for the current player. */
 export function migrateDone(done) {
   if (read('scoresMigrated', false)) return;

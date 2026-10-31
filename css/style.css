@@ -1237,3 +1237,51 @@ input { user-select: text; -webkit-user-select: text; font: inherit; }
 .credits-body h3 { margin: 14px 0 4px; font-size: 18px; }
 .credits-body p { margin: 0 0 8px; }
 .credits-body a { color: var(--primary); }
+
+/* ---------- free play: record + my tunes ---------- */
+.rec-bar { display: flex; gap: 10px; margin-top: 10px; position: relative; z-index: 2; }
+.rec-btn, .tunes-btn {
+  display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: 26px;
+  font-size: 17px; font-weight: 700; color: var(--foreground);
+}
+.rec-btn[hidden], .tunes-btn[hidden] { display: none; }
+.rec-dot { width: 16px; height: 16px; border-radius: 50%; background: #e53935; box-shadow: 0 0 0 3px oklch(90% 0.06 25); }
+.rec-btn.on { background: #e53935; border-color: #c62828; color: #fff; font-variant-numeric: tabular-nums; }
+.rec-btn.on .rec-dot { border-radius: 3px; background: #fff; box-shadow: none; animation: rec-blink 1s steps(2, start) infinite; }
+@keyframes rec-blink { to { opacity: 0.3; } }
+.tunes-count:not(:empty) {
+  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: inline-grid; place-items: center;
+  background: var(--sun); color: var(--sun-foreground); font-size: 13px;
+}
+@media (max-height: 430px) { .rec-bar { margin-top: 2px; } .rec-btn, .tunes-btn { height: 38px; font-size: 15px; padding: 0 12px; } }
+@media (max-width: 600px) { .rec-bar { gap: 6px; } .rec-btn, .tunes-btn { height: 38px; font-size: 14px; padding: 0 10px; gap: 5px; } }
+
+.tunes-card { width: min(720px, 100%); max-height: 100%; display: flex; flex-direction: column; }
+.tunes-intro { margin: 0; padding: 0 22px 8px; font-size: 14px; color: var(--muted-foreground); }
+.tunes-list { overflow-y: auto; padding: 4px 16px 20px; display: flex; flex-direction: column; gap: 8px; }
+.tunes-empty { text-align: center; color: var(--muted-foreground); padding: 24px 10px; font-size: 16px; }
+.tune-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius);
+  background: var(--muted); border: 2px solid transparent;
+}
+.tune-row.new { border-color: var(--sun); animation: tune-new 1.4s ease-out; }
+@keyframes tune-new { from { background: var(--sun); } }
+.tune-emoji { font-size: 30px; flex: 0 0 auto; }
+.tune-info { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.tune-name {
+  font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--foreground);
+  background: transparent; border: 0; border-bottom: 2px dashed transparent; padding: 0; width: 100%; min-width: 0;
+}
+.tune-name:hover, .tune-name:focus { border-bottom-color: var(--border); outline: none; }
+.tune-info small { color: var(--muted-foreground); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tune-info .best-stars { color: #f9a825; letter-spacing: 1px; }
+.tune-row .round-btn { width: 44px; height: 44px; font-size: 17px; }
+.tune-play.on { background: var(--sky); }
+.tune-del { opacity: 0.7; }
+.tune-song { height: 44px; padding: 0 14px; font-size: 18px; flex: 0 0 auto; }
+.tune-song span, .tune-song.big-btn span { display: inline; font-size: 15px; }
+@media (max-width: 560px) {
+  .tune-row { flex-wrap: wrap; }
+  .tune-info { flex-basis: calc(100% - 50px); }
+  .tune-song { flex: 1 1 auto; justify-content: center; }
+}

@@ -44,6 +44,10 @@
         <div data-brand></div>
         <div class="free-hint" data-i18n="tapKeys"></div>
         <div class="range-map" id="range-map" aria-hidden="true"></div>
+        <div class="rec-bar">
+          <button class="rec-btn" id="rec-btn"><span class="rec-dot"></span><span class="rec-label" data-i18n="record"></span></button>
+          <button class="tunes-btn" id="tunes-btn">📼<span data-i18n="myTunes"></span><span class="tunes-count" id="tunes-count"></span></button>
+        </div>
       </div>
       <button class="oct-btn" id="oct-up" data-i18n-label="higher"><span class="oct-emoji">🐦</span><span class="oct-label" data-i18n="higherShort"></span></button>
     </section>
@@ -141,6 +145,16 @@
       </form>
       <p class="welcome-note" data-i18n="nameNote"></p>
       <button class="link-btn" id="welcome-skip" type="button" data-i18n="skip"></button>
+    </div>
+  </div>
+  <div class="sheet hidden" id="tunes-sheet">
+    <div class="sheet-card tunes-card" role="dialog" data-i18n-label="myTunes">
+      <div class="sheet-head">
+        <h2>📼 <span data-i18n="myTunes"></span></h2>
+        <button class="round-btn" id="tunes-close" data-i18n-label="close">✕</button>
+      </div>
+      <p class="tunes-intro" data-i18n="tunesIntro"></p>
+      <div class="tunes-list" id="tunes-list"></div>
     </div>
   </div>
   <div class="sheet hidden" id="credits-sheet">
